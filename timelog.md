@@ -40,6 +40,8 @@
 ### 24 Sept 2023
 * *2 hours* Fought with lucidrains/RETRO-pytorch implementation and various pip and conda errors
 
+## Week 2
+
 ### 25 Sept 2023
 * *1.5 hours* Cloned kennethleungty/Llama-2-Open-Source-LLM-CPU-Inference 
 * *0.5 hours* Got llama2-7b-q4-quantized CPU inference for docQA working, retrieval enhanced with FAISS-indexed random study from RCT20K dataset
