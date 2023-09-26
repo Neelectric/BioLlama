@@ -50,3 +50,4 @@
 
 * *0.5 hours* Second meeting with supervisor
 * *1 hour* Further configutation of technologies, restructuring GitHub project and local folders
+* *2 hours* Browsing of possibly relevant studies, discovery of a Llama2-7B biomedical finetune & a GPT4 medQA study
