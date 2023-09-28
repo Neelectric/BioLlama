@@ -1,6 +1,13 @@
+import box
+import yaml
+import faiss
+
 from src.utilities import load_benchmark, load_knowledge_db
 
 from sentence_transformers import SentenceTransformer
+
+with open('config/config.yml', 'r', encoding='utf8') as ymlfile:
+    cfg = box.Box(yaml.safe_load(ymlfile))
 
 
 model = "Llama-2-70B-q4"
