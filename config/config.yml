@@ -1,0 +1,2 @@
+DATA_PATH: 'data/'
+DATABASE_AS_FAISS_PATH: 'vectorstore/db_faiss/'
