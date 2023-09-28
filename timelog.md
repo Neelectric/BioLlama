@@ -47,7 +47,13 @@
 * *0.5 hours* Got llama2-7b-q4-quantized CPU inference for docQA working, retrieval enhanced with FAISS-indexed random study from RCT20K dataset
 
 ### 26 Sept 2023
-
 * *0.5 hours* Second meeting with supervisor
 * *1 hour* Further configutation of technologies, restructuring GitHub project and local folders
 * *2 hours* Browsing of possibly relevant studies, discovery of a Llama2-7B biomedical finetune & a GPT4 medQA study
+
+### 27 Sept 2023
+* *1.5 hours* Trying various (eventually successful) methods to connect to workstation via SSH
+* *1 hour* Trialling functionality of workstation, download and parsing of BioASQ5b
+
+### 28 Sept 2023
+* *1 hours* Achieving fully functional batch-inference of Llama-2-70B-4quant, trialling answering of BioASQ5b
