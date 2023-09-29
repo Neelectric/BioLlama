@@ -1,3 +1,7 @@
 #ignore any data files
 /raw_data/
 /data/
+/database/
+vectorstore/db_faiss/train.txt.index
+vectorstore/db_JSON/train.txt.json
+benchmarks/BioASQ-training5b/BioASQ-trainingDataset5b.json

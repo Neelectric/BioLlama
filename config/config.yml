@@ -1,2 +1,3 @@
 DATABASE_PATH: 'database/'
 DATABASE_AS_FAISS_PATH: 'vectorstore/db_faiss/'
+DATABASE_AS_JSON_PATH: 'vectorstore/db_JSON/'
