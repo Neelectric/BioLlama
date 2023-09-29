@@ -57,3 +57,5 @@
 
 ### 28 Sept 2023
 * *1 hours* Achieving fully functional batch-inference of Llama-2-70B-4quant, trialling answering of BioASQ5b
+* *3 hours* Setting up project architecture (main.py, .yml config, /src, /data etc)
+* *1.5 hours* Computing FAISS index of RCT20k and computing nearest neighbors
