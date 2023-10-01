@@ -1,4 +1,4 @@
-from model import ExLlamaConfig, Ex4bitLinear
+from src.model import ExLlamaConfig, Ex4bitLinear
 import torch
 import json
 from safetensors.torch import load_file as safe_load_file
