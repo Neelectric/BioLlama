@@ -8,8 +8,10 @@ with open('config/config.yml', 'r', encoding='utf8') as ymlfile:
     cfg = box.Box(yaml.safe_load(ymlfile))
 
 def load_knowledge_db(knowledge_db_name):
+    print("THIS METHOD SEEMS TO BE PROBLEMATIC. FOR NOW ITS FUNCTIONALITY IS COMMENTED OUT")
     print("Attempting to load FAISS index for " + cfg.DATABASE_AS_FAISS_PATH + knowledge_db_name + '.index')
-    return faiss.read_index(cfg.DATABASE_AS_FAISS_PATH + knowledge_db_name + '.index')
+    #this is what usually goes instea of the None faiss.read_index(cfg.DATABASE_AS_FAISS_PATH + knowledge_db_name + '.index')
+    return None
 
 def load_benchmark(benchmark_filepath, type):
     with open('benchmarks/' + benchmark_filepath, 'rb') as json_file:
