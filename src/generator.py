@@ -1,6 +1,6 @@
-import cuda_ext
-from model import ExLlama, ExLlamaCache
-from lora import ExLlamaLora
+import src.cuda_ext as cuda_ext
+from src.model import ExLlama, ExLlamaCache
+from src.lora import ExLlamaLora
 import torch
 import torch.nn.functional as F
 
