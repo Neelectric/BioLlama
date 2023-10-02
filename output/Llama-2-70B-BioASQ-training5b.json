@@ -1,1 +1,252 @@
-[["What is the mode of inheritance of Wilson's disease?", "autosomal recessive", "Autosomal recessive inheritance."], ["What is the mode of inheritance of Facioscapulohumeral muscular dystrophy (FSHD)?", "autosomal dominant", "Autosomal dominant with variable penetrance."], ["What kind of chromatography is HILIC?", "Hydrophilic Interaction Chromatography", "Hydrophilic Interaction Liquid Chromatography."], ["What is the structural fold of bromodomain proteins?", "All-alpha-helical fold", "Beta-alpha-beta structural fold."], ["Which MAP kinase phosphorylates the transcription factor c-jun?", "c-Jun NH2-terminal kinase", " Mitogen-activated protein kinase 7 (MAPK7)"], ["What is the meaning of the acronym \"TAILS\" used in protein N-terminomics?", "TAILS: Terminal Amine Isotopic Labeling of Substrates", "Terminal amino acid labeling strategy."], ["Which fusion protein is involved in the development of Ewing sarcoma?", "EWS/FLI1", "EWS-FLI1 fusion protein."], ["Treatment of which disease was investigated in the MR CLEAN study?", "acute ischemic stroke", "Stroke"], ["Which enzyme is targeted by Evolocumab?", "proprotein convertase subtilisin/kexin type 9", "PCSK9"], ["What is the methyl donor of DNA (cytosine-5)-methyltransferases?", "S-adenosyl-L-methionine", "S-adenosyl-L-methionine"]]
+[
+    [
+        "What is the mode of inheritance of Wilson's disease?",
+        "autosomal recessive",
+        "Autosomal recessive disorder"
+    ],
+    [
+        "What is the mode of inheritance of Facioscapulohumeral muscular dystrophy (FSHD)?",
+        "autosomal dominant",
+        "Autosomal dominant."
+    ],
+    [
+        "What kind of chromatography is HILIC?",
+        "Hydrophilic Interaction Chromatography",
+        "Hydrophilic interaction liquid chromatography."
+    ],
+    [
+        "What is the structural fold of bromodomain proteins?",
+        "All-alpha-helical fold",
+        "Beta-alpha-beta structural fold."
+    ],
+    [
+        "Which MAP kinase phosphorylates the transcription factor c-jun?",
+        "c-Jun NH2-terminal kinase",
+        " Mitogen-activated protein kinase 7 (MAPK7)"
+    ],
+    [
+        "What is the meaning of the acronym \"TAILS\" used in protein N-terminomics?",
+        "TAILS: Terminal Amine Isotopic Labeling of Substrates",
+        "Terminal amino acid labeling strategy."
+    ],
+    [
+        "Which fusion protein is involved in the development of Ewing sarcoma?",
+        "EWS/FLI1",
+        "EWS-FLI1."
+    ],
+    [
+        "Treatment of which disease was investigated in the MR CLEAN study?",
+        "acute ischemic stroke",
+        "Acute ischemic stroke."
+    ],
+    [
+        "Which enzyme is targeted by Evolocumab?",
+        "proprotein convertase subtilisin/kexin type 9",
+        "PCSK9"
+    ],
+    [
+        "What is the methyl donor of DNA (cytosine-5)-methyltransferases?",
+        "S-adenosyl-L-methionine",
+        "S-adenosyl-L-methionine"
+    ],
+    [
+        "Which signaling pathway does sonidegib inhibit?",
+        "Hedghog signalling pathway",
+        "Hedgehog signaling pathway"
+    ],
+    [
+        "In which phase of the cell cycle arrest is impaired in Fanconi anemia?",
+        "In Fanconi anemia cells, the S-phase checkpoint is inefficient.",
+        "S phase"
+    ],
+    [
+        "Mutation of which gene is implicated in the familial isolated pituitary adenoma?",
+        "aryl hydrocarbon receptor interacting protein",
+        "Arginase I granulocyte colony stimulating factor receptor alpha subunit"
+    ],
+    [
+        "GV1001 vaccine targets which enzyme?",
+        "human telomerase reverse transcriptase",
+        "Glypican-3 proteoglycan."
+    ],
+    [
+        "Which is the E3 ubiquitin ligase which ubiquitinates IkB leading to its proteasomal degradation?",
+        "SCF(\u03b2-TrCP)",
+        "TRAF6 (TNF receptor associated factor 6)"
+    ],
+    [
+        "Is there a crystal structure of Greek Goat Encephalitis?",
+        "No crustal structure of Greek Goat Encephalitis found",
+        "No crystal structure available."
+    ],
+    [
+        "Mutation of which gene is implicated in the Brain-lung-thyroid syndrome?",
+        "thyroid transcription factor 1",
+        "RET proto-oncogene"
+    ],
+    [
+        "Which enzyme is targeted by the drug Imetelstat?",
+        "Human Telomerase",
+        "Telomerase"
+    ],
+    [
+        "In which breast cancer patients can palbociclib be used?",
+        "hormone receptor-positive, human epidermal growth factor receptor 2-negative",
+        "hormone receptor positive, HER2 negative"
+    ],
+    [
+        "What is the method FASP used for?",
+        "proteomic sample preparation",
+        "FASP: Fast Asynchronous Serial Passage."
+    ],
+    [
+        "Which gene is required for the efficient function of clopidogrel?",
+        "cytochrome P450, CYPC19",
+        "CYP2C19*3"
+    ],
+    [
+        "Which transcription factor is considered as a master regulator of lysosomal genes?",
+        "Transcription factor EB (TFEB)",
+        "MASTER REGULATOR OF LYSOSOMAL GENES"
+    ],
+    [
+        "Which technique is used for detection of EWS/FLI1 fusion transcripts?",
+        "Reverse transcription - polymerase chain reaction (RT-PCR)",
+        "Reverse Transcription Polymerase Chain Reaction (RT-PCR)"
+    ],
+    [
+        "What is the application of the Bimolecular Fluorescence Complementation (BiFC) assay in Drosophila embryos?",
+        "The study of protein-protein interactions in a physiologically relevant developing context.",
+        "Study protein interactions in vivo."
+    ],
+    [
+        "What is the genetic basis of Rubinstein-Taybi syndrome?",
+        "Mutations or/and deletions in the genes of the cAMP-response element binding protein-BP (CREBBP) (50-60% of the cases) and of the homologous gene E1A-binding protein (EP300) at 22q13 (5%).",
+        "Rubinstein-Taybi caused by H3F3A mutations."
+    ],
+    [
+        "What is the function of the AIRE gene at the embryonic stage?",
+        "stem cell renewal and self-immune tolerance",
+        "AIRE gene: thymic stroma development."
+    ],
+    [
+        "Which is the genetic defect causing Neurofibromatosis type 1?",
+        "Mutation in NF1 gene.",
+        "NF1 gene mutations"
+    ],
+    [
+        "Which is the human selenoprotein that contains several Se-Cys residues?",
+        "Selenoprotein P",
+        "Selenium-containing protein 1 (SELENOP)"
+    ],
+    [
+        "Which package is available for analysing genomic interactions in R/Bioconductor?",
+        "r3Cseq",
+        "GenomicInteractions Package Available"
+    ],
+    [
+        "How many clinical trials for off-label drugs in neonates are cited in the literature.",
+        "none",
+        "Limited data available, few studies."
+    ],
+    [
+        "What enzyme is inhibied by Opicapone?",
+        "catechol-O-methyltransferase",
+        "Monoamine oxidase (MAO)"
+    ],
+    [
+        "Do archaeal genomes contain one or multiple origins of replication?",
+        "mostly multiple",
+        "Multiple origins in some cases."
+    ],
+    [
+        "Which is the genetic basis of Spinal Muscular Atrophy (SMA)?",
+        "The molecular genetic basis of spinal muscular atrophy (SMA), an autosomal recessive neuromuscular disorder, is the loss of function of the survival motor neuron gene (SMN1)",
+        "Survival Motor Neuron 1 (SMN1) deficiency."
+    ],
+    [
+        "Which is the third subunit of the TSC1-TSC2 complex upstream of mTORC1?",
+        "TBC1D7",
+        "Printerest/RBX1"
+    ],
+    [
+        "Which kinase is inhibited by the small molecule KN-93?",
+        "The calcium/calmodulin-dependent protein kinase-II",
+        "Calcium/calmodulin-dependent protein kinase II (CaMKII)"
+    ],
+    [
+        "What are 'vildagliptin', 'sitagliptin', 'saxagliptin', 'alogliptin', 'linagliptin', and 'dutogliptin'?",
+        "dipeptidyl peptidase-4 (DPP-4) inhibitors",
+        "Dipeptidyl peptidase-4 (DPP-4) inhibitors."
+    ],
+    [
+        "Which is the most important prognosis sub-classification in Chronic Lymphocytic Leukemia?",
+        "The mutational status of the IGHV genes.",
+        "IGHV mutational status"
+    ],
+    [
+        "What is needed for MMP proteins to be functional?",
+        "zinc",
+        "Zinc ion presence required."
+    ],
+    [
+        "What is hyperosmia",
+        "increased olfactory acuity",
+        " heightened sense of smell"
+    ],
+    [
+        "What is the number of long non coding RNAs in the human genome",
+        "between 10,000 and 20,000",
+        "Thousands of long non-coding RNAs."
+    ],
+    [
+        "Which is the most known bacterium responsible for botulism (sausage-poisoning)?",
+        "Clostridium botulinum",
+        "Clostridium botulinum"
+    ],
+    [
+        "What is the association of spermidine with \u03b1-synuclein neurotoxicity?",
+        "Spermidine protects against \u03b1-synuclein neurotoxicity",
+        "Spermidine inhibits \u03b1-synuclein fibrillization."
+    ],
+    [
+        "Where is the histone variant CENPA preferentially localized?",
+        "Centromeres",
+        "Centromere region of chromosomes."
+    ],
+    [
+        "Which is the prognostic meaning of delayed enhancement documented in patients hypertrophic cardiomyopathy?",
+        "Delayed enhancement by CMR has prognostic value in predicting adverse cardiovascular events among HCM patients.",
+        "Increased risk of sudden death."
+    ],
+    [
+        "Which is the cellular localization of the protein Opa1?",
+        "mitochondrial intermembrane space",
+        "Endoplasmic reticulum (ER) resident protein."
+    ],
+    [
+        "Which genome browser database for DNA shape annotations is available?",
+        "GBshape",
+        "3D Genome Browser Database"
+    ],
+    [
+        "What is the enzymatic activity of the breast cancer associated gene BRCA1?",
+        "E3 ubiquitin ligase activity",
+        "DNA repair, transcriptional regulation."
+    ],
+    [
+        "What is the function of Neu5Gc (N-Glycolylneuraminic acid)?",
+        "Neu5Gc is an immune message to self",
+        "Cell surface glycoprotein/lipid anchor"
+    ],
+    [
+        "Which metabolite activates AtxA?",
+        "CO2",
+        "3-phosphoglycerate"
+    ],
+    [
+        "Which amino acid residue appears mutated in most of the cases reported with  cadasil syndrome?",
+        "Cysteine",
+        "arginine 302"
+    ]
+]
