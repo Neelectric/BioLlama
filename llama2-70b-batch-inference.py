@@ -5,9 +5,13 @@ import os, glob
 import json
 import argparse
 import re
-
+import time
 import src.model_init as model_init
 from src.llm import llm as llm
+
+#time before batch inference
+
+start_time = time.time()
 
 # Directory containing model, tokenizer, generator
 
@@ -39,10 +43,11 @@ for question in data['questions']:
 print("Loaded " + str(num) + " factoid questions.")
 combo = zip(factoid_questions, factoid_answers)
 combo = list(combo)
+print(combo[0:5])
 
-
+offset = 3
 prompts = []
-for question in factoid_questions[5:486]:
+for question in factoid_questions[offset:num]:
     prompts.append("You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as: <QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION> <ANSWER>castration-resistant prostate cancer</ANSWER> You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words\n <QUESTION>""" 
                    + question 
                    + "</QUESTION> <ANSWER>")
@@ -51,7 +56,7 @@ print("NOW WE'LL LET THE MODEL WORK ------------------------------------------")
 
 
 
-def raw_llm_inference(prompts, max_new_tokens):
+def batch_llm_inference(prompts, max_new_tokens):
     llm_output = []
 
     llm_generator = llm(prompts, max_new_tokens)
@@ -63,7 +68,8 @@ raw_responses = []
 
 for i in range(len(prompts)//10):
     temp_prompts = list(prompts[i*10:(i+1)*10])
-    raw_responses += raw_llm_inference(temp_prompts, 25)
+    raw_responses += batch_llm_inference(temp_prompts, 30)
+    print("Performed batch inference on prompts " + str(i*10) + " to " + str((i+1)*10) + ".")
 
 print("We have generated " + str(len(raw_responses)) + " responses.")
 
@@ -73,21 +79,24 @@ pattern = r'<ANSWER>(.*?)</ANSWER>'
 responses = []
 for raw_response in raw_responses:
     response = re.findall(pattern, raw_response, re.DOTALL)
-    print(raw_response)
-    print(response)
-    responses.append(response[2])
+    # print(raw_response)
+    # print(response)
+    if len(response) > 2:
+        responses.append(response[2])
+    else:
+        responses.append("LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: " + raw_response)
 
 output = []
 for i in range(len(responses)):
     instance = []
     #print(factoid_questions[i+5])
-    instance.append(factoid_questions[i+5])
-    if type(factoid_answers[i+5][0]) != type("String lol"):
+    instance.append(factoid_questions[i+offset])
+    if type(factoid_answers[i+offset][0]) != type("String lol"):
         #print("Answer: " + str(factoid_answers[i+5][0][0]))
-        instance.append(factoid_answers[i+5][0][0])
+        instance.append(factoid_answers[i+offset][0][0])
     else:
         #print("Answer: " + str(factoid_answers[i+5][0]))
-        instance.append(factoid_answers[i+5][0])
+        instance.append(factoid_answers[i+offset][0])
     #print("Prediction: " + str(responses[i]))
     instance.append(responses[i])
     #print("\n")
@@ -96,3 +105,5 @@ for i in range(len(responses)):
 
 with open("output/Llama-2-70B-BioASQ-training5b.json", "w") as outfile: 
     json.dump(output, outfile)
+
+print("Time for batch inference: " + str(time.time() - start_time))

@@ -12,7 +12,7 @@
 * This timelog should be filled out honestly, regularly (daily) and accurately. It is for *your* benefit.
 * Follow the structure provided, grouping time by weeks.  Quantise time to the half hour.
 
-## Week 1
+## Week 1 - 14 hours total
 
 ### 19 Sept 2023
 
@@ -40,7 +40,7 @@
 ### 24 Sept 2023
 * *2 hours* Fought with lucidrains/RETRO-pytorch implementation and various pip and conda errors
 
-## Week 2
+## Week 2 - 12.5 hours total
 
 ### 25 Sept 2023
 * *1.5 hours* Cloned kennethleungty/Llama-2-Open-Source-LLM-CPU-Inference 
@@ -69,3 +69,6 @@
 
 ### 02 Oct 2023
 * *2 hours* Achieved batch-inference of 10 BioASQ5b questions on Llama-2-70B at a time
+* *1.5 hours* Extended batch-inference from 10 to 100 questions of BioASQ5b
+* *1 hour* Extended batch-inference from 100 to 480 questions of BioASQ5b
+* *3 hours* Implemented fully automatic eval of responses with LLM-as-judge, scoring 0.4875 accuracy
