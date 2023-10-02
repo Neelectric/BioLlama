@@ -57,3 +57,15 @@
 
 ### 28 Sept 2023
 * *1 hours* Achieving fully functional batch-inference of Llama-2-70B-4quant, trialling answering of BioASQ5b
+
+### 29 Sept 2023
+* *1.5 hours* Fighting with FAISS library, adopting own FAISS code to avoid use of external libraries (langchain etc)
+
+
+### 01 Oct 2023
+* *2 hours* Re-wrote large parts of exllama library for own use
+
+## Week 3
+
+### 02 Oct 2023
+* *2 hours* Achieved batch-inference of 10 BioASQ5b questions on Llama-2-70B at a time
