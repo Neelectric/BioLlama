@@ -4,6 +4,7 @@ from src.generator import ExLlamaGenerator
 import os, glob
 import json
 import argparse
+import re
 
 import src.model_init as model_init
 from src.llm import llm as llm
@@ -35,18 +36,46 @@ for question in data['questions']:
         factoid_questions.append(question['body'])
         # print(question['exact_answer'])
         factoid_answers.append(question['exact_answer'])
-print(num)
+print("Loaded " + str(num) + " factoid questions.")
 combo = zip(factoid_questions, factoid_answers)
 combo = list(combo)
-# for item in combo[0:4]:
-#     print(item)
+
 
 prompts = []
-for question in factoid_questions[0:3]:
-    prompts.append("You are an AI chatbot that answers questions. Given your training on biomedical data, you are an expert on all topics related to biology and medicine. You must now answer the following biomedical question in 5 words or less: " + question + ". Answer:")
+for question in factoid_questions[5:15]:
+    prompts.append("You are an excellently helpful AI assistant. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as: <QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION> <ANSWER>castration-resistant prostate cancer</ANSWER> You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words\n <QUESTION>""" 
+                   + question 
+                   + "</QUESTION> <ANSWER>")
 
 print("NOW WE'LL LET THE MODEL WORK ------------------------------------------")
-
-llm = llm(prompts, 100)
+raw_responses = []
+responses = []
+llm = llm(prompts, 30)
 for line in llm:
-        print(line)
+    raw_responses.append(line)
+
+pattern = r'<ANSWER>(.*?)</ANSWER>'
+
+for raw_response in raw_responses:
+    response = re.findall(pattern, raw_response, re.DOTALL)
+    responses.append(response[1])
+
+output = []
+for i in range(len(responses)):
+    instance = []
+    print(factoid_questions[i+5])
+    instance.append(factoid_questions[i+5])
+    if type(factoid_answers[i+5][0]) != type("String lol"):
+        print("Answer: " + str(factoid_answers[i+5][0][0]))
+        instance.append(factoid_answers[i+5][0][0])
+    else:
+        print("Answer: " + str(factoid_answers[i+5][0]))
+        instance.append(factoid_answers[i+5][0])
+    print("Prediction: " + str(responses[i]))
+    instance.append(responses[i])
+    print("\n")
+    output.append(instance)
+
+
+with open("output/Llama-2-70B-BioASQ-training5b.json", "w") as outfile: 
+    json.dump(output, outfile)
