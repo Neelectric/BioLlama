@@ -1,0 +1,29 @@
+== Data purpose ==
+
+The data are intended to be used as training and development data for BioASQ 5, which will take place during 2017.
+There is one file containing the data:
+ - BioASQ-trainingDataset5b.json
+
+The file contains the data of the first four editions of the challenge: 1799 questions with their relevant documents, snippets, concepts and rdf triples, exact and ideal answers.
+For more information about the format of the data as well as the instructions for participating at BioASQ please consult: http://participants-area.bioasq.org/general_information/Task5b/
+
+== Citing BioASQ ==
+When using this data please cite our previous work:
+
+An overview of the BIOASQ large-scale biomedical semantic indexing and question answering competition: George Tsatsaronis, Georgios Balikas, Prodromos Malakasiotis, Ioannis Partalas, Matthias Zschunke, Michael R Alvers, Dirk Weissenborn, Anastasia Krithara, Sergios Petridis, Dimitris Polychronopoulos, Yannis Almirantis, John Pavlopoulos, Nicolas Baskiotis, Patrick Gallinari, Thierry Artiéres, Axel Ngonga, Norman Heino, Eric Gaussier, Liliana Barrio-Alvers, Michael Schroeder, Ion Androutsopoulos and Georgios Paliouras, in BMC bioinformatics, 2015
+
+Bib:
+@article{tsatsaronis2015overview,
+  title={An overview of the BIOASQ large-scale biomedical semantic indexing and question answering competition},
+  author={Tsatsaronis, George and Balikas, Georgios and Malakasiotis, Prodromos and Partalas, Ioannis and Zschunke, Matthias and Alvers, Michael R and Weissenborn, Dirk and Krithara, Anastasia and Petridis, Sergios and Polychronopoulos, Dimitris and others},
+  journal={BMC bioinformatics},
+  volume={16},
+  number={1},
+  pages={138},
+  year={2015},
+  publisher={BioMed Central Ltd}
+}
+
+
+Fore more information about the challenge, the organisers and the relevant publications please visit: http://bioasq.org/
+
