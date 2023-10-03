@@ -66,11 +66,16 @@ incorrect_pattern = r'\bincorrect\b'
 
 responses = []
 total_num_correct = 0
+total_num_incorrect = 0
 for raw_response in raw_responses:
     count_correct = len(re.findall(correct_pattern, raw_response, flags=re.IGNORECASE))
     count_incorrect = len(re.findall(incorrect_pattern, raw_response, flags=re.IGNORECASE))
     if count_correct > count_incorrect:
         total_num_correct += 1
+    elif count_correct < count_incorrect:
+        total_num_incorrect += 1
+    else:
+        print("Weird response: " + raw_response)
 
 print("Total number correct: " + str(total_num_correct))
 print("Total number of questions asked: " + str(len(raw_responses)))
