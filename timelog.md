@@ -14,61 +14,63 @@
 
 ## Week 1 - 14 hours total
 
-### 19 Sept 2023
+### Tuesday - 19 Sept 2023
 
 * *1 hour* Skimmed 2 relevant papers for idea gathering
 * *1 hour* Prepared notes/timeline for first meeting
 * *1 hour* Read the project guidance notes
 
-### 20 Sept 2023
-
+### Wednesday - 20 Sept 2023
 * *0.5 hours* First meeting with supervisor
 * *2 hours* Setup of technologies, reading project advice
 
-### 21 Sept 2023
+### Thursday - 21 Sept 2023
 * *0.5 hours* Researched RETRO-fitting Llama2
 
-### 22 Sept 2023
+### Friday - 22 Sept 2023
 * *2.5 hours* Revisited RETRO paper and its implementation in depth
 * *1.5 hours* Revisited BIOREADER paper, its explanation of retro-fitting Sci-Five, and studied a RETRO implementation on GitHub
 
-### 23 Sept 2023
+### Saturday - 23 Sept 2023
 * *0.5 hours* Watched video and read article on RETRO
 * *0.5 hours* Watched interview with Patrick Lewis on RAG
 * *1 hour* Familiarised myself with lucidrains/RETRO-pytorch implementation
 
-### 24 Sept 2023
+### Sunday - 24 Sept 2023
 * *2 hours* Fought with lucidrains/RETRO-pytorch implementation and various pip and conda errors
 
 ## Week 2 - 12.5 hours total
 
-### 25 Sept 2023
+### Monday - 25 Sept 2023
 * *1.5 hours* Cloned kennethleungty/Llama-2-Open-Source-LLM-CPU-Inference 
 * *0.5 hours* Got llama2-7b-q4-quantized CPU inference for docQA working, retrieval enhanced with FAISS-indexed random study from RCT20K dataset
 
-### 26 Sept 2023
+### Tuesday - 26 Sept 2023
 * *0.5 hours* Second meeting with supervisor
 * *1 hour* Further configutation of technologies, restructuring GitHub project and local folders
 * *2 hours* Browsing of possibly relevant studies, discovery of a Llama2-7B biomedical finetune & a GPT4 medQA study
 
-### 27 Sept 2023
+### Wednesday - 27 Sept 2023
 * *1.5 hours* Trying various (eventually successful) methods to connect to workstation via SSH
 * *1 hour* Trialling functionality of workstation, download and parsing of BioASQ5b
 
-### 28 Sept 2023
-* *1 hours* Achieving fully functional batch-inference of Llama-2-70B-4quant, trialling answering of BioASQ5b
+### Thursday - 28 Sept 2023
+* *1 hour* Breakthrough! Achieving fully functional batch-inference of Llama-2-70B-4quant, trialling answering of BioASQ5b
 
-### 29 Sept 2023
+### Friday - 29 Sept 2023
 * *1.5 hours* Fighting with FAISS library, adopting own FAISS code to avoid use of external libraries (langchain etc)
 
-
-### 01 Oct 2023
+### Sunday - 01 Oct 2023
 * *2 hours* Re-wrote large parts of exllama library for own use
 
 ## Week 3
 
-### 02 Oct 2023
+### Monday - 02 Oct 2023
 * *2 hours* Achieved batch-inference of 10 BioASQ5b questions on Llama-2-70B at a time
 * *1.5 hours* Extended batch-inference from 10 to 100 questions of BioASQ5b
 * *1 hour* Extended batch-inference from 100 to 480 questions of BioASQ5b
-* *3 hours* Implemented fully automatic eval of responses with LLM-as-judge, scoring 0.4875 accuracy
+* *2 hours* Implemented fully automatic eval of responses with LLM-as-judge, scoring 0.4875 accuracy
+
+### Tuesday - 03 Oct 2023
+* *0.5 hours* Third meeting with supervisor
+* *0.5 hours* Investigation into different few-shot prompting practices
