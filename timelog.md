@@ -63,7 +63,7 @@
 ### Sunday - 01 Oct 2023
 * *2 hours* Re-wrote large parts of exllama library for own use
 
-## Week 3
+## Week 3 - 9 hours total
 
 ### Monday - 02 Oct 2023
 * *2 hours* Achieved batch-inference of 10 BioASQ5b questions on Llama-2-70B at a time
@@ -74,3 +74,12 @@
 ### Tuesday - 03 Oct 2023
 * *0.5 hours* Third meeting with supervisor
 * *0.5 hours* Investigation into different few-shot prompting practices
+
+### Sunday - 08 Oct 2023
+* *0.5 hours* Drafting E-Mail to Giacomo Frisoni asking for BIOREADER resources
+* *1 hour* Starting to read "Judging LLM-as-judge"
+
+## Week 4 - 
+
+### Monday - 09 Oct 2023
+* * hour* A
