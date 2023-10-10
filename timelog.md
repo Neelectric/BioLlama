@@ -81,5 +81,5 @@
 
 ## Week 4 - 
 
-### Monday - 09 Oct 2023
-* * hour* A
+### Tuesday - 10 Oct 2023
+* *0.5 hours* Started reading meta-review of recent advances in NLP
