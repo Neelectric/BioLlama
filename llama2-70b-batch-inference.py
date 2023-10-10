@@ -8,6 +8,7 @@ import re
 import time
 import src.model_init as model_init
 from src.llm import llm as llm
+from src.prompts import promptify_benchmark_question
 
 #time before batch inference
 
@@ -48,9 +49,7 @@ print(combo[0:5])
 offset = 3
 prompts = []
 for question in factoid_questions[offset:num]:
-    prompts.append("You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as: <QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION> <ANSWER>castration-resistant prostate cancer</ANSWER> You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words\n <QUESTION>""" 
-                   + question 
-                   + "</QUESTION> <ANSWER>")
+    prompts.append(promptify_benchmark_question(question))
 
 print("NOW WE'LL LET THE MODEL WORK ------------------------------------------")
 
@@ -68,6 +67,7 @@ raw_responses = []
 
 for i in range(len(prompts)//10):
     temp_prompts = list(prompts[i*10:(i+1)*10])
+    #print(temp_prompts)
     raw_responses += batch_llm_inference(temp_prompts, 30)
     print("Performed batch inference on prompts " + str(i*10) + " to " + str((i+1)*10) + ".")
 
