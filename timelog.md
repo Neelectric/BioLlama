@@ -83,3 +83,4 @@
 
 ### Tuesday - 10 Oct 2023
 * *0.5 hours* Started reading meta-review of recent advances in NLP
+* *2 hours* Refactored prompt-building to new file
