@@ -26,7 +26,7 @@ def llm(prompts, max_new_tokens):
     parser = argparse.ArgumentParser(description = "Benchmark tests for ExLlama")
     model_init.add_args(parser)
     args = parser.parse_args()
-    print("args are as follows: " + str(args))
+    #print("args are as follows: " + str(args))
     args.directory = model_directory
     args.gpu_split = "17.2,24"
     model_init.post_parse(args)
