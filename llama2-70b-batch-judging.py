@@ -69,7 +69,7 @@ responses = []
 total_num_correct = 0
 total_num_incorrect = 0
 total_num_weird = 0
-weird_responses = []
+judging_output = []
 for raw_response in raw_responses:
     count_correct = len(re.findall(correct_pattern, raw_response, flags=re.IGNORECASE))
     count_incorrect = len(re.findall(incorrect_pattern, raw_response, flags=re.IGNORECASE))
@@ -78,19 +78,27 @@ for raw_response in raw_responses:
     elif count_correct < count_incorrect:
         total_num_incorrect += 1
     else:
-        weird_responses.append(raw_response)
+        judging_output.append(raw_response)
         total_num_weird += 1
 
-print("Total number correct: " + str(total_num_correct))
-print("Total number incorrect: " + str(total_num_incorrect))
-print("Total number weird: " + str(total_num_weird))
-print("Total number of questions asked: " + str(len(raw_responses)))
-print("Accuracy: " + str(total_num_correct/len(raw_responses)))
+correct_string = "Total number correct: " + str(total_num_correct)
+incorrect_string = "Total number incorrect: " + str(total_num_incorrect)
+weird_string = "Total number weird: " + str(total_num_weird)
+total_string = "Total number of questions asked: " + str(len(raw_responses))
+accuracy_string = "Accuracy: " + str(total_num_correct/len(raw_responses))
 
+
+print(correct_string)
+print(incorrect_string)
+print(weird_string)
+print(total_string)
+print(accuracy_string)
+
+judging_output.insert(0, [correct_string, incorrect_string, weird_string, total_string, accuracy_string])
     
 
 
 with open("output/JUDGING_WEIRD-Llama-2-70B-BioASQ-training5b.json", "w") as outfile: 
-    json.dump(weird_responses, outfile)
+    json.dump(judging_output, outfile)
 
 print("Time for batch inference: " + str(time.time() - start_time))
