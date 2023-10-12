@@ -33,7 +33,6 @@ data = json.loads(json_data)
 num = 0
 factoid_questions = []
 factoid_answers = []
-factoid_predictions = []
 for question in data['questions']:
     if question['type'] == 'factoid':
         num += 1
@@ -89,17 +88,12 @@ for raw_response in raw_responses:
 output = []
 for i in range(len(responses)):
     instance = []
-    #print(factoid_questions[i+5])
     instance.append(factoid_questions[i+offset])
     if type(factoid_answers[i+offset][0]) != type("String lol"):
-        #print("Answer: " + str(factoid_answers[i+5][0][0]))
         instance.append(factoid_answers[i+offset][0][0])
     else:
-        #print("Answer: " + str(factoid_answers[i+5][0]))
         instance.append(factoid_answers[i+offset][0])
-    #print("Prediction: " + str(responses[i]))
     instance.append(responses[i])
-    #print("\n")
     output.append(instance)
 
 

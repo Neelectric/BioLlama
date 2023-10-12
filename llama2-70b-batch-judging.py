@@ -98,7 +98,7 @@ judging_output.insert(0, [correct_string, incorrect_string, weird_string, total_
     
 
 
-with open("output/JUDGING_WEIRD-Llama-2-70B-BioASQ-training5b.json", "w") as outfile: 
+with open("output/judging-output-Llama-2-70B-BioASQ-training5b.json", "w") as outfile: 
     json.dump(judging_output, outfile)
 
 print("Time for batch inference: " + str(time.time() - start_time))
