@@ -91,3 +91,8 @@
 ### Thursday - 12 Oct 2023
 * *1 hour* Further investigations into size of BioASQ5b_factoid
 * *2 hours* Refactoring benchmark parsing, achieving first benchmarking with MedQA-USMLE
+
+### Friday - 13 Oct 2023
+* *1 hour* Benchmarking on MedQA-USMLE with 1000 questions
+* *2 hours* Refactoring of architecture for greater modularity
+* *1 hour* Figma graph of architecture for better overview
