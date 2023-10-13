@@ -87,3 +87,7 @@
 
 ### Wednesday - 11 Oct 2023
 * *1 hour* Attempts to improve judging prompt
+
+### Thursday - 12 Oct 2023
+* *1 hour* Further investigations into size of BioASQ5b_factoid
+* *2 hours* Refactoring benchmark parsing, achieving first benchmarking with MedQA-USMLE
