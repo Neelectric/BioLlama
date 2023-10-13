@@ -17,9 +17,9 @@ def parse_bioASQ(version):
             num_factoids += 1
         else:
             num_non_factoid += 1
-    print("processed " + str(num_factoids) + " factoid questions")
-    print("processed " + str(num_non_factoid) + " non-factoid questions")
-    print("this adds up to " + str(num_factoids + num_non_factoid) + " questions")
+    print("Processed " + str(num_factoids) + " factoid questions")
+    print("Processed " + str(num_non_factoid) + " non-factoid questions")
+    print("In total, the benchmark contains " + str(num_factoids + num_non_factoid) + " questions")
     return ["factoid", benchmark]
 
 def parse_MedQA(version):
@@ -34,13 +34,21 @@ def parse_MedQA(version):
     #print(data[0])
     benchmark_questions = []
     benchmark_answers = []
+    num_questions_with_5_options = 0
+    num_questions_with_non_5_options = 0
     for instance in data:
         MCQ_question = instance["question"]
+        if len(instance["options"].keys())== 5:
+            num_questions_with_5_options += 1
+        else:
+            num_questions_with_non_5_options += 1
         for option in instance["options"].keys():
             MCQ_question += "\n" + "(" + option + ") " + instance["options"][option]
         MCQ_answer = "(" + instance['answer_idx'] + ") " + instance["answer"]
         benchmark_questions.append(MCQ_question)
         benchmark_answers.append(MCQ_answer)
+
+    print("of the " + str(len(data)) + " questions, " + str(num_questions_with_5_options) + " had 5 options and " + str(num_questions_with_non_5_options) + " had non-5 options")
 
     return benchmark_questions, benchmark_answers
 
