@@ -48,6 +48,13 @@ def parse_MedQA(version="US"):
 
     return benchmark_questions, benchmark_answers
 
+def parse_PubMedQA(version=""):
+    return None, None
+
+def parse_MedMCQA(version=""):
+    return None, None
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--b', type=str, help="Name of the benchmark to parse.")

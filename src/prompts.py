@@ -1,4 +1,4 @@
-def promptify_bioASQ_question(question):
+def promptify_BioASQ_question(question):
     promptified = (
         "You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as:\n<QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION>\n<ANSWER>castration-resistant prostate cancer</ANSWER>\n You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words. \n <QUESTION>"
         + question
@@ -7,12 +7,20 @@ def promptify_bioASQ_question(question):
     return promptified
 
 
-def promptify_medQA_question(question):
+def promptify_MedQA_question(question):
     promptified = (
         "You are an excellently helpful AI assistant. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as:\n<QUESTION>A 23-year-old pregnant woman at 22 weeks gestation presents with burning upon urination. She states it started 1 day ago and has been worsening despite drinking more water and taking cranberry extract. She otherwise feels well and is followed by a doctor for her pregnancy. Her temperature is 97.7°F (36.5°C), blood pressure is 122/77 mmHg, pulse is 80/min, respirations are 19/min, and oxygen saturation is 98% on room air. Physical exam is notable for an absence of costovertebral angle tenderness and a gravid uterus. Which of the following is the best treatment for this patient? (A) Ampicillin (B) Ceftriaxone (C) Ciprofloxacin (D) Doxycycline (E) Nitrofurantoin</QUESTION>\n<ANSWER> (E) Nitrofurantoin</ANSWER>\n Select the correct choice for the following question. \n <QUESTION>"
         + question
         + "</QUESTION>\n<ANSWER> "
     )
+    return promptified
+
+def promptify_PubMedQA_question(question):
+    promptified = ()
+    return promptified
+
+def promptify_MedMCQA_question(question):
+    promptified = ()
     return promptified
 
 

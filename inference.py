@@ -8,14 +8,34 @@ import re
 import time
 import src.model_init as model_init
 from src.llm import llm as llm
-from src.prompts import promptify_bioASQ_question, promptify_medQA_question
-from parse_benchmark import parse_bioASQ, parse_MedQA
+from src.prompts import promptify_BioASQ_question, promptify_MedQA_question, promptify_PubMedQA_question, promptify_MedMCQA_question
+from parse_benchmark import parse_bioASQ, parse_MedQA, parse_PubMedQA, parse_MedMCQA
 
 #time before batch inference
 start_time = time.time()
 
+#prepare data and methods depending on model and benchmark
+benchmark = "bioASQ5b"
+model = "Llama-2-70B-chat-GPTQ"
+if benchmark == "bioASQ5b":
+    parse_benchmark = parse_bioASQ
+    promptify = promptify_BioASQ_question
+    targetfile = "output/" + model + "-BioASQ.json"
+elif benchmark == "MedQA_US":
+    parse_benchmark = parse_MedQA
+    promptify = promptify_MedQA_question
+    targetfile = "output/" + model + "-MedQA_USMLE.json"
+elif benchmark == "PubMedQA":
+    parse_benchmark = parse_PubMedQA
+    promptify = promptify_PubMedQA_question
+    targetfile = "output/" + model + "-PubMedQA.json"
+elif benchmark == "MedMCQA":
+    parse_benchmark = parse_MedMCQA
+    promptify = promptify_MedMCQA_question
+    targetfile = "output/" + model + "-MedQA_USMLE.json"
+
 # Directory containing model, tokenizer, generator
-model_directory =  "../models/Llama-2-70B-chat-GPTQ"
+model_directory =  "../models/" + model + "/"
 
 # Locate files we need within that directory
 tokenizer_path = os.path.join(model_directory, "tokenizer.model")
@@ -23,26 +43,15 @@ model_config_path = os.path.join(model_directory, "config.json")
 st_pattern = os.path.join(model_directory, "*.safetensors")
 model_path = glob.glob(st_pattern)[0]
 
-benchmark = "bioASQ5b"
-if benchmark == "bioASQ5b":
-    parse_benchmark = parse_bioASQ
-    promptify = promptify_bioASQ_question
-    targetfile = "output/Llama-2-70B-BioASQ-training5b.json"
-elif benchmark == "MedQA_US":
-    parse_benchmark = parse_MedQA
-    promptify = promptify_medQA_question
-    targetfile = "output/Llama-2-70B-MedQA_USMLE_train_ALL1078.json"
-
+#load benchmark, promptify questions
 offset = 1
-limit = 10178
+limit = 11
 benchmark_questions, benchmark_answers = parse_benchmark()
-
 prompts = []
 for question in benchmark_questions[offset:max(limit, len(benchmark_questions))]:
     prompts.append(promptify(question))
 
 print("---------------------Start of inference---------------------")
-
 
 def batch_llm_inference(prompts, max_new_tokens):
     llm_output = []
@@ -51,15 +60,15 @@ def batch_llm_inference(prompts, max_new_tokens):
         llm_output.append(line)
     return llm_output
 
+#perform batch inference
 raw_responses = []
-
 for i in range(len(prompts)//10):
     temp_prompts = list(prompts[i*10:(i+1)*10])
     raw_responses += batch_llm_inference(temp_prompts, 35)
     print("Performed batch inference on prompts " + str(i*10) + " to " + str((i+1)*10) + ".")
-
 print("We have generated " + str(len(raw_responses)) + " responses.")
 
+#detect answers to benchmark questions in response from the LLM
 pattern = r'<ANSWER>(.*?)</ANSWER>'
 responses = []
 for raw_response in raw_responses:
@@ -69,6 +78,7 @@ for raw_response in raw_responses:
     else:
         responses.append("LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: " + raw_response)
 
+#parse the output and write it to file
 output = []
 for i in range(len(responses)):
     instance = []
@@ -79,8 +89,6 @@ for i in range(len(responses)):
         instance.append(benchmark_answers[i+offset])
     instance.append(responses[i])
     output.append(instance)
-
-
 with open(targetfile, "w") as outfile: 
     json.dump(output, outfile)
 
