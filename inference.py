@@ -23,7 +23,7 @@ model_config_path = os.path.join(model_directory, "config.json")
 st_pattern = os.path.join(model_directory, "*.safetensors")
 model_path = glob.glob(st_pattern)[0]
 
-benchmark = "MedQA_US"
+benchmark = "bioASQ5b"
 if benchmark == "bioASQ5b":
     parse_benchmark = parse_bioASQ
     promptify = promptify_bioASQ_question
