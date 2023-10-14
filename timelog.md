@@ -96,3 +96,9 @@
 * *1 hour* Benchmarking on MedQA-USMLE with 1000 questions
 * *2 hours* Refactoring of architecture for greater modularity
 * *1 hour* Figma graph of architecture for better overview
+
+### Saturday - 14 Oct 2023
+* *1 hour* Refactoring of inference script
+* *2 hours* Benchmarking on MedQA-USMLE with 1000 questions
+* *0.5 hours* Listening to an LLM Podcast
+* *1 hour* Further collecting of papers, creation of first overleaf table
