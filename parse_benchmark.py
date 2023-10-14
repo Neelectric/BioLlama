@@ -2,27 +2,25 @@ import json
 import argparse
 from collections import Counter
 
-def parse_bioASQ(version):
-
+def parse_bioASQ(version="5b"):
     with open('benchmarks/BioASQ-training5b/BioASQ-trainingDataset5b.json', 'rb') as json_file:
         json_data = json_file.read().decode('utf-8')
     data = json.loads(json_data)
     num_factoids = 0
     num_non_factoid = 0
-    benchmark = []
+    benchmark_questions = []
+    benchmark_answers = []
     for question in data["questions"]:
         if question["type"] == "factoid":
-            factoid_question = [question['body'], question['exact_answer']]
-            benchmark.append(benchmark)
+            benchmark_questions.append(question['body'])
+            benchmark_answers.append(question['exact_answer'])
             num_factoids += 1
         else:
             num_non_factoid += 1
-    print("Processed " + str(num_factoids) + " factoid questions")
-    print("Processed " + str(num_non_factoid) + " non-factoid questions")
-    print("In total, the benchmark contains " + str(num_factoids + num_non_factoid) + " questions")
-    return ["factoid", benchmark]
+    print("Benchmark contains " + str(num_factoids + num_non_factoid) + " questions, made up of " + str(num_factoids) + " factoid questions and " + str(num_non_factoid) + " non-factoid questions")
+    return benchmark_questions, benchmark_answers
 
-def parse_MedQA(version):
+def parse_MedQA(version="US"):
     #load data from benchmarks/MedQA-USMLE/US/train.jsonl, which has a dictionary on each line
     data = []
     with open('benchmarks/MedQA-USMLE/US/train.jsonl', 'r') as file:
@@ -30,8 +28,7 @@ def parse_MedQA(version):
             # Load each line as a JSON object (dictionary)
             record = json.loads(line)
             data.append(record)
-    print("loaded " + str(len(data)) + " questions from MedQA-USMLE/US/train.jsonl")
-    #print(data[0])
+    print("Loading Benchmark from MedQA-USMLE/US/train.jsonl")
     benchmark_questions = []
     benchmark_answers = []
     num_questions_with_5_options = 0
@@ -47,8 +44,7 @@ def parse_MedQA(version):
         MCQ_answer = "(" + instance['answer_idx'] + ") " + instance["answer"]
         benchmark_questions.append(MCQ_question)
         benchmark_answers.append(MCQ_answer)
-
-    print("of the " + str(len(data)) + " questions, " + str(num_questions_with_5_options) + " had 5 options and " + str(num_questions_with_non_5_options) + " had non-5 options")
+    print("Benchmark contains " + str(len(data)) + " questions, made up of " + str(num_questions_with_5_options) + " with 5 options and " + str(num_questions_with_non_5_options) + " with non-5 options")
 
     return benchmark_questions, benchmark_answers
 
