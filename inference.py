@@ -23,34 +23,25 @@ model_config_path = os.path.join(model_directory, "config.json")
 st_pattern = os.path.join(model_directory, "*.safetensors")
 model_path = glob.glob(st_pattern)[0]
 
-#this until line 48 was working code for in-file loading of bioasq5bfactoid
+benchmark = "MedQA_US"
+if benchmark == "bioASQ5b":
+    parse_benchmark = parse_bioASQ
+    promptify = promptify_bioASQ_question
+    targetfile = "output/Llama-2-70B-BioASQ-training5b.json"
+elif benchmark == "MedQA_US":
+    parse_benchmark = parse_MedQA
+    promptify = promptify_medQA_question
+    targetfile = "output/Llama-2-70B-MedQA_USMLE_train_ALL1078.json"
 
-# with open('benchmarks/BioASQ-training5b/BioASQ-trainingDataset5b.json', 'rb') as json_file:
-#     json_data = json_file.read().decode('utf-8')
-
-# data = json.loads(json_data)
-
-# num = 0
-# benchmark_questions = []
-# benchmark_answers = []
-# for question in data['questions']:
-#     if question['type'] == 'factoid':
-#         num += 1
-#         benchmark_questions.append(question['body'])
-#         benchmark_answers.append(question['exact_answer'])
-# print("Loaded " + str(num) + " factoid questions.")
-# combo = zip(benchmark_questions, benchmark_answers)
-# combo = list(combo)
-# print(combo[0:5])
 offset = 1
-limit = 1001
-benchmark_questions, benchmark_answers = parse_MedQA("US")
+limit = 10178
+benchmark_questions, benchmark_answers = parse_benchmark()
 
 prompts = []
-for question in benchmark_questions[offset:limit]:
-    prompts.append(promptify_medQA_question(question))
+for question in benchmark_questions[offset:max(limit, len(benchmark_questions))]:
+    prompts.append(promptify(question))
 
-print("NOW WE'LL LET THE MODEL WORK ------------------------------------------")
+print("---------------------Start of inference---------------------")
 
 
 def batch_llm_inference(prompts, max_new_tokens):
@@ -73,7 +64,6 @@ pattern = r'<ANSWER>(.*?)</ANSWER>'
 responses = []
 for raw_response in raw_responses:
     response = re.findall(pattern, raw_response, re.DOTALL)
-    print(response)
     if len(response) == 2:
         responses.append(response[1][2:])
     else:
@@ -91,7 +81,7 @@ for i in range(len(responses)):
     output.append(instance)
 
 
-with open("output/Llama-2-70B-MedQA_USMLE_train.json", "w") as outfile: 
+with open(targetfile, "w") as outfile: 
     json.dump(output, outfile)
 
 print("Time for batch inference: " + str(time.time() - start_time))
