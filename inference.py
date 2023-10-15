@@ -45,7 +45,7 @@ model_path = glob.glob(st_pattern)[0]
 
 #load benchmark, promptify questions
 offset = 1
-limit = 11
+limit = 10170
 benchmark_questions, benchmark_answers = parse_benchmark()
 prompts = []
 for question in benchmark_questions[offset:min(limit, len(benchmark_questions))]:
