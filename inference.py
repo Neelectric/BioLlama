@@ -15,8 +15,8 @@ from parse_benchmark import parse_bioASQ, parse_MedQA, parse_PubMedQA, parse_Med
 start_time = time.time()
 
 #prepare data and methods depending on model and benchmark
-benchmark = "bioASQ5b"
-model = "Llama-2-70B-chat-GPTQ"
+benchmark = "MedQA_US"
+model = "Llama-2-13B-chat-GPTQ"
 if benchmark == "bioASQ5b":
     parse_benchmark = parse_bioASQ
     promptify = promptify_BioASQ_question
@@ -48,7 +48,7 @@ offset = 1
 limit = 11
 benchmark_questions, benchmark_answers = parse_benchmark()
 prompts = []
-for question in benchmark_questions[offset:max(limit, len(benchmark_questions))]:
+for question in benchmark_questions[offset:min(limit, len(benchmark_questions))]:
     prompts.append(promptify(question))
 
 print("---------------------Start of inference---------------------")
