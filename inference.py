@@ -8,20 +8,21 @@ import re
 import time
 import src.model_init as model_init
 from src.llm import llm as llm
-from src.prompts import promptify_BioASQ_question, promptify_MedQA_question, promptify_PubMedQA_question, promptify_MedMCQA_question
-from parse_benchmark import parse_bioASQ, parse_MedQA, parse_PubMedQA, parse_MedMCQA
+from src.prompts import promptify_BioASQ_question_no_snippet, promptify_BioASQ_question_with_snippet, promptify_MedQA_question, promptify_PubMedQA_question, promptify_MedMCQA_question
+from parse_benchmark import parse_bioASQ_no_snippet, parse_bioASQ_with_snippet, parse_MedQA, parse_PubMedQA, parse_MedMCQA
 
 #time before batch inference
 start_time = time.time()
 
 #prepare data and methods depending on model and benchmark
-benchmark = "MedQA_US"
-model = "Llama-2-13B-chat-GPTQ"
+benchmark = "bioASQ5b"
+model = "Llama-2-70B-chat-GPTQ"
 if benchmark == "bioASQ5b":
-    parse_benchmark = parse_bioASQ
-    promptify = promptify_BioASQ_question
+    parse_benchmark = parse_bioASQ_with_snippet
+    promptify = promptify_BioASQ_question_with_snippet
     targetfile = "output/" + model + "-BioASQ.json"
 elif benchmark == "MedQA_US":
+    print("IMPLEMENT THE OUTPUTTING AND WRITING TO FILE DOOFUS")
     parse_benchmark = parse_MedQA
     promptify = promptify_MedQA_question
     targetfile = "output/" + model + "-MedQA_USMLE.json"
@@ -44,12 +45,13 @@ st_pattern = os.path.join(model_directory, "*.safetensors")
 model_path = glob.glob(st_pattern)[0]
 
 #load benchmark, promptify questions
-offset = 1
-limit = 10170
+offset = 3
+limit = 487
 benchmark_questions, benchmark_answers = parse_benchmark()
 prompts = []
 for question in benchmark_questions[offset:min(limit, len(benchmark_questions))]:
     prompts.append(promptify(question))
+#print(prompts[0])
 
 print("---------------------Start of inference---------------------")
 
@@ -79,17 +81,21 @@ for raw_response in raw_responses:
         responses.append("LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: " + raw_response)
 
 #parse the output and write it to file
-output = []
-for i in range(len(responses)):
-    instance = []
-    instance.append(benchmark_questions[i+offset])
-    if type(benchmark_answers[i+offset][0]) != type("String lol"):
-        instance.append(benchmark_answers[i+offset])
-    else:
-        instance.append(benchmark_answers[i+offset])
-    instance.append(responses[i])
-    output.append(instance)
-with open(targetfile, "w") as outfile: 
-    json.dump(output, outfile)
+if benchmark == "bioASQ5b":
+    output = []
+    for i in range(len(responses)):
+        instance = []
+        instance.append(benchmark_questions[i+offset][1])
+        if type(benchmark_answers[i+offset][0]) != type("String lol"):
+            instance.append(benchmark_answers[i+offset][0][0])
+        else:
+            instance.append(benchmark_answers[i+offset][0])
+        
+        instance.append(responses[i])
+        output.append(instance)
+    with open(targetfile, "w") as outfile: 
+        json.dump(output, outfile)
+elif benchmark == "MedQA_US":
+    print("NOT YET IMPLEMENTED")
 
 print("Time for batch inference: " + str(time.time() - start_time))
