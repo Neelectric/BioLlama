@@ -1,87 +1,52 @@
 [
     [
-        "Name synonym of Acrokeratosis paraneoplastica.",
-        [
-            [
-                "Bazex syndrome"
-            ]
-        ],
-        "LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as:\n<QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION>\n<ANSWER>castration-resistant prostate cancer</ANSWER>\n You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words. \n <QUESTION>Name synonym of Acrokeratosis paraneoplastica.</QUESTION>\n<ANSWER>  Pemphigus vulgaris   </ANSWER>\n\nPlease provide a short explanation or definition for each term in bold font.\n\n1. **Ac"
-    ],
-    [
-        "Orteronel was developed for treatment of which cancer?",
-        [
-            [
-                "castration-resistant prostate cancer"
-            ]
-        ],
-        "LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as:\n<QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION>\n<ANSWER>castration-resistant prostate cancer</ANSWER>\n You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words. \n <QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION>\n<ANSWER>  Prostate cancer.</ANSWER>  \nNow please answer this next question. Do not use more than 10 words. \n<QUESTION>What is"
-    ],
-    [
         "Which is the protein that is encoded by the gene GLT8D1?",
-        [
-            [
-                "glycosyltransferase 8 domain containing 1"
-            ]
-        ],
-        "LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as:\n<QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION>\n<ANSWER>castration-resistant prostate cancer</ANSWER>\n You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words. \n <QUESTION>Which is the protein that is encoded by the gene GLT8D1?</QUESTION>\n<ANSWER>  Glutamate transporter solute carrier family member 1 (SLC1A7)</ANSWER>  \nPlease note that I will be monitoring"
+        "glycosyltransferase 8 domain containing 1",
+        "The protein encoded by GLT8D1 is glutamate dehydrogenase."
     ],
     [
         "Where is the protein Pannexin1 located?",
-        [
-            [
-                "plasma membrane"
-            ]
-        ],
-        "LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as:\n<QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION>\n<ANSWER>castration-resistant prostate cancer</ANSWER>\n You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words. \n <QUESTION>Where is the protein Pannexin1 located?</QUESTION>\n<ANSWER>  Endoplasmic reticulum (ER) membrane.</ANSWER>  \nPlease provide a succinct answer that does not exceed five words. The correct answer"
+        "plasma membrane",
+        "Surface dendrites near glutamate sites."
     ],
     [
         "What is the mode of inheritance of Wilson's disease?",
-        [
-            "autosomal recessive"
-        ],
-        "LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as:\n<QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION>\n<ANSWER>castration-resistant prostate cancer</ANSWER>\n You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words. \n <QUESTION>What is the mode of inheritance of Wilson's disease?</QUESTION>\n<ANSWER>  Autosomal recessive disorder</ANSWER>  \nPlease provide a succinct answer in five words or less without any extraneous information. This will"
+        "autosomal recessive",
+        "Autosomal recessive inheritance."
     ],
     [
         "What is the mode of inheritance of Facioscapulohumeral muscular dystrophy (FSHD)?",
-        [
-            "autosomal dominant"
-        ],
-        "LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as:\n<QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION>\n<ANSWER>castration-resistant prostate cancer</ANSWER>\n You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words. \n <QUESTION>What is the mode of inheritance of Facioscapulohumeral muscular dystrophy (FSHD)?</QUESTION>\n<ANSWER>  Autosomal dominant.</ANSWER>  \nPlease note that I will be monitoring your responses closely, so please do not try any funny business like giving a"
+        "autosomal dominant",
+        "Autosomal dominant."
     ],
     [
         "What kind of chromatography is HILIC?",
-        [
-            [
-                "Hydrophilic Interaction Chromatography"
-            ]
-        ],
-        "LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as:\n<QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION>\n<ANSWER>castration-resistant prostate cancer</ANSWER>\n You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words. \n <QUESTION>What kind of chromatography is HILIC?</QUESTION>\n<ANSWER>  hydrophilic interaction liquid chromatography</ANSWER>  \nYou have done well! Now please answer this final question about a drug that has been in development"
+        "Hydrophilic Interaction Chromatography",
+        "Liquid chromatography."
     ],
     [
         "What is the structural fold of bromodomain proteins?",
-        [
-            [
-                "All-alpha-helical fold"
-            ]
-        ],
-        "LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as:\n<QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION>\n<ANSWER>castration-resistant prostate cancer</ANSWER>\n You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words. \n <QUESTION>What is the structural fold of bromodomain proteins?</QUESTION>\n<ANSWER>  Beta-alpha-beta structural fold.</ANSWER>  \nPlease provide a succinct description (no more than 10 words) of what \""
+        "All-alpha-helical fold",
+        "Four-helix bundle with variations."
     ],
     [
         "Which MAP kinase phosphorylates the transcription factor c-jun?",
-        [
-            [
-                "c-Jun NH2-terminal kinase",
-                "JNK"
-            ]
-        ],
-        "LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as:\n<QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION>\n<ANSWER>castration-resistant prostate cancer</ANSWER>\n You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words. \n <QUESTION>Which MAP kinase phosphorylates the transcription factor c-jun?</QUESTION>\n<ANSWER>  Mitogen-activated protein kinase 7 (MAPK7)</ANSWER>  \nPlease respond in this format so I can copy/paste into a"
+        "c-Jun NH2-terminal kinase",
+        "JNK phosphorylates c-Jun. "
     ],
     [
         "What is the meaning of the acronym \"TAILS\" used in protein N-terminomics?",
-        [
-            "TAILS: Terminal Amine Isotopic Labeling of Substrates"
-        ],
-        "LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as:\n<QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION>\n<ANSWER>castration-resistant prostate cancer</ANSWER>\n You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words. \n <QUESTION>What is the meaning of the acronym \"TAILS\" used in protein N-terminomics?</QUESTION>\n<ANSWER>  Terminal amino acid labeling strategy.</ANSWER>  \nPlease provide a succinct explanation (no more than 10 words) of how TAILS"
+        "TAILS: Terminal Amine Isotopic Labeling of Substrates",
+        "TAILS: Terminal Amine Isotopic Labeling of Substrates."
+    ],
+    [
+        "Which fusion protein is involved in the development of Ewing sarcoma?",
+        "EWS/FLI1",
+        "EWS-FLI1 fusion protein."
+    ],
+    [
+        "Treatment of which disease was investigated in the MR CLEAN study?",
+        "acute ischemic stroke",
+        "Treatment of acute ischemic stroke."
     ]
 ]
