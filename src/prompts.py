@@ -10,10 +10,12 @@ def promptify_BioASQ_question_with_snippet(question):
     snippets = question[0]
     question_body = question[1]
 
-    promptified = "You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine. You are given the following snippets, from which you must extract the answer to a question. Snippets:\n"
-    for snippet in snippets:
-        promptified += snippet + "\n"
-    promptified += "Please answer the following question using the context provided above. You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words.<QUESTION>" + question_body + "</QUESTION>\n<ANSWER> "
+    promptified = "You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Do not use more than 5 words. Given your training on biomedical data, you are an expert on questions related to biology and medicine." 
+    if len(snippets) > 0:
+        promptified += "You are given the following snippets, from which you must extract the answer to a question. Snippets:\n"
+        for snippet in snippets:
+            promptified += snippet + "\n"
+    promptified += "You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words.<QUESTION>" + question_body + "</QUESTION>\n<ANSWER> "
     return promptified
 
 def promptify_MedQA_question(question):

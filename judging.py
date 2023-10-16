@@ -25,7 +25,7 @@ model_config_path = os.path.join(model_directory, "config.json")
 st_pattern = os.path.join(model_directory, "*.safetensors")
 model_path = glob.glob(st_pattern)[0]
 
-with open('output/Llama-2-70B-BioASQ-training5b.json', 'rb') as json_file:
+with open('output/Llama-2-70B-chat-GPTQ-BioASQ.json', 'rb') as json_file:
     json_data = json_file.read().decode('utf-8')
 
 data = json.loads(json_data)

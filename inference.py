@@ -45,15 +45,15 @@ st_pattern = os.path.join(model_directory, "*.safetensors")
 model_path = glob.glob(st_pattern)[0]
 
 #load benchmark, promptify questions
-offset = 3
-limit = 487
+offset = 0
+limit = 486
 benchmark_questions, benchmark_answers = parse_benchmark()
 prompts = []
 for question in benchmark_questions[offset:min(limit, len(benchmark_questions))]:
     prompts.append(promptify(question))
 #print(prompts[0])
 
-print("---------------------Start of inference---------------------")
+print(f"---------------------Start of inference on questions {offset} to {limit}---------------------")
 
 def batch_llm_inference(prompts, max_new_tokens):
     llm_output = []
@@ -64,10 +64,18 @@ def batch_llm_inference(prompts, max_new_tokens):
 
 #perform batch inference
 raw_responses = []
-for i in range(len(prompts)//10):
-    temp_prompts = list(prompts[i*10:(i+1)*10])
-    raw_responses += batch_llm_inference(temp_prompts, 35)
-    print("Performed batch inference on prompts " + str(i*10) + " to " + str((i+1)*10) + ".")
+if len(prompts) > 10:
+    for i in range(len(prompts)//10):
+        temp_prompts = list(prompts[i*10:(i+1)*10])
+        raw_responses += batch_llm_inference(temp_prompts, 35)
+        print("Performed batch inference on prompts " + str(i*10) + " to " + str((i+1)*10) + ".")
+        # with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
+        #     json.dump(raw_responses, outfile)
+else:
+    raw_responses += batch_llm_inference(prompts, 35)
+    print("Performed batch inference on prompts 0 to " + str(len(prompts)) + ".")
+    with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
+        json.dump(raw_responses, outfile)
 print("We have generated " + str(len(raw_responses)) + " responses.")
 
 #detect answers to benchmark questions in response from the LLM

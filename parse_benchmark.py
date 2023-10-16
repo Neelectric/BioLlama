@@ -47,7 +47,7 @@ def parse_bioASQ_with_snippet(version="5b"):
         else:
             question_types[question["type"]] += 1
         if question["type"] == "factoid":
-            snippet_index = min(20,len(question["snippets"]))
+            snippet_index = min(10,len(question["snippets"]))
             snippets = question["snippets"][0:snippet_index]
             snippets = [snippet['text'] for snippet in snippets]
             benchmark_questions.append([snippets,question['body']])
@@ -55,9 +55,7 @@ def parse_bioASQ_with_snippet(version="5b"):
             num_factoids += 1
         else:
             num_non_factoid += 1
-    print(question_types)
     print(f"Benchmark contains {num_factoids + num_non_factoid} questions, made up of {question_types}")
-    question_index = 11
     return benchmark_questions, benchmark_answers
 
 def parse_MedQA(version="US"):
