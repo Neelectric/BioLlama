@@ -25,7 +25,9 @@ model_config_path = os.path.join(model_directory, "config.json")
 st_pattern = os.path.join(model_directory, "*.safetensors")
 model_path = glob.glob(st_pattern)[0]
 
-with open('output/Llama-2-13B-chat-GPTQ-BioASQ.json', 'rb') as json_file:
+model_to_mark = 'Llama-2-13B-chat-GPTQ'
+
+with open('output/' + model_to_mark + '-BioASQ.json', 'rb') as json_file:
     json_data = json_file.read().decode('utf-8')
 
 data = json.loads(json_data)
@@ -98,7 +100,9 @@ judging_output.insert(0, [correct_string, incorrect_string, weird_string, total_
     
 
 
-with open("output/judging-output-Llama-2-70B-BioASQ-training5b.json", "w") as outfile: 
+with open("output/judging-output-" + model_to_mark + "-BioASQ-training5b.json", "w") as outfile: 
     json.dump(judging_output, outfile)
+
+print("Written output to output/judging-output-" + model_to_mark + "-BioASQ-training5b.json")
 
 print("Time for batch inference: " + str(time.time() - start_time))

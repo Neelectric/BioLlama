@@ -103,6 +103,7 @@ if benchmark == "bioASQ5b":
         output.append(instance)
     with open(targetfile, "w") as outfile: 
         json.dump(output, outfile)
+    print("Written output to" + targetfile)
 elif benchmark == "MedQA_US":
     print("NOT YET IMPLEMENTED")
 
