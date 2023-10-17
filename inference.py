@@ -16,7 +16,7 @@ start_time = time.time()
 
 #prepare data and methods depending on model and benchmark
 benchmark = "bioASQ5b"
-model = "Llama-2-70B-chat-GPTQ"
+model = "Llama-2-13B-chat-GPTQ"
 if benchmark == "bioASQ5b":
     parse_benchmark = parse_bioASQ_with_snippet
     promptify = promptify_BioASQ_question_with_snippet
