@@ -79,7 +79,7 @@
 * *0.5 hours* Drafting E-Mail to Giacomo Frisoni asking for BIOREADER resources
 * *1 hour* Starting to read "Judging LLM-as-judge"
 
-## Week 4 - 
+## Week 4 - 16.5 hours total
 
 ### Tuesday - 10 Oct 2023
 * *0.5 hours* Started reading meta-review of recent advances in NLP
@@ -102,3 +102,14 @@
 * *2 hours* Benchmarking on MedQA-USMLE with 1000 questions
 * *0.5 hours* Listening to an LLM Podcast
 * *1 hour* Further collecting of papers, creation of first overleaf table
+
+### Sunday - 14 Oct 2023
+* *1 hour* Creating of first LaTeX table to represent results
+* *0.5 hours* Further benchmarking on MedQA-USMLE with 10178 questions
+
+## Week 5 - 16.5
+### Monday - 16 Oct 2023
+* *2.5 hours* Refactoring of benchmark parsing and prompting
+* *1.5 hours* Further research into conception of BioASQ and Task B design
+* *1 hour* Adding support for proper snippet consideration in BioASQ
+* *0.5 hours* Suspicious accuracy score of 81.66% using automatic judging
