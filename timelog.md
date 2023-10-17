@@ -107,9 +107,14 @@
 * *1 hour* Creating of first LaTeX table to represent results
 * *0.5 hours* Further benchmarking on MedQA-USMLE with 10178 questions
 
-## Week 5 - 16.5
+## Week 5 - 
 ### Monday - 16 Oct 2023
 * *2.5 hours* Refactoring of benchmark parsing and prompting
 * *1.5 hours* Further research into conception of BioASQ and Task B design
 * *1 hour* Adding support for proper snippet consideration in BioASQ
 * *0.5 hours* Suspicious accuracy score of 81.66% using automatic judging
+
+### Tuesday - 17 Oct 2023
+* *0.5 hours* Fourth Meeting with supervisor
+* *0.5 hours* Re-read of LLM-As-Judge
+* *0.5 hours* Benchmarking of Llama-2-13B on BioASQ and MedQA-USMLE
