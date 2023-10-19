@@ -118,3 +118,8 @@
 * *0.5 hours* Fourth Meeting with supervisor
 * *0.5 hours* Re-read of LLM-As-Judge
 * *0.5 hours* Benchmarking of Llama-2-13B on BioASQ and MedQA-USMLE
+
+### Wednesday - 17 Oct 2023
+* *0.5 hours* Fourth Meeting with supervisor
+* *0.5 hours* Re-read of LLM-As-Judge
+* *0.5 hours* Benchmarking of Llama-2-13B on BioASQ and MedQA-USMLE
