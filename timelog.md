@@ -120,6 +120,10 @@
 * *0.5 hours* Benchmarking of Llama-2-13B on BioASQ and MedQA-USMLE
 
 ### Wednesday - 17 Oct 2023
-* *0.5 hours* Fourth Meeting with supervisor
-* *0.5 hours* Re-read of LLM-As-Judge
-* *0.5 hours* Benchmarking of Llama-2-13B on BioASQ and MedQA-USMLE
+* *0.5 hours* Watched tutorial on how to finetune Llama-2-70B on 48GB GPU RAM
+
+### Thursday - 18 Oct 2023
+* *0.5 hours* Downloaded M42 Llama-2-70b finetune for quantization
+
+### Saturday - 21 Oct 2023
+* *0.5 hours* Further amendment of main results table, 7B BioASQ testing
