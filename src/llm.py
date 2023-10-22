@@ -24,7 +24,10 @@ def llm(model_directory, prompts, max_new_tokens):
     args = parser.parse_args()
     #print("args are as follows: " + str(args))
     args.directory = model_directory
-    args.gpu_split = "17.2,24"
+    if model_directory == "../models/Llama-2-13B-chat-GPTQ/":
+        args.gpu_split = "10,20"
+    else:
+        args.gpu_split = "17.2,24"
     model_init.post_parse(args)
     model_init.get_model_files(args)
 
