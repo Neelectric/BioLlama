@@ -1,12 +1,13 @@
-from src.model import ExLlama, ExLlamaCache, ExLlamaConfig
-from src.tokenizer import ExLlamaTokenizer
-from src.generator import ExLlamaGenerator
-import os, glob
+# from src.model import ExLlama, ExLlamaCache, ExLlamaConfig
+# from src.tokenizer import ExLlamaTokenizer
+# from src.generator import ExLlamaGenerator
+# import src.model_init as model_init
+# import os, glob
+# import argparse
 import json
-import argparse
 import re
 import time
-import src.model_init as model_init
+from tqdm import tqdm
 from src.llm import llm as llm
 from src.prompts import promptify_BioASQ_question_no_snippet, promptify_BioASQ_question_with_snippet, promptify_MedQA_question, promptify_PubMedQA_question, promptify_MedMCQA_question
 from parse_benchmark import parse_bioASQ_no_snippet, parse_BioASQ_with_snippet, parse_MedQA, parse_PubMedQA, parse_MedMCQA
@@ -19,8 +20,8 @@ benchmark = "MedQA" # benchmark from which we take questios
 model = "Llama-2-13B-chat-GPTQ" # model for inference
 
 # index of first question in benchmark to start/end with
-offset = 0
-limit = 100
+offset = 1
+limit = 10178
 
 max_new_tokens = 35 # max number of tokens we allow the model to generate
 
@@ -62,10 +63,10 @@ def batch_llm_inference(prompts, max_new_tokens):
 #perform batch inference
 raw_responses = []
 if len(prompts) > 10:
-    for i in range(len(prompts)//10):
+    for i in tqdm(range(len(prompts)//10), desc="Batch Inference"):
         temp_prompts = list(prompts[i*10:(i+1)*10])
         raw_responses += batch_llm_inference(temp_prompts, max_new_tokens)
-        print("Performed batch inference on prompts " + str(i*10) + " to " + str((i+1)*10) + ".")
+        #print("Performed batch inference on prompts " + str(i*10) + " to " + str((i+1)*10) + ".")
         # with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
         #     json.dump(raw_responses, outfile)
 else:
