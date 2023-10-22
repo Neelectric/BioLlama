@@ -37,12 +37,12 @@ def promptify_PubMedQA_question(question):
     snippets = question[0]
     question_body = question[1]
 
-    promptified = "You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. You must answer with Yes, No or Maybe. Given your training on biomedical data, you are an expert on questions related to biology and medicine."
+    promptified = "You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. You must answer with NOTHING OTHER THAN Yes, No or Maybe. Given your training on biomedical data, you are an expert on questions related to biology and medicine."
     if len(snippets) > 0:
         promptified += " You are given the following snippets, from which you must extract the answer to a question. Snippets:"
         for snippet in snippets:
             promptified += snippet
-    promptified += "You must now respond to the following question with Yes, No or Maybe given the context above. <QUESTION>" + question_body + "</QUESTION><ANSWER> "
+    promptified += " You must now respond to the following question with NOTHING OTHER THAN Yes, No or Maybe given the context above. Do not justify your response, respond with only Yes, No or Maybe. <QUESTION>" + question_body + "</QUESTION><ANSWER> "
     return promptified
 
 

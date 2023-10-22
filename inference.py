@@ -14,9 +14,16 @@ from parse_benchmark import parse_bioASQ_no_snippet, parse_bioASQ_with_snippet, 
 #time before batch inference
 start_time = time.time()
 
-#prepare data and methods depending on model and benchmark
-benchmark = "bioASQ5b"
-model = "Llama-2-13B-chat-GPTQ"
+#central variables to control pipeline
+benchmark = "PubMedQA" # benchmark from which we take questios
+model = "Llama-2-7B-chat-GPTQ" # model for inference
+
+# index of first question in benchmark to start/end with
+offset = 0
+limit = 1000
+
+max_new_tokens = 15 # max number of tokens we allow the model to generate
+
 if benchmark == "bioASQ5b":
     parse_benchmark = parse_bioASQ_with_snippet
     promptify = promptify_BioASQ_question_with_snippet
@@ -33,14 +40,12 @@ elif benchmark == "PubMedQA":
 elif benchmark == "MedMCQA":
     parse_benchmark = parse_MedMCQA
     promptify = promptify_MedMCQA_question
-    targetfile = "output/" + model + "-MedQA_USMLE.json"
+    targetfile = "output/" + model + "-MedMCQA.json"
 
 # Directory containing model, tokenizer, generator
 model_directory =  "../models/" + model + "/"
 
 #load benchmark, promptify questions
-offset = 280
-limit = 340
 benchmark_questions, benchmark_answers = parse_benchmark()
 prompts = []
 for question in benchmark_questions[offset:min(limit, len(benchmark_questions))]:
@@ -57,7 +62,6 @@ def batch_llm_inference(prompts, max_new_tokens):
 
 #perform batch inference
 raw_responses = []
-max_new_tokens = 35
 if len(prompts) > 10:
     for i in range(len(prompts)//10):
         temp_prompts = list(prompts[i*10:(i+1)*10])
@@ -98,6 +102,19 @@ if benchmark == "bioASQ5b":
     with open(targetfile, "w") as outfile: 
         json.dump(output, outfile)
     print("Written output to " + targetfile)
+
+elif benchmark == "PubMedQA":
+    output = []
+    for i in range(len(responses)):
+        instance = []
+        instance.append(benchmark_questions[i+offset][1])
+        instance.append(benchmark_answers[i+offset])
+        instance.append(responses[i])
+        output.append(instance)
+    with open(targetfile, "w") as outfile: 
+        json.dump(output, outfile)
+    print("Written output to " + targetfile)
+
 elif benchmark == "MedQA_US":
     print("NOT YET IMPLEMENTED")
 
