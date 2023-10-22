@@ -126,4 +126,7 @@
 * *0.5 hours* Downloaded M42 Llama-2-70b finetune for quantization
 
 ### Saturday - 21 Oct 2023
-* *0.5 hours* Further amendment of main results table, 7B BioASQ testing
+* *0.5 hours* Further amendment of main results table
+* *0.5 hours* Identified and downloaded appropriate Llama-2-7B chat version (ie 4bit 128g actorder=true)
+* *0.5 hours* Read MedPalm2 paper's treating of PubMedQA, and PubMedQA paper
+* *0.5 hours* Fixed bug where specified llm was ignored and only L2-70B was used for inference in llm.py
