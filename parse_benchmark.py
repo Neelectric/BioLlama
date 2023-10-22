@@ -28,7 +28,7 @@ def parse_bioASQ_no_snippet(version="5b"):
     print(f"Benchmark contains {num_factoids + num_non_factoid} questions, made up of {question_types}")
     return benchmark_questions, benchmark_answers
 
-def parse_bioASQ_with_snippet(version="5b"):
+def parse_BioASQ_with_snippet(version="5b"):
     #read in raw benchmark
     with open('benchmarks/BioASQ-training5b/BioASQ-trainingDataset5b.json', 'rb') as json_file:
         json_data = json_file.read().decode('utf-8')
@@ -112,7 +112,7 @@ if __name__ == "__main__":
     if(args.b == "bioASQ_no_snippet"):
         parse_bioASQ_no_snippet("5b")
     if(args.b == "bioASQ_with_snippet"):
-        parse_bioASQ_with_snippet("5b")
+        parse_BioASQ_with_snippet("5b")
     elif(args.b == "MedQA_US"):
         parse_MedQA("US")
     elif(args.b == "PubMedQA"):
