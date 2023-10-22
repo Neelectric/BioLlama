@@ -5,7 +5,7 @@ import argparse
 def standardize_string_PubMedQA(string):
     return re.sub(r'[. ]+', '', string.strip()).lower()
 
-def mark_USMLE(input):
+def mark_MedQA(input):
     num_correct = 0
     num_total = 0
     for i in range(len(input)):
@@ -49,9 +49,7 @@ if __name__ == "__main__":
         json_data = json_file.read().decode('utf-8')
     data = json.loads(json_data)    
     #call correct parsing function based on argument
-    if(args.b == "USMLE"):
-        mark_USMLE(data)
-    # elif(args.b == "MedQA_US"):
-    #     parse_MedQA("US")
+    if(args.b == "MedQA"):
+        mark_MedQA(data)
     elif(args.b == "PubMedQA"):
         mark_PubMedQA(data)

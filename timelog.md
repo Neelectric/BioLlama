@@ -130,3 +130,6 @@
 * *0.5 hours* Identified and downloaded appropriate Llama-2-7B chat version (ie 4bit 128g actorder=true)
 * *0.5 hours* Read MedPalm2 paper's treating of PubMedQA, and PubMedQA paper
 * *0.5 hours* Fixed bug where specified llm was ignored and only L2-70B was used for inference in llm.py
+
+### Saturday - 21 Oct 2023
+* *2.5 hours* Further efforts to extend coverage of different models under varying benchmarks
