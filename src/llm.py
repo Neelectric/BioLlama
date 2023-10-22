@@ -9,11 +9,7 @@ import src.model_init as model_init
 
 
 #function that creates a callable "llm" object
-def llm(prompts, max_new_tokens):
-
-    # Directory containing model, tokenizer, generator
-    model_directory =  "../models/Llama-2-70B-chat-GPTQ"
-
+def llm(model_directory, prompts, max_new_tokens):
     # Locate files we need within that directory
     tokenizer_path = os.path.join(model_directory, "tokenizer.model")
     model_config_path = os.path.join(model_directory, "config.json")
@@ -37,12 +33,9 @@ def llm(prompts, max_new_tokens):
 
     # Instantiate model
     config = model_init.make_config(args)
-
     config.model_path = model_path                          # supply path to model weights file
-
     model = ExLlama(config)                                 # create ExLlama instance and load the weights
     tokenizer = ExLlamaTokenizer(tokenizer_path)            # create tokenizer from tokenizer model file
-
     cache = ExLlamaCache(model, batch_size = len(prompts))  # create cache for inference
     generator = ExLlamaGenerator(model, tokenizer, cache)   # create generator
 

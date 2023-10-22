@@ -1,6 +1,5 @@
 import json
 import argparse
-from collections import Counter
 
 def parse_bioASQ_no_snippet(version="5b"):
     #read in raw benchmark
@@ -87,8 +86,20 @@ def parse_MedQA(version="US"):
     return benchmark_questions, benchmark_answers
 
 def parse_PubMedQA(version=""):
-    #not yet supported
-    return None, None
+    #read in raw benchmark
+    with open('benchmarks/PubMedQA/ori_pqal.json', 'rb') as json_file:
+        json_data = json_file.read().decode('utf-8')
+    data = json.loads(json_data)
+    #print(len(data.keys()))
+    benchmark_questions = []
+    benchmark_answers = []
+    for key, val in data.items():
+        benchmark_questions.append([val["CONTEXTS"],val["QUESTION"]])
+        benchmark_answers.append(val["final_decision"])
+    print("Benchmark contains " + str(len(data.keys())) + " questions")
+    print(benchmark_questions[0])
+    print(benchmark_answers[0])
+    return benchmark_questions, benchmark_answers
 
 def parse_MedMCQA(version=""):
     #not yet supported
@@ -107,3 +118,5 @@ if __name__ == "__main__":
         parse_bioASQ_with_snippet("5b")
     elif(args.b == "MedQA_US"):
         parse_MedQA("US")
+    elif(args.b == "PubMedQA"):
+        parse_PubMedQA()

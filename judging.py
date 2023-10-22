@@ -15,17 +15,9 @@ from src.prompts import promptify_for_judging
 start_time = time.time()
 
 # Directory containing model, tokenizer, generator
-
 model_directory =  "../models/Llama-2-70B-chat-GPTQ"
 
-# Locate files we need within that directory
-
-tokenizer_path = os.path.join(model_directory, "tokenizer.model")
-model_config_path = os.path.join(model_directory, "config.json")
-st_pattern = os.path.join(model_directory, "*.safetensors")
-model_path = glob.glob(st_pattern)[0]
-
-model_to_mark = 'Llama-2-13B-chat-GPTQ'
+model_to_mark = 'Llama-2-7B-chat-GPTQ'
 
 with open('output/' + model_to_mark + '-BioASQ.json', 'rb') as json_file:
     json_data = json_file.read().decode('utf-8')
@@ -39,12 +31,9 @@ for instance in data:
                    
 print("NOW WE'LL LET THE MODEL WORK ------------------------------------------")
 
-
-
 def raw_llm_inference(prompts, max_new_tokens):
     llm_output = []
-
-    llm_generator = llm(prompts, max_new_tokens)
+    llm_generator = llm(model_directory, prompts, max_new_tokens)
     for line in llm_generator:
         llm_output.append(line)
     return llm_output
@@ -98,8 +87,6 @@ print(accuracy_string)
 
 judging_output.insert(0, [correct_string, incorrect_string, weird_string, total_string, accuracy_string])
     
-
-
 with open("output/judging-output-" + model_to_mark + "-BioASQ-training5b.json", "w") as outfile: 
     json.dump(judging_output, outfile)
 
