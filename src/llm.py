@@ -22,10 +22,13 @@ def llm(model_directory, prompts, max_new_tokens):
     parser = argparse.ArgumentParser(description = "Benchmark tests for ExLlama")
     model_init.add_args(parser)
     args = parser.parse_args()
-    #print("args are as follows: " + str(args))
+    
     args.directory = model_directory
     if model_directory == "../models/Llama-2-13B-chat-GPTQ/":
-        args.gpu_split = "10,20"
+        #args.gpu_split = "10,20"
+        args.gpu_split = "17.4,24"
+        args.length = 1700
+        args.gpu_peer_fix = True
     else:
         args.gpu_split = "17.2,24"
     model_init.post_parse(args)
@@ -33,6 +36,7 @@ def llm(model_directory, prompts, max_new_tokens):
 
     # Globals
     model_init.set_globals(args)
+    #print("args are as follows: " + str(args))
 
     # Instantiate model
     config = model_init.make_config(args)
