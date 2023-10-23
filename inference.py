@@ -9,21 +9,23 @@ import re
 import time
 from tqdm import tqdm
 from src.llm import llm as llm
+from src.count_tokens import count_tokens
 from src.prompts import promptify_BioASQ_question_no_snippet, promptify_BioASQ_question_with_snippet, promptify_MedQA_question, promptify_PubMedQA_question, promptify_MedMCQA_question
 from parse_benchmark import parse_bioASQ_no_snippet, parse_BioASQ_with_snippet, parse_MedQA, parse_PubMedQA, parse_MedMCQA
+
 
 #time before batch inference
 start_time = time.time()
 
 #central variables to control pipeline
-benchmark = "MedQA" # benchmark from which we take questios
-model = "Llama-2-13B-chat-GPTQ" # model for inference
+benchmark = "PubMedQA" # benchmark from which we take questios
+model = "Llama-2-7B-chat-GPTQ" # model for inference
 
 # index of first question in benchmark to start/end with
-offset = 1
-limit = 10178
+offset = 0
+limit = 1000
 
-max_new_tokens = 35 # max number of tokens we allow the model to generate
+max_new_tokens = 30 # max number of tokens we allow the model to generate
 
 if benchmark == "BioASQ5b":
     parse_benchmark = parse_BioASQ_with_snippet
@@ -53,7 +55,16 @@ for question in benchmark_questions[offset:min(limit, len(benchmark_questions))]
 
 print(f"--------------Start of inference of {model} on questions {offset} to {limit}------------------")
 
+global_max_seq_len = 0
+
 def batch_llm_inference(prompts, max_new_tokens):
+    max_sequence_len = 0
+    for prompt in prompts:
+        max_sequence_len = max(count_tokens(model_directory,prompt), max_sequence_len)
+    global global_max_seq_len
+    global_max_seq_len = max(max_sequence_len, global_max_seq_len)
+    print(f"Longest local prompt is {max_sequence_len} tokens long, longest global prompt is {global_max_seq_len}")
+    
     llm_output = []
     llm_generator = llm(model_directory, prompts, max_new_tokens)
     for line in llm_generator:
@@ -69,6 +80,7 @@ if len(prompts) > 10:
         #print("Performed batch inference on prompts " + str(i*10) + " to " + str((i+1)*10) + ".")
         # with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
         #     json.dump(raw_responses, outfile)
+        
 else:
     raw_responses += batch_llm_inference(prompts, max_new_tokens)
     print("Performed batch inference on prompts 0 to " + str(len(prompts)) + ".")

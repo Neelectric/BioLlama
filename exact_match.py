@@ -31,7 +31,7 @@ def mark_PubMedQA(input):
             num_incorrect += 1
         else:
             num_invalid += 1
-            print(student_response + "\n")
+            #print(student_response + "\n")
     print(f"Marking model {model_to_grade} performance on benchmark {benchmark_to_grade}")
     print(f"Out of {num_total}, accuracy is {num_correct/num_total} with a total of {num_correct} correct, {num_incorrect} incorrect and {num_invalid} invalid responses.")
 
