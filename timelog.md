@@ -107,7 +107,7 @@
 * *1 hour* Creating of first LaTeX table to represent results
 * *0.5 hours* Further benchmarking on MedQA-USMLE with 10178 questions
 
-## Week 5 - 
+## Week 5 - 14.5 hours total
 ### Monday - 16 Oct 2023
 * *2.5 hours* Refactoring of benchmark parsing and prompting
 * *1.5 hours* Further research into conception of BioASQ and Task B design
@@ -138,6 +138,9 @@
 * *1.5 hours* Attempts at bugfixing 7B and 13B inference on all three benchmarks
 * *0.5 hours* Further benchmarking of 7B and 13B on MedQA
 
-### Monday - 23 Octo 2023
+## Week 5 - 20.5 hours total
+### Monday - 23 Oct 2023
 * *0.5 hours* Write up of count_tokens.py utility script to count tokens in prompt
-* *3 hours* Fixed bug where LLM was not split on GPUs properly, creating graph for initial baselines
+* *2.5 hours* Fixed bug where LLM was not split on GPUs properly, creating graph for initial baselines
+* *2 hours* Further reading into ATLAS, RETRO, RETRO++ and FiD
+* *0.5 hours* Further research into RETRO implementations from lucidrains and NVIDIA
