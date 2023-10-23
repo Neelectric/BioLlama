@@ -133,3 +133,11 @@
 
 ### Saturday - 21 Oct 2023
 * *2.5 hours* Further efforts to extend coverage of different models under varying benchmarks
+
+### Sunday - 22 Oct 2023
+* *1.5 hours* Attempts at bugfixing 7B and 13B inference on all three benchmarks
+* *0.5 hours* Further benchmarking of 7B and 13B on MedQA
+
+### Monday - 23 Octo 2023
+* *0.5 hours* Write up of count_tokens.py utility script to count tokens in prompt
+* *3 hours* Fixed bug where LLM was not split on GPUs properly, creating graph for initial baselines
