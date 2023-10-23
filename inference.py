@@ -18,12 +18,12 @@ from parse_benchmark import parse_bioASQ_no_snippet, parse_BioASQ_with_snippet, 
 start_time = time.time()
 
 #central variables to control pipeline
-benchmark = "PubMedQA" # benchmark from which we take questios
-model = "Llama-2-7B-chat-GPTQ" # model for inference
+benchmark = "MedQA" # benchmark from which we take questios
+model = "Llama-2-13B-chat-GPTQ" # model for inference
 
 # index of first question in benchmark to start/end with
-offset = 0
-limit = 1000
+offset = 1
+limit = 10178
 
 max_new_tokens = 30 # max number of tokens we allow the model to generate
 
@@ -58,12 +58,12 @@ print(f"--------------Start of inference of {model} on questions {offset} to {li
 global_max_seq_len = 0
 
 def batch_llm_inference(prompts, max_new_tokens):
-    max_sequence_len = 0
-    for prompt in prompts:
-        max_sequence_len = max(count_tokens(model_directory,prompt), max_sequence_len)
-    global global_max_seq_len
-    global_max_seq_len = max(max_sequence_len, global_max_seq_len)
-    print(f"Longest local prompt is {max_sequence_len} tokens long, longest global prompt is {global_max_seq_len}")
+    # max_sequence_len = 0
+    # for prompt in prompts:
+    #     max_sequence_len = max(count_tokens(model_directory,prompt), max_sequence_len)
+    # global global_max_seq_len
+    # global_max_seq_len = max(max_sequence_len, global_max_seq_len)
+    # print(f"Longest local prompt is {max_sequence_len} tokens long, longest global prompt is {global_max_seq_len}")
     
     llm_output = []
     llm_generator = llm(model_directory, prompts, max_new_tokens)

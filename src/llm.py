@@ -26,8 +26,8 @@ def llm(model_directory, prompts, max_new_tokens):
     args.directory = model_directory
     if model_directory == "../models/Llama-2-13B-chat-GPTQ/":
         #args.gpu_split = "10,20"
-        args.gpu_split = "17.4,24"
-        args.length = 1700
+        args.gpu_split = "4,20"
+        #args.length = 1700
         args.gpu_peer_fix = True
     else:
         args.gpu_split = "17.2,24"
