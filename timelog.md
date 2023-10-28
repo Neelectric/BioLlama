@@ -138,9 +138,25 @@
 * *1.5 hours* Attempts at bugfixing 7B and 13B inference on all three benchmarks
 * *0.5 hours* Further benchmarking of 7B and 13B on MedQA
 
-## Week 5 - 20.5 hours total
+## Week 5 - 14.5 hours total
 ### Monday - 23 Oct 2023
 * *0.5 hours* Write up of count_tokens.py utility script to count tokens in prompt
 * *2.5 hours* Fixed bug where LLM was not split on GPUs properly, creating graph for initial baselines
 * *2 hours* Further reading into ATLAS, RETRO, RETRO++ and FiD
 * *0.5 hours* Further research into RETRO implementations from lucidrains and NVIDIA
+
+### Tuesday - 24 Oct 2023
+* *0.5 hours* Fifth meeting with supervisor
+* *0.5 hours* Further research into 
+
+### Wednesday - 25 Oct 2023
+* *0.5 hours* Contact with the M42 team on benchmarking Med42 on BioASQ5b
+
+### Thursday - 26 Oct 2023
+* *1 hour* Perusing "Editing Knowledge in LLMs", "Improving QA" and "Biomedical LLMs" by P. Lewis
+
+### Friday - 27 Oct 2023
+* *1 hour* Reading Anthropic's LLM evaluation paper
+
+### Saturday - 28 Oct 2023
+* *1 hour* Starting to implement MedMCQA for full model comparisons
