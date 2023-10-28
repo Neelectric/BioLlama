@@ -18,12 +18,12 @@ from parse_benchmark import parse_bioASQ_no_snippet, parse_BioASQ_with_snippet, 
 start_time = time.time()
 
 #central variables to control pipeline
-benchmark = "MedQA" # benchmark from which we take questios
-model = "Llama-2-13B-chat-GPTQ" # model for inference
+benchmark = "MedMCQA" # benchmark from which we take questios
+model = "Llama-2-70B-chat-GPTQ" # model for inference
 
 # index of first question in benchmark to start/end with
 offset = 1
-limit = 10178
+limit = 10
 
 max_new_tokens = 30 # max number of tokens we allow the model to generate
 

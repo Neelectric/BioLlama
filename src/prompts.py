@@ -47,7 +47,7 @@ def promptify_PubMedQA_question(question):
 
 
 def promptify_MedMCQA_question(question):
-    promptified = ()
+    promptified = "You are an excellently helpful AI assistant. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as:<QUESTION> Which of the following is not true for myelinated nerve fibers: (A) Impulse through myelinated fibers is slower than non-myelinated fibers (B) Membrane currents are generated at nodes of Ranvier (C) Saltatory conduction of impulses is seen (D) Local anesthesia is effective only when the nerve is not covered by myelin sheath</QUESTION><ANSWER> (A) Impulse through myelinated fibers is slower than non-myelinated fibers</ANSWER> Select the correct choice for the following question. <QUESTION>"
     return promptified
 
 

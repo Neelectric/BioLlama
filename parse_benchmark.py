@@ -3,7 +3,7 @@ import argparse
 
 def parse_bioASQ_no_snippet(version="5b"):
     #read in raw benchmark
-    with open('benchmarks/BioASQ-training5b/BioASQ-trainingDataset5b.json', 'rb') as json_file:
+    with open('benchmarks/BioASQ/BioASQ-trainingDataset5b.json', 'rb') as json_file:
         json_data = json_file.read().decode('utf-8')
     data = json.loads(json_data)
     num_factoids = 0
@@ -30,7 +30,7 @@ def parse_bioASQ_no_snippet(version="5b"):
 
 def parse_BioASQ_with_snippet(version="5b"):
     #read in raw benchmark
-    with open('benchmarks/BioASQ-training5b/BioASQ-trainingDataset5b.json', 'rb') as json_file:
+    with open('benchmarks/BioASQ/BioASQ-trainingDataset5b.json', 'rb') as json_file:
         json_data = json_file.read().decode('utf-8')
     data = json.loads(json_data)
     num_factoids = 0
@@ -78,7 +78,7 @@ def parse_MedQA(version="US"):
         else:
             num_questions_with_non_5_options += 1
         for option in instance["options"].keys():
-            MCQ_question += "\n" + "(" + option + ") " + instance["options"][option]
+            MCQ_question += "\n (" + option + ") " + instance["options"][option]
         MCQ_answer = "(" + instance['answer_idx'] + ") " + instance["answer"]
         benchmark_questions.append(MCQ_question)
         benchmark_answers.append(MCQ_answer)
@@ -99,8 +99,34 @@ def parse_PubMedQA(version=""):
     return benchmark_questions, benchmark_answers
 
 def parse_MedMCQA(version=""):
-    #not yet supported
-    return None, None
+    #load raw data from benchmarks/MedMCQA/train.json
+    data = []
+    with open('benchmarks/MedMCQA/train.json', 'r') as file:
+        json_data = file.read()
+    data = json.loads(json_data)
+    print("Loading Benchmark from MedMCQA/train.json")
+    benchmark_questions = []
+    benchmark_answers = []
+    num_questions_single = 0
+    num_questions_multiple = 0
+
+    for instance in data:
+        question_output = instance["question"]
+        if instance["choice_type"] == "single":
+            num_questions_single += 1
+        else:
+            num_questions_multiple += 1
+            
+        options = [instance["opa"], instance["opb"], instance["opc"], instance["opd"]]
+        question_output += "\n (A) " + instance["opa"]
+        question_output += "\n (B) " + instance["opb"]
+        question_output += "\n (C) " + instance["opc"]
+        question_output += "\n (D) " + instance["opd"]
+
+        benchmark_questions.append(question_output)
+        #the answer index starts with 1, not with 0; all correct options should be in the range of [ 1, 2, 3, 4 ]
+        benchmark_answers.append(options[instance["cop"]]+1)
+    return benchmark_questions, benchmark_answers
 
 
 if __name__ == "__main__":
@@ -117,3 +143,5 @@ if __name__ == "__main__":
         parse_MedQA("US")
     elif(args.b == "PubMedQA"):
         parse_PubMedQA()
+    elif(args.b == "MedMCQA"):
+        parse_MedMCQA()
