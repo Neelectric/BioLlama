@@ -23,7 +23,7 @@ model = "Llama-2-70B-chat-GPTQ" # model for inference
 
 # index of first question in benchmark to start/end with
 offset = 1
-limit = 10
+limit = 1001
 
 max_new_tokens = 30 # max number of tokens we allow the model to generate
 
@@ -91,10 +91,15 @@ print("We have generated " + str(len(raw_responses)) + " responses.")
 #detect answers to benchmark questions in response from the LLM
 pattern = r'<ANSWER>(.*?)</[aA][nN][sS][wW][eE][rR]>'
 responses = []
+
+
 for raw_response in raw_responses:
+    #print(raw_response)
     response = re.findall(pattern, raw_response, re.DOTALL)
-    if len(response) > 1:
+    if len(response) > 1 and benchmark != "MedMCQA":
         responses.append(response[1][2:])
+    elif len(response) > 1 and benchmark == "MedMCQA":
+        responses.append(response[1])
     else:
         responses.append("LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: " + raw_response)
 
@@ -115,7 +120,7 @@ if benchmark == "BioASQ5b":
         json.dump(output, outfile)
     print("Written output to " + targetfile)
 
-elif benchmark == "MedQA":
+elif benchmark == "MedQA" or benchmark == "MedMCQA":
     output = []
     for i in range(len(responses)):
         instance = []

@@ -102,9 +102,13 @@ def parse_MedMCQA(version=""):
     #load raw data from benchmarks/MedMCQA/train.json
     data = []
     with open('benchmarks/MedMCQA/train.json', 'r') as file:
-        json_data = file.read()
-    data = json.loads(json_data)
+        for line in file:
+            # Parse the JSON object from the line and append it to the list
+            json_obj = json.loads(line)
+            data.append(json_obj)
     print("Loading Benchmark from MedMCQA/train.json")
+    #print(f"second question: {data[4]}")
+
     benchmark_questions = []
     benchmark_answers = []
     num_questions_single = 0
@@ -117,21 +121,30 @@ def parse_MedMCQA(version=""):
         else:
             num_questions_multiple += 1
             
-        options = [instance["opa"], instance["opb"], instance["opc"], instance["opd"]]
-        question_output += "\n (A) " + instance["opa"]
-        question_output += "\n (B) " + instance["opb"]
-        question_output += "\n (C) " + instance["opc"]
-        question_output += "\n (D) " + instance["opd"]
-
+        #options = [instance["opa"], instance["opb"], instance["opc"], instance["opd"]]
+        question_output += "\n (1) " + instance["opa"]
+        question_output += "\n (2) " + instance["opb"]
+        question_output += "\n (3) " + instance["opc"]
+        question_output += "\n (4) " + instance["opd"]
         benchmark_questions.append(question_output)
+        
+        #adjusted_answer_index = int(instance["cop"])
+        #benchmark_answers.append(str(adjusted_answer_index))
+
         #the answer index starts with 1, not with 0; all correct options should be in the range of [ 1, 2, 3, 4 ]
-        benchmark_answers.append(options[instance["cop"]]+1)
+        benchmark_answers.append(str(instance["cop"]))
+    num_total = num_questions_single + num_questions_multiple
+    #divide num_questions_single by num_total to 2 decimal places
+    percent_single = round(num_questions_single/num_total, 2) *100
+    percent_multiple = round(num_questions_multiple/num_total, 2) *100
+    print(f"Benchmark contains {len(data)} questions, made up to {percent_single}% with single answers and {percent_multiple}% with multiple answers")
+    print(f"Only adding the {num_questions_single} questions with single answers to the benchmark")
     return benchmark_questions, benchmark_answers
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--b', type=str, help="Name of the benchmark to parse.")
+    parser.add_argument('-b', type=str, help="Name of the benchmark to parse.")
     args = parser.parse_args()
     
     #call correct parsing function based on argument
@@ -144,4 +157,8 @@ if __name__ == "__main__":
     elif(args.b == "PubMedQA"):
         parse_PubMedQA()
     elif(args.b == "MedMCQA"):
-        parse_MedMCQA()
+        benchmark_questions, benchmark_answers = parse_MedMCQA()
+        for i in range(1):
+            print(benchmark_questions[i])
+            print(benchmark_answers[i])
+        

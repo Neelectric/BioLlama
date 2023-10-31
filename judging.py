@@ -13,9 +13,11 @@ start_time = time.time()
 # Directory containing model, tokenizer, generator
 model_directory =  "../models/Llama-2-70B-chat-GPTQ"
 
-model_to_mark = 'Llama-2-13B-chat-GPTQ'
+#which model and benchmark combo to mark
+model_to_mark = 'Llama-2-7B-chat-GPTQ'
+benchmark_to_mark = "MedMCQA"
 
-with open('output/' + model_to_mark + '-BioASQ.json', 'rb') as json_file:
+with open('output/' + model_to_mark + '-' + benchmark_to_mark + '.json', 'rb') as json_file:
     json_data = json_file.read().decode('utf-8')
 
 data = json.loads(json_data)
@@ -23,8 +25,13 @@ prompts = []
 
 for instance in data:
     prompts.append(promptify_for_judging(instance[0], instance[1], instance[2]))
+
+start_index = 0
+end_index = 10
+
+prompts = prompts[start_index:end_index]
                    
-print(f"--------Start of Llama-2-70B marking {model_to_mark} on BioASQ5b--------")
+print(f"--------Start of Llama-2-70B marking {model_to_mark} on {benchmark_to_mark}--------")
 
 def raw_llm_inference(prompts, max_new_tokens):
     llm_output = []
@@ -82,9 +89,9 @@ print(accuracy_string)
 
 judging_output.insert(0, [correct_string, incorrect_string, weird_string, total_string, accuracy_string])
     
-with open("output/judging-output-" + model_to_mark + "-BioASQ-training5b.json", "w") as outfile: 
+with open("output/judging-output-" + model_to_mark + "-" + benchmark_to_mark + ".json", "w") as outfile: 
     json.dump(judging_output, outfile)
 
-print("Written output to output/judging-output-" + model_to_mark + "-BioASQ-training5b.json")
+print("Written output to output/judging-output-" + model_to_mark + "-" + benchmark_to_mark + ".json")
 
 print("Time for batch inference: " + str(time.time() - start_time))

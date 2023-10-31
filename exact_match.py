@@ -13,7 +13,8 @@ def mark_MedQA(input):
         if input[i][1] == input[i][2]:
             num_correct += 1
 
-    print("Accuracy is " + str(num_correct/num_total) + " with a total of " + str(num_total) + " questions.")
+    print(f"Marking model {model_to_grade} performance on benchmark {benchmark_to_grade}")
+    print("Accuracy is " + str(num_correct/num_total) + " with a total of " + str(num_total) + " responses.")
 
 def mark_PubMedQA(input):
     valid_answers = ["yes","maybe","no"]
@@ -35,6 +36,24 @@ def mark_PubMedQA(input):
     print(f"Marking model {model_to_grade} performance on benchmark {benchmark_to_grade}")
     print(f"Out of {num_total}, accuracy is {num_correct/num_total} with a total of {num_correct} correct, {num_incorrect} incorrect and {num_invalid} invalid responses.")
 
+def mark_MedMCQA(input):
+    num_correct = 0
+    num_incorrect = 0
+    num_total = 0
+
+    for i in range(len(input)):
+        num_total += 1
+        if input[i][1] == input[i][2]:
+            num_correct += 1
+        else:
+            num_incorrect += 1
+
+    #print("Accuracy is " + str(num_correct/num_total) + " with a total of " + str(num_total) + " questions.")
+    print(f"Marking model {model_to_grade} performance on benchmark {benchmark_to_grade}")
+    print(f"Out of {num_total}, accuracy is {num_correct/num_total} with a total of {num_correct} correct and {num_incorrect} incorrect responses.")
+
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-m', type=str, help="Name of the model that answered questions.")
@@ -53,3 +72,5 @@ if __name__ == "__main__":
         mark_MedQA(data)
     elif(args.b == "PubMedQA"):
         mark_PubMedQA(data)
+    elif(args.b == "MedMCQA"):
+        mark_MedMCQA(data)
