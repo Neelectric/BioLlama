@@ -145,7 +145,13 @@ def parse_MedMCQA(version=""):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-b', type=str, help="Name of the benchmark to parse.")
-    parser.add_argument('-r', type=bool, help="Whether a random sample of 100 questions should be written to file.")
+    #add a boolean argument r to write a random sample of 100 questions to file
+    parser.add_argument('-r', action='store_true', help="Whether a random sample of 100 questions should be written to file.")
+    
+
+
+
+    #parser.add_argument('-r', type=bool, help="Whether a random sample of 100 questions should be written to file.")
     args = parser.parse_args()
     
     #call correct parsing function based on argument
@@ -164,3 +170,17 @@ if __name__ == "__main__":
             print(benchmark_answers[i])
         
 #add 100 random benchmark questions to benchmarks/benchmark_random_samples
+    if(args.r):
+        import random
+        random.seed(42)
+        random_indices = random.sample(range(len(benchmark_questions)), 100)
+        #now write to a new json file
+        random_questions = [benchmark_questions[i] for i in random_indices]
+        random_answers = [benchmark_answers[i] for i in random_indices]
+        random_sample = {"questions":random_questions, "answers":random_answers}
+        #create a new json file with the random sample, for this specific benchmark
+        with open(f'benchmarks/benchmark_random_samples/{args.b}_random_sample.json', 'w') as outfile:
+            json.dump(random_sample, outfile)
+        print("Wrote random sample of 100 questions to benchmarks/benchmark_random_samples/" + args.b + "_random_sample.json")
+
+        
