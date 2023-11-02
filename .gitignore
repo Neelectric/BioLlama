@@ -4,8 +4,10 @@
 /database/
 vectorstore/db_faiss/train.txt.index
 vectorstore/db_JSON/train.txt.json
-benchmarks/BioASQ/
-benchmarks/MedMCQA/
-benchmarks/MedQA-USMLE
-benchmarks/PubMedQA/
+# benchmarks/BioASQ/
+# benchmarks/MedMCQA/
+# benchmarks/MedQA-USMLE
+# benchmarks/PubMedQA/
+/benchmarks
+/benchmarks/MedMCQA
 
