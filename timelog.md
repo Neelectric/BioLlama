@@ -164,3 +164,9 @@
 ## Week 6
 ### Monday - 30 Oct 2023
  * *1 hour* Reading "Improving qa robustness" by Sebastian Riedel and Patrick Lewis 2020 paper on BioLLM SOTA
+
+ ### Tuesday - 31 Oct 2023
+ * *0.5 hours* Sixth meeting with supervisor
+
+ ### Wednesday - 1 Nov 2023
+ * *1 hour* Reading blogposts on MoE LLMs

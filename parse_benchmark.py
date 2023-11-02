@@ -145,20 +145,22 @@ def parse_MedMCQA(version=""):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-b', type=str, help="Name of the benchmark to parse.")
+    parser.add_argument('-r', type=bool, help="Whether a random sample of 100 questions should be written to file.")
     args = parser.parse_args()
     
     #call correct parsing function based on argument
     if(args.b == "bioASQ_no_snippet"):
-        parse_bioASQ_no_snippet("5b")
+       benchmark_questions, benchmark_answers = parse_bioASQ_no_snippet("5b")
     if(args.b == "bioASQ_with_snippet"):
-        parse_BioASQ_with_snippet("5b")
+        benchmark_questions, benchmark_answers = parse_BioASQ_with_snippet("5b")
     elif(args.b == "MedQA_US"):
-        parse_MedQA("US")
+        benchmark_questions, benchmark_answers = parse_MedQA("US")
     elif(args.b == "PubMedQA"):
-        parse_PubMedQA()
+        benchmark_questions, benchmark_answers = parse_PubMedQA()
     elif(args.b == "MedMCQA"):
         benchmark_questions, benchmark_answers = parse_MedMCQA()
         for i in range(1):
             print(benchmark_questions[i])
             print(benchmark_answers[i])
         
+#add 100 random benchmark questions to benchmarks/benchmark_random_samples
