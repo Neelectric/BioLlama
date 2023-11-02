@@ -4,5 +4,8 @@
 /database/
 vectorstore/db_faiss/train.txt.index
 vectorstore/db_JSON/train.txt.json
-benchmarks/BioASQ-training5b/
-benchmarks/Task5BGoldenEnriched/
+benchmarks/BioASQ/
+benchmarks/MedMCQA/
+benchmarks/MedQA-USMLE
+benchmarks/PubMedQA/
+
