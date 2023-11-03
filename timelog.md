@@ -170,3 +170,7 @@
 
  ### Wednesday - 1 Nov 2023
  * *1 hour* Reading blogposts on MoE LLMs
+
+  ### Thursday - 2 Nov 2023
+ * *1 hour* Fixing a massive branch divergence by adding new branch develop
+ * *0.5 hours* Added 100 question samples for each benchmark

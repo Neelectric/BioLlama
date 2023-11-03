@@ -98,16 +98,16 @@ def parse_PubMedQA(version=""):
         benchmark_answers.append(val["final_decision"])
     return benchmark_questions, benchmark_answers
 
-def parse_MedMCQA(version=""):
-    #load raw data from benchmarks/MedMCQA/train.json
+def parse_MedMCQA(version="train.json"):
+
+    #load raw data from benchmarks/MedMCQA/ + version
     data = []
-    with open('benchmarks/MedMCQA/train.json', 'r') as file:
+    with open('benchmarks/MedMCQA/'+version, 'r') as file:
         for line in file:
             # Parse the JSON object from the line and append it to the list
             json_obj = json.loads(line)
             data.append(json_obj)
-    print("Loading Benchmark from MedMCQA/train.json")
-    #print(f"second question: {data[4]}")
+    print(f"Loading Benchmark from MedMCQA/{version}.json")
 
     benchmark_questions = []
     benchmark_answers = []
@@ -121,15 +121,11 @@ def parse_MedMCQA(version=""):
         else:
             num_questions_multiple += 1
             
-        #options = [instance["opa"], instance["opb"], instance["opc"], instance["opd"]]
         question_output += "\n (1) " + instance["opa"]
         question_output += "\n (2) " + instance["opb"]
         question_output += "\n (3) " + instance["opc"]
         question_output += "\n (4) " + instance["opd"]
         benchmark_questions.append(question_output)
-        
-        #adjusted_answer_index = int(instance["cop"])
-        #benchmark_answers.append(str(adjusted_answer_index))
 
         #the answer index starts with 1, not with 0; all correct options should be in the range of [ 1, 2, 3, 4 ]
         benchmark_answers.append(str(instance["cop"]))
@@ -141,17 +137,10 @@ def parse_MedMCQA(version=""):
     print(f"Only adding the {num_questions_single} questions with single answers to the benchmark")
     return benchmark_questions, benchmark_answers
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-b', type=str, help="Name of the benchmark to parse.")
-    #add a boolean argument r to write a random sample of 100 questions to file
-    parser.add_argument('-r', action='store_true', help="Whether a random sample of 100 questions should be written to file.")
-    
-
-
-
-    #parser.add_argument('-r', type=bool, help="Whether a random sample of 100 questions should be written to file.")
+    parser.add_argument('-r', type=str, help="Whether a random sample of 100 questions should be written to file.")
     args = parser.parse_args()
     
     #call correct parsing function based on argument
@@ -169,18 +158,18 @@ if __name__ == "__main__":
             print(benchmark_questions[i])
             print(benchmark_answers[i])
         
-#add 100 random benchmark questions to benchmarks/benchmark_random_samples
+#add r random benchmark questions to benchmarks/benchmark_random_samples
     if(args.r):
+        r = int(args.r)
         import random
         random.seed(42)
-        random_indices = random.sample(range(len(benchmark_questions)), 100)
-        #now write to a new json file
+        random_indices = random.sample(range(len(benchmark_questions)), r)
         random_questions = [benchmark_questions[i] for i in random_indices]
         random_answers = [benchmark_answers[i] for i in random_indices]
         random_sample = {"questions":random_questions, "answers":random_answers}
         #create a new json file with the random sample, for this specific benchmark
         with open(f'benchmarks/benchmark_random_samples/{args.b}_random_sample.json', 'w') as outfile:
             json.dump(random_sample, outfile)
-        print("Wrote random sample of 100 questions to benchmarks/benchmark_random_samples/" + args.b + "_random_sample.json")
+        print(f"Wrote random sample of {r} questions to benchmarks/benchmark_random_samples/{args.b}_random_sample.json")
 
         
