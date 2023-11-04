@@ -159,7 +159,7 @@
 * *1 hour* Reading Anthropic's LLM evaluation paper
 
 ### Saturday - 28 Oct 2023
-* *1 hour* Starting to implement MedMCQA for full model comparisons
+ * *1 hour* Starting to implement MedMCQA for full model comparisons
 
 ## Week 6
 ### Monday - 30 Oct 2023
@@ -168,9 +168,15 @@
  ### Tuesday - 31 Oct 2023
  * *0.5 hours* Sixth meeting with supervisor
 
- ### Wednesday - 1 Nov 2023
+ ### Wednesday - 01 Nov 2023
  * *1 hour* Reading blogposts on MoE LLMs
 
-  ### Thursday - 2 Nov 2023
+### Thursday - 02 Nov 2023
  * *1 hour* Fixing a massive branch divergence by adding new branch develop
  * *0.5 hours* Added 100 question samples for each benchmark
+
+### Friday - 03 Nov 2023
+ * *1 hour* Started a graph explaining a potential classifier system
+
+### Saturday - 04 Nov 2023
+ * *1 hour* Continuation of classifier graph, data visualisations on MedMCQA

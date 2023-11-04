@@ -99,7 +99,6 @@ def parse_PubMedQA(version=""):
     return benchmark_questions, benchmark_answers
 
 def parse_MedMCQA(version="train.json"):
-
     #load raw data from benchmarks/MedMCQA/ + version
     data = []
     with open('benchmarks/MedMCQA/'+version, 'r') as file:
@@ -108,13 +107,19 @@ def parse_MedMCQA(version="train.json"):
             json_obj = json.loads(line)
             data.append(json_obj)
     print(f"Loading Benchmark from MedMCQA/{version}.json")
-
     benchmark_questions = []
     benchmark_answers = []
     num_questions_single = 0
     num_questions_multiple = 0
+    subject_names = {}
+    #print(data[0])
 
     for instance in data:
+        #add topic name to dictionary
+        if instance["subject_name"] not in subject_names:
+            subject_names[instance["subject_name"]] = 1
+        else:
+            subject_names[instance["subject_name"]] += 1        
         question_output = instance["question"]
         if instance["choice_type"] == "single":
             num_questions_single += 1
@@ -135,6 +140,8 @@ def parse_MedMCQA(version="train.json"):
     percent_multiple = round(num_questions_multiple/num_total, 2) *100
     print(f"Benchmark contains {len(data)} questions, made up to {percent_single}% with single answers and {percent_multiple}% with multiple answers")
     print(f"Only adding the {num_questions_single} questions with single answers to the benchmark")
+    for subject in subject_names:
+        print(f"{subject}: {subject_names[subject]}")
     return benchmark_questions, benchmark_answers
 
 if __name__ == "__main__":
@@ -154,7 +161,7 @@ if __name__ == "__main__":
         benchmark_questions, benchmark_answers = parse_PubMedQA()
     elif(args.b == "MedMCQA"):
         benchmark_questions, benchmark_answers = parse_MedMCQA()
-        for i in range(1):
+        for i in range(0):
             print(benchmark_questions[i])
             print(benchmark_answers[i])
         
