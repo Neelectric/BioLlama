@@ -1,6 +1,7 @@
 from src.model import ExLlama, ExLlamaCache, ExLlamaConfig
 from src.tokenizer import ExLlamaTokenizer
 from src.generator import ExLlamaGenerator
+from src.alt_generator import ExLlamaAltGenerator
 import os, glob
 import json
 import argparse
@@ -9,7 +10,7 @@ import src.model_init as model_init
 
 
 #function that creates a callable "llm" object
-def llm(model_directory, prompts, max_new_tokens):
+def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
     # Locate files we need within that directory
     tokenizer_path = os.path.join(model_directory, "tokenizer.model")
     model_config_path = os.path.join(model_directory, "config.json")
@@ -30,6 +31,9 @@ def llm(model_directory, prompts, max_new_tokens):
         #args.length = 1700
         args.gpu_peer_fix = True
     else:
+        # args.gpu_split = "17.2,24"
+        #args.gpu_split = "24,17"
+        args.gpu_peer_fix = True
         args.gpu_split = "17.2,24"
     model_init.post_parse(args)
     model_init.get_model_files(args)
@@ -44,8 +48,11 @@ def llm(model_directory, prompts, max_new_tokens):
     model = ExLlama(config)                                 # create ExLlama instance and load the weights
     tokenizer = ExLlamaTokenizer(tokenizer_path)            # create tokenizer from tokenizer model file
     cache = ExLlamaCache(model, batch_size = len(prompts))  # create cache for inference
-    generator = ExLlamaGenerator(model, tokenizer, cache)   # create generator
-
+    if generator_mode == "std":
+        generator = ExLlamaGenerator(model, tokenizer, cache)   # create generator
+    elif generator_mode == "alt":
+        generator = ExLlamaAltGenerator(model, tokenizer, cache)
+        generator.settings.stop_strings = ["</ANSWER>"]
     # Configure generator
     generator.disallow_tokens([tokenizer.eos_token_id])
     generator.settings.token_repetition_penalty_max = 1.2

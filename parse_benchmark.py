@@ -140,8 +140,9 @@ def parse_MedMCQA(version="train.json"):
     percent_multiple = round(num_questions_multiple/num_total, 2) *100
     print(f"Benchmark contains {len(data)} questions, made up to {percent_single}% with single answers and {percent_multiple}% with multiple answers")
     print(f"Only adding the {num_questions_single} questions with single answers to the benchmark")
-    for subject in subject_names:
-        print(f"{subject}: {subject_names[subject]}")
+    #uncomment the following to display the number of questions per subject
+    # for subject in subject_names:
+    #     print(f"{subject}: {subject_names[subject]}")
     return benchmark_questions, benchmark_answers
 
 if __name__ == "__main__":
@@ -161,7 +162,7 @@ if __name__ == "__main__":
         benchmark_questions, benchmark_answers = parse_PubMedQA()
     elif(args.b == "MedMCQA"):
         benchmark_questions, benchmark_answers = parse_MedMCQA()
-        for i in range(0):
+        for i in range(1):
             print(benchmark_questions[i])
             print(benchmark_answers[i])
         
