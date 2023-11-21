@@ -33,7 +33,7 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
     else:
         # args.gpu_split = "17.2,24"
         #args.gpu_split = "24,17"
-        args.gpu_peer_fix = True
+        #args.gpu_peer_fix = True
         args.gpu_split = "17.2,24"
     model_init.post_parse(args)
     model_init.get_model_files(args)
@@ -47,23 +47,41 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
     config.model_path = model_path                          # supply path to model weights file
     model = ExLlama(config)                                 # create ExLlama instance and load the weights
     tokenizer = ExLlamaTokenizer(tokenizer_path)            # create tokenizer from tokenizer model file
-    cache = ExLlamaCache(model, batch_size = len(prompts))  # create cache for inference
-    if generator_mode == "std":
-        generator = ExLlamaGenerator(model, tokenizer, cache)   # create generator
-    elif generator_mode == "alt":
-        generator = ExLlamaAltGenerator(model, tokenizer, cache)
-        generator.settings.stop_strings = ["</ANSWER>"]
+    
     # Configure generator
-    generator.disallow_tokens([tokenizer.eos_token_id])
-    generator.settings.token_repetition_penalty_max = 1.2
-    generator.settings.temperature = 0.01
-    generator.settings.top_p = 0.65
-    generator.settings.top_k = 100
-    generator.settings.typical = 0.5
+    if generator_mode == "std":
+        if type(prompts == str):
+            prompts = [prompts]
+        cache = ExLlamaCache(model, batch_size = len(prompts))  # create cache for inference
+        generator = ExLlamaGenerator(model, tokenizer, cache)   # create generator
+        generator.disallow_tokens([tokenizer.eos_token_id])
+        generator.settings.token_repetition_penalty_max = 1.2
+        generator.settings.temperature = 0.01
+        generator.settings.top_p = 0.65
+        generator.settings.top_k = 100
+        generator.settings.typical = 0.5
 
-    # Generate, batched
-    output = generator.generate_simple(prompts, max_new_tokens = max_new_tokens)
+        
+        # Generate, batched
+        output = generator.generate_simple(prompts, max_new_tokens = max_new_tokens)
 
+    elif generator_mode == "alt":
+        cache = ExLlamaCache(model, batch_size = 1)  # create cache for inference
+        generator = ExLlamaAltGenerator(model, tokenizer, cache)
+        generator.settings.token_repetition_penalty_max = 1.2
+        generator.settings.temperature = 0.01
+        generator.settings.top_p = 0.65
+        generator.settings.top_k = 100
+        generator.settings.typical = 0.5
+
+
+        #generator.settings.stop_strings = ["</ANSWER>"]
+        stop_conditions = ["</ANSWER>"]
+        output = generator.generate(prompts, max_new_tokens=max_new_tokens, gen_settings=generator.settings, stop_conditions=stop_conditions, encode_special_characters=False)
+    
+    
+
+    
     # for line in output:
     #     print("---")
     #     print(line)

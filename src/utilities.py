@@ -29,3 +29,7 @@ def load_benchmark(benchmark_filepath, type):
     print("Returning " + str(num) + " questions.")
     return questions, exact_answers
 
+
+def write_to_readme(result):
+    return
+

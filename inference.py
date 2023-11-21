@@ -14,7 +14,12 @@ from src.prompts import promptify_BioASQ_question_no_snippet, promptify_BioASQ_q
 from parse_benchmark import parse_bioASQ_no_snippet, parse_BioASQ_with_snippet, parse_MedQA, parse_PubMedQA, parse_MedMCQA
 
 
-def inference(model="Llama-2-70B-chat-GPTQ", benchmark="MedMCQA", b_start = 0, b_end = None, max_new_tokens = 30):
+def inference(model="Llama-2-70B-chat-GPTQ", 
+              benchmark="MedMCQA", 
+              b_start = 0, 
+              b_end = 1, 
+              max_new_tokens = 30,
+              inference_mode = "std"):
     #time before batch inference
     start_time = time.time()
 
@@ -24,7 +29,7 @@ def inference(model="Llama-2-70B-chat-GPTQ", benchmark="MedMCQA", b_start = 0, b
 
     # index of first question in benchmark to start/end with
     offset = b_start
-    limit = b_end if b_end != None else 10
+    limit = b_end
 
     max_new_tokens = 30 # max number of tokens we allow the model to generate
 
@@ -56,6 +61,8 @@ def inference(model="Llama-2-70B-chat-GPTQ", benchmark="MedMCQA", b_start = 0, b
 
     print(f"--------------Start of inference of {model} on questions {offset} to {limit}------------------")
 
+    for prompt in prompts:
+        print(type(prompt))
     def batch_llm_inference(prompts, max_new_tokens):
         llm_output = []
         llm_generator = llm(model_directory, prompts, max_new_tokens)
@@ -63,23 +70,24 @@ def inference(model="Llama-2-70B-chat-GPTQ", benchmark="MedMCQA", b_start = 0, b
             llm_output.append(line)
         return llm_output
 
-    #perform batch inference
     raw_responses = []
-    if len(prompts) > 10:
-        for i in tqdm(range(len(prompts)//10), desc="Batch Inference"):
-            temp_prompts = list(prompts[i*10:(i+1)*10])
-            raw_responses += batch_llm_inference(temp_prompts, max_new_tokens)
-            #print("Performed batch inference on prompts " + str(i*10) + " to " + str((i+1)*10) + ".")
-            # with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
-            #     json.dump(raw_responses, outfile)
-            
-    else:
-        raw_responses += batch_llm_inference(prompts, max_new_tokens)
-        print("Performed batch inference on prompts 0 to " + str(len(prompts)) + ".")
-        with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
-            json.dump(raw_responses, outfile)
-    print("We have generated " + str(len(raw_responses)) + " responses.")
-
+    #perform batch inference
+    if inference_mode == "std":
+        if len(prompts) > 10:
+            for i in tqdm(range(len(prompts)//10), desc="Batch Inference"):
+                temp_prompts = list(prompts[i*10:(i+1)*10])
+                raw_responses += batch_llm_inference(temp_prompts, max_new_tokens)
+                
+        else:
+            raw_responses += batch_llm_inference(prompts, max_new_tokens)
+            print("Performed batch inference on prompts 0 to " + str(len(prompts)) + ".")
+            with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
+                json.dump(raw_responses, outfile)
+        print("We have generated " + str(len(raw_responses)) + " responses.")
+    elif inference_mode == "alt":
+        for prompt in tqdm(prompts, desc="Alt Inference"):
+            raw_responses.append(llm(model_directory, prompt, max_new_tokens, generator_mode="alt"))
+        print("We have generated " + str(len(raw_responses)) + " responses.")
     #detect answers to benchmark questions in response from the LLM
     pattern = r'<ANSWER>(.*?)</[aA][nN][sS][wW][eE][rR]>'
     responses = []
