@@ -5,18 +5,18 @@ The aim of this project is to enhance models of varying sizes from the Llama2 fa
 
 ## Results
 The table below shows preliminary results, as reported by other papers or recorded by me
-|    Model   |  Size  | BioASQ5b snippets  | PubMedQA | MedQA-USMLE | MedMCQA |
-|:----------:|:------:|:------------------:|:--------:|:-----------:|:-------:|
-|  BIOREADER | 229.5M |        81.88       |     -    |    42.96    |    -    |
-|  Llama2 7B |   7B   |        73.75       |   54.5   |    21.22    |   30.4  |
-| Llama2 13B |   13B  |        78.33       |   46.4   |    28.27    |   40.2  |
-| Llama2 70B |   70B  |        85.41       |   69.8   |    34.48    |   39.1  |
-|     M42    |   70B  |          -         |     -    |     61.5    |   60.9  |
-|  Med-PaLM  |  540B  |          -         |   79.0   |     67.6    |   57.6  |
-| Med-PaLM 2 |  540B  |          -         |   81.8   |     86.5    |   72.3  |
-|  RAGLlama  |   70B  |                    |          |             |         |
-|  BioLlama  |   70B  |                    |          |             |         |
 
+| Model      | Size   | BioASQ5b snippets   | PubMedQA   | MedQA-USMLE   | MedMCQA   |
+|:-----------|:-------|:--------------------|:-----------|:--------------|:----------|
+| BIOREADER  | 229.5M | 81.88               | -          | 42.96         | -         |
+| Llama2 7B  | 7B     | 73.75               | 54.5       | 21.22         | 30.4      |
+| Llama2 13B | 13B    | 78.33               | 46.4       | 28.27         | 40.2      |
+| Llama2 70B | 70B    | 85.41               | 69.8       | 34.48         | 39.1      |
+| M42        | 70B    | -                   | -          | 61.5          | 60.9      |
+| Med-PaLM   | 540B   | -                   | 79.0       | 67.6          | 57.6      |
+| Med-PaLM 2 | 540B   | -                   | 81.8       | 86.5          | 72.3      |
+| RAGLlama   | 70B    |                     |            |               |           |
+| BioLlama   | 70B    |                     | 99.99      |               |           |
 ## 🔎 Dissertation
 The dissertation is on the following overleaf project: https://www.overleaf.com/read/pvgmnfpxtvby
 

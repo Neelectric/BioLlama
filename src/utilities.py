@@ -4,7 +4,10 @@ import glob
 import faiss
 import json
 
-with open('config/config.yml', 'r', encoding='utf8') as ymlfile:
+import pandas as pd
+from io import StringIO
+
+with open('../config/config.yml', 'r', encoding='utf8') as ymlfile:
     cfg = box.Box(yaml.safe_load(ymlfile))
 
 def load_knowledge_db(knowledge_db_name):
@@ -29,7 +32,47 @@ def load_benchmark(benchmark_filepath, type):
     print("Returning " + str(num) + " questions.")
     return questions, exact_answers
 
+def write_to_readme(model, benchmark, result):
+    #read README file
+    with open('../README.md', 'r') as file:
+        readme = file.read()
+    
+    #split README into parts
+    before_table, table, after_table = readme.split("<!-- table -->")
+    print(table)
 
-def write_to_readme(result):
+    #read table into a dataframe
+    df = pd.read_csv(StringIO(table), sep='|')
+    #delete the first row containing a bunch of -s
+    df = df.iloc[1:]
+    #print(df)
+
+    #some column strings have excess whitespace, remove it
+    df.columns = df.columns.str.strip()
+    #same for row strings
+    df['Model'] = df['Model'].str.strip()
+
+    #edit cell where row 'Model' = model and column 'Benchmark' = benchmark
+    df.loc[df['Model'] == model, benchmark] = result
+    #print this change
+    print(df.loc[df['Model'] == model, benchmark])
+    
+    #convert dataframe back to a markdown table
+    df = df.drop(columns=['Unnamed: 0'])
+    df = df.drop(columns=['Unnamed: 7'])
+    new_table = df.to_markdown(index=False)
+    #
+    print(new_table)
+
+    #combine parts
+    new_readme = before_table + '\n' + new_table + after_table
+    print(new_readme)
+
+    #write to README
+    with open('../README.md', 'w') as file:
+        file.write(new_readme)
+
     return
+
+write_to_readme("BioLlama", "PubMedQA", 99.99 )
 
