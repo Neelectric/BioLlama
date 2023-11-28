@@ -6,6 +6,7 @@ The aim of this project is to enhance models of varying sizes from the Llama2 fa
 ## Results
 The table below shows preliminary results, as reported by other papers or recorded by me
 
+ <!-- table -->
 | Model      | Size   | BioASQ5b snippets   | PubMedQA   | MedQA-USMLE   | MedMCQA   |
 |:-----------|:-------|:--------------------|:-----------|:--------------|:----------|
 | BIOREADER  | 229.5M | 81.88               | -          | 42.96         | -         |
@@ -17,9 +18,27 @@ The table below shows preliminary results, as reported by other papers or record
 | Med-PaLM 2 | 540B   | -                   | 81.8       | 86.5          | 72.3      |
 | RAGLlama   | 70B    |                     |            |               |           |
 | BioLlama   | 70B    |                     | 99.99      |               |           |
+<!-- table -->
+
 ## 🔎 Dissertation
 The dissertation is on the following overleaf project: https://www.overleaf.com/read/pvgmnfpxtvby
 
+<!-- changelog -->
+
+
+
+
+
+## Changelog
+ * 2023-11-28 01:25:06 | BioLlama | PubMedQA | 99.99
+
+ * 2023-11-28 01:25:07 | BioLlama | PubMedQA | 99.99
+
+ * 2023-11-28 01:25:21 | BioLlama | PubMedQA | 99.99
+
+ * 2023-11-28 01:25:22 | BioLlama | PubMedQA | 99.99
+
+<!-- changelog -->
 
 ## ✉ Contacts
 * Neel Rajani, Neel.R@web.de

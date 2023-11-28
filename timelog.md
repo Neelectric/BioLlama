@@ -180,3 +180,32 @@
 
 ### Saturday - 04 Nov 2023
  * *1 hour* Continuation of classifier graph, data visualisations on MedMCQA
+
+## Week 7
+### Monday - 06 Nov 2023
+ * *0.5 hours* Minor bugfixes
+
+ ### Tuesday - 07 Nov 2023
+ * *0.5 hours* Seventh meeting with supervisor
+
+## Week 8
+### Monday - 13 Nov 2023
+ * *0.5 hours* Minor bugfixes
+
+ ### Tuesday - 14 Nov 2023
+ * *0.5 hours* Eigth meeting with supervisor
+
+## Week 9
+### Monday - 20 Nov 2023
+ * *0.5 hours* Minor bugfixes
+
+ ### Tuesday - 21 Nov 2023
+ * *0.5 hours* Ninth meeting with supervisor
+
+## Week 10
+### Monday - 27 Nov 2023
+ * *2 hours* Small changes to automatic README changes
+
+### Tuesday - 28 Nov 2023
+ * *0.5 hours* Addition of automatic timelog to README
+ * *0.5 hours* Tenth meeting with supervisor

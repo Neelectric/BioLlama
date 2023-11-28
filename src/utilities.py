@@ -6,6 +6,7 @@ import json
 
 import pandas as pd
 from io import StringIO
+import datetime
 
 with open('../config/config.yml', 'r', encoding='utf8') as ymlfile:
     cfg = box.Box(yaml.safe_load(ymlfile))
@@ -64,8 +65,17 @@ def write_to_readme(model, benchmark, result):
     #
     print(new_table)
 
+    #
+    before_changelog_after_table, changelog, after_changelog_after_table = after_table.split("<!-- changelog -->")
+
+    #current date and time
+    now = datetime.datetime.now()
+    changelog += " * " + now.strftime("%Y-%m-%d %H:%M:%S") + " | " + model + " | " + benchmark + " | " + str(result) + "\n"
+
+    after_table = before_changelog_after_table + '<!-- changelog -->\n' + changelog + "\n<!-- changelog -->"+ after_changelog_after_table
+
     #combine parts
-    new_readme = before_table + '\n' + new_table + after_table
+    new_readme = before_table + '<!-- table -->\n' + new_table + "\n<!-- table -->"+ after_table
     print(new_readme)
 
     #write to README
