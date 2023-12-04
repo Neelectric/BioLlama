@@ -13,25 +13,29 @@ from src.count_tokens import count_tokens
 from src.prompts import promptify_BioASQ_question_no_snippet, promptify_BioASQ_question_with_snippet, promptify_MedQA_question, promptify_PubMedQA_question, promptify_MedMCQA_question
 from parse_benchmark import parse_bioASQ_no_snippet, parse_BioASQ_with_snippet, parse_MedQA, parse_PubMedQA, parse_MedMCQA
 
-
+#method summary:
+# 1. Load specified benchmark
+# 2. Prepare specified model
+# 3. Promptify questions
+# 4. Perform batch inference on benchmark questions
+# 5. Parse output
+# 6. Write output to file
 def inference(model="Llama-2-70B-chat-GPTQ", 
               benchmark="MedMCQA", 
               b_start = 0, 
               b_end = 1, 
               max_new_tokens = 30,
-              inference_mode = "std"):
+              inference_mode = "std",
+              retrieval = False):
     #time before batch inference
     start_time = time.time()
 
-    #central variables to control pipeline
-    # benchmark = "MedMCQA" # benchmark from which we take questios
-    # model = "Llama-2-70B-chat-GPTQ" # model for inference
-
-    # index of first question in benchmark to start/end with
+    #index of first question in benchmark to start/end with
     offset = b_start
     limit = b_end
 
-    max_new_tokens = 30 # max number of tokens we allow the model to generate
+    #max number of tokens we allow the model to generate
+    max_new_tokens = 30 
 
     if benchmark == "BioASQ5b":
         parse_benchmark = parse_BioASQ_with_snippet
@@ -50,12 +54,13 @@ def inference(model="Llama-2-70B-chat-GPTQ",
         promptify = promptify_MedMCQA_question
         targetfile = "output/" + model + "-MedMCQA.json"
 
-    # Directory containing model, tokenizer, generator
+    #directory containing model, tokenizer, generator
     model_directory =  "../models/" + model + "/"
 
     #load benchmark, promptify questions
     benchmark_questions, benchmark_answers = parse_benchmark()
     prompts = []
+    raw_responses = []
     for question in benchmark_questions[offset:min(limit, len(benchmark_questions))]:
         prompts.append(promptify(question))
 
@@ -70,14 +75,12 @@ def inference(model="Llama-2-70B-chat-GPTQ",
             llm_output.append(line)
         return llm_output
 
-    raw_responses = []
     #perform batch inference
     if inference_mode == "std":
         if len(prompts) > 10:
             for i in tqdm(range(len(prompts)//10), desc="Batch Inference"):
                 temp_prompts = list(prompts[i*10:(i+1)*10])
                 raw_responses += batch_llm_inference(temp_prompts, max_new_tokens)
-                
         else:
             raw_responses += batch_llm_inference(prompts, max_new_tokens)
             print("Performed batch inference on prompts 0 to " + str(len(prompts)) + ".")
@@ -88,13 +91,12 @@ def inference(model="Llama-2-70B-chat-GPTQ",
         for prompt in tqdm(prompts, desc="Alt Inference"):
             raw_responses.append(llm(model_directory, prompt, max_new_tokens, generator_mode="alt"))
         print("We have generated " + str(len(raw_responses)) + " responses.")
+
     #detect answers to benchmark questions in response from the LLM
     pattern = r'<ANSWER>(.*?)</[aA][nN][sS][wW][eE][rR]>'
     responses = []
 
-
     for raw_response in raw_responses:
-        #print(raw_response)
         response = re.findall(pattern, raw_response, re.DOTALL)
         if len(response) > 1 and benchmark != "MedMCQA":
             responses.append(response[1][2:])

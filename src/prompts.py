@@ -65,3 +65,12 @@ def promptify_for_judging(question, true_answer, model_response):
         + "</student_response><judging>The student response is"
     )
     return promptified
+
+#def promptify_for_retrieval_augmentation(promptified, chunks):
+
+#need to make judging modular
+
+#need to make promptify modular:
+#system prompt
+#few shot
+#
