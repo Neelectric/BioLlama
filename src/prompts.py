@@ -72,5 +72,8 @@ def promptify_for_judging(question, true_answer, model_response):
 
 #need to make promptify modular:
 #system prompt
+#retrieved docs
 #few shot
-#
+#question
+
+

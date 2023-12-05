@@ -209,3 +209,7 @@
 ### Tuesday - 28 Nov 2023
  * *0.5 hours* Addition of automatic timelog to README
  * *0.5 hours* Tenth meeting with supervisor
+
+### Monday - 04 Dec 2023
+ * *2 hours* First steps towards simple retrieval system
+ * *1 hour* Important changes to promptification
