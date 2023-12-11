@@ -1,17 +1,12 @@
-# from src.model import ExLlama, ExLlamaCache, ExLlamaConfig
-# from src.tokenizer import ExLlamaTokenizer
-# from src.generator import ExLlamaGenerator
-# import src.model_init as model_init
-# import os, glob
-# import argparse
 import json
 import re
 import time
+import argparse
 from tqdm import tqdm
 from src.llm import llm as llm
 from src.count_tokens import count_tokens
-from src.prompts import promptify_BioASQ_question_no_snippet, promptify_BioASQ_question_with_snippet, promptify_MedQA_question, promptify_PubMedQA_question, promptify_MedMCQA_question
 from parse_benchmark import parse_bioASQ_no_snippet, parse_BioASQ_with_snippet, parse_MedQA, parse_PubMedQA, parse_MedMCQA
+from src.prompts2 import promptify, promptify_for_judging
 
 #method summary:
 # 1. Load specified benchmark
@@ -39,20 +34,14 @@ def inference(model="Llama-2-70B-chat-GPTQ",
 
     if benchmark == "BioASQ5b":
         parse_benchmark = parse_BioASQ_with_snippet
-        promptify = promptify_BioASQ_question_with_snippet
-        targetfile = "output/" + model + "-BioASQ.json"
     elif benchmark == "MedQA":
         parse_benchmark = parse_MedQA
-        promptify = promptify_MedQA_question
-        targetfile = "output/" + model + "-MedQA.json"
     elif benchmark == "PubMedQA":
         parse_benchmark = parse_PubMedQA
-        promptify = promptify_PubMedQA_question
-        targetfile = "output/" + model + "-PubMedQA.json"
     elif benchmark == "MedMCQA":
         parse_benchmark = parse_MedMCQA
-        promptify = promptify_MedMCQA_question
-        targetfile = "output/" + model + "-MedMCQA.json"
+
+    targetfile = "output/" + model + "-" + benchmark + ".json"
 
     #directory containing model, tokenizer, generator
     model_directory =  "../models/" + model + "/"
@@ -62,12 +51,10 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     prompts = []
     raw_responses = []
     for question in benchmark_questions[offset:min(limit, len(benchmark_questions))]:
-        prompts.append(promptify(question))
+        prompts.append(promptify(benchmark, question))
 
     print(f"--------------Start of inference of {model} on questions {offset} to {limit}------------------")
 
-    for prompt in prompts:
-        print(type(prompt))
     def batch_llm_inference(prompts, max_new_tokens):
         llm_output = []
         llm_generator = llm(model_directory, prompts, max_new_tokens)
@@ -82,6 +69,9 @@ def inference(model="Llama-2-70B-chat-GPTQ",
                 temp_prompts = list(prompts[i*10:(i+1)*10])
                 raw_responses += batch_llm_inference(temp_prompts, max_new_tokens)
         else:
+            print("prompts is of type " + str(type(prompts)) + " and length " + str(len(prompts)))
+            print("prompts[0] is of type " + str(type(prompts[0])) + " and length " + str(len(prompts[0])))
+            print("prompt[0] is " + prompts[0])
             raw_responses += batch_llm_inference(prompts, max_new_tokens)
             print("Performed batch inference on prompts 0 to " + str(len(prompts)) + ".")
             with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
@@ -147,3 +137,41 @@ def inference(model="Llama-2-70B-chat-GPTQ",
         print("Written output to " + targetfile)
 
     print("Time for batch inference: " + str(time.time() - start_time))
+
+
+# (model="Llama-2-70B-chat-GPTQ", 
+#               benchmark="MedMCQA", 
+#               b_start = 0, 
+#               b_end = 1, 
+#               max_new_tokens = 30,
+#               inference_mode = "std",
+#               retrieval = False):
+
+
+#main method
+if __name__ == "__main__":
+    #parse arguments
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("--model", default="Llama-2-70B-chat-GPTQ", help="specify model to use")
+    # parser.add_argument("--benchmark", default="MedMCQA", help="specify benchmark to use")
+    # parser.add_argument("--b_start", default=0, help="specify index of first question in benchmark to start with")
+    # parser.add_argument("--b_end", default=1, help="specify index of last question in benchmark to end with")
+    # parser.add_argument("--max_new_tokens", default=30, help="specify maximum number of tokens to generate")
+    # parser.add_argument("--inference_mode", default="std", help="specify inference mode")
+    # parser.add_argument("--retrieval", default=False, help="specify whether to perform retrieval")
+    # args = parser.parse_args()
+
+    # inference(model=args.model, 
+    #           benchmark=args.benchmark, 
+    #           b_start = int(args.b_start), 
+    #           b_end = int(args.b_end), 
+    #           max_new_tokens = int(args.max_new_tokens),
+    #           inference_mode = args.inference_mode,
+    #           retrieval = bool(args.retrieval))
+    inference(model="Llama-2-70B-chat-GPTQ",
+                benchmark="MedMCQA",
+                b_start = 0,
+                b_end = 20,
+                max_new_tokens = 30,
+                inference_mode = "std",
+                retrieval = False)

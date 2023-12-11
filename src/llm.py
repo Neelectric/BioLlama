@@ -31,7 +31,6 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
         #args.length = 1700
         args.gpu_peer_fix = True
     else:
-        # args.gpu_split = "17.2,24"
         #args.gpu_split = "24,17"
         #args.gpu_peer_fix = True
         args.gpu_split = "17.2,24"
@@ -50,7 +49,7 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
     
     # Configure generator
     if generator_mode == "std":
-        if type(prompts == str):
+        if type(prompts) == str:
             prompts = [prompts]
         cache = ExLlamaCache(model, batch_size = len(prompts))  # create cache for inference
         generator = ExLlamaGenerator(model, tokenizer, cache)   # create generator
@@ -60,6 +59,10 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
         generator.settings.top_p = 0.65
         generator.settings.top_k = 100
         generator.settings.typical = 0.5
+        # print("about to perform batch inference")
+        # print(type(prompts))
+        # print(type(prompts[0]))
+        # print(prompts)
 
         
         # Generate, batched
