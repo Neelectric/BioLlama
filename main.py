@@ -6,9 +6,9 @@
 # -b : the benchmark to use. Options are BioASQ5b_factoid_with_snippet, MedQA, PubMedQA, MedMCQA
 # -e : the evaluation method to use. Options are exact_match and judging
 
-from src.llm import llm
-from src.prompts import promptify_MedMCQA_question
-from inference import inference
+from utilities.llm import llm
+from utilities.old_prompts import promptify_MedMCQA_question
+from utilities.inference import inference
 
 # model_directory =  "../models/Llama-2-70B-chat-GPTQ/"
 

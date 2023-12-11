@@ -3,8 +3,8 @@ import argparse
 from tqdm import tqdm
 import re
 import time
-from src.llm import llm as llm
-from src.prompts import promptify_for_judging
+from utilities.llm import llm as llm
+from utilities.old_prompts import promptify_for_judging
 
 #time before batch inference
 

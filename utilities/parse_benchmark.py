@@ -112,7 +112,6 @@ def parse_MedMCQA(version="train.json"):
     num_questions_single = 0
     num_questions_multiple = 0
     subject_names = {}
-    #print(data[0])
 
     for instance in data:
         #add topic name to dictionary
@@ -143,6 +142,20 @@ def parse_MedMCQA(version="train.json"):
     #uncomment the following to display the number of questions per subject
     # for subject in subject_names:
     #     print(f"{subject}: {subject_names[subject]}")
+    return benchmark_questions, benchmark_answers
+
+def parse_benchmark(benchmark):
+    #call correct parsing function based on argument
+    if(benchmark == "bioASQ_no_snippet"):
+       benchmark_questions, benchmark_answers = parse_bioASQ_no_snippet("5b")
+    if(benchmark == "bioASQ_with_snippet"):
+        benchmark_questions, benchmark_answers = parse_BioASQ_with_snippet("5b")
+    elif(benchmark == "MedQA_US"):
+        benchmark_questions, benchmark_answers = parse_MedQA("US")
+    elif(benchmark == "PubMedQA"):
+        benchmark_questions, benchmark_answers = parse_PubMedQA()
+    elif(benchmark == "MedMCQA"):
+        benchmark_questions, benchmark_answers = parse_MedMCQA()
     return benchmark_questions, benchmark_answers
 
 if __name__ == "__main__":

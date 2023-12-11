@@ -214,6 +214,9 @@
  * *2 hours* First steps towards simple retrieval system
  * *1 hour* Important changes to promptification
 
+### Saturday - 09 Dec 2023
+* *0.5 hours* Made parse_benchmark.py slightly more modular
+
 ### Sunday - 10 Dec 2023
 * *1 hour* Reading "REALTIME QA: What’s the Answer Right Now?"
 * *1 hour* Further work on promptification & simple retrieval

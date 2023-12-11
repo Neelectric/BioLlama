@@ -3,7 +3,7 @@ import yaml
 import faiss
 import json
 import numpy as np
-from src.utilities import load_benchmark, load_knowledge_db
+from utilities.utilities import load_benchmark, load_knowledge_db
 
 from sentence_transformers import SentenceTransformer
 

@@ -1,4 +1,4 @@
-from inference import inference
+from utilities.inference import inference
 import faiss
 
 inference(benchmark="MedMCQA", 

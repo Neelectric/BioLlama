@@ -14,13 +14,13 @@ with open('../config/config.yml', 'r', encoding='utf8') as ymlfile:
 def load_knowledge_db(knowledge_db_name):
     print("THIS METHOD SEEMS TO BE PROBLEMATIC. FOR NOW ITS FUNCTIONALITY IS COMMENTED OUT")
     print("Attempting to load FAISS index for " + cfg.DATABASE_AS_FAISS_PATH + knowledge_db_name + '.index')
-    #this is what usually goes instea of the None faiss.read_index(cfg.DATABASE_AS_FAISS_PATH + knowledge_db_name + '.index')
+    #this is what usually goes instea of the None 
+    # faiss.read_index(cfg.DATABASE_AS_FAISS_PATH + knowledge_db_name + '.index')
     return None
 
 def load_benchmark(benchmark_filepath, type):
     with open('benchmarks/' + benchmark_filepath, 'rb') as json_file:
         json_data = json_file.read().decode('utf-8')
-
     data = json.loads(json_data)
     num = 0
     questions = []
@@ -62,10 +62,8 @@ def write_to_readme(model, benchmark, result):
     df = df.drop(columns=['Unnamed: 0'])
     df = df.drop(columns=['Unnamed: 7'])
     new_table = df.to_markdown(index=False)
-    #
     print(new_table)
 
-    #
     before_changelog_after_table, changelog, after_changelog_after_table = after_table.split("<!-- changelog -->")
 
     #current date and time
@@ -81,7 +79,6 @@ def write_to_readme(model, benchmark, result):
     #write to README
     with open('../README.md', 'w') as file:
         file.write(new_readme)
-
     return
 
 write_to_readme("BioLlama", "PubMedQA", 99.99 )

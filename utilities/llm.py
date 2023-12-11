@@ -1,3 +1,4 @@
+#core file that creates the callable "llm" object, some code adapted from exllama's "test_benchmark_inference.py"
 from src.model import ExLlama, ExLlamaCache, ExLlamaConfig
 from src.tokenizer import ExLlamaTokenizer
 from src.generator import ExLlamaGenerator
@@ -5,9 +6,7 @@ from src.alt_generator import ExLlamaAltGenerator
 import os, glob
 import json
 import argparse
-
 import src.model_init as model_init
-
 
 #function that creates a callable "llm" object
 def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
@@ -39,7 +38,6 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
 
     # Globals
     model_init.set_globals(args)
-    #print("args are as follows: " + str(args))
 
     # Instantiate model
     config = model_init.make_config(args)
@@ -59,11 +57,6 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
         generator.settings.top_p = 0.65
         generator.settings.top_k = 100
         generator.settings.typical = 0.5
-        # print("about to perform batch inference")
-        # print(type(prompts))
-        # print(type(prompts[0]))
-        # print(prompts)
-
         
         # Generate, batched
         output = generator.generate_simple(prompts, max_new_tokens = max_new_tokens)
@@ -77,15 +70,7 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
         generator.settings.top_k = 100
         generator.settings.typical = 0.5
 
-
         #generator.settings.stop_strings = ["</ANSWER>"]
         stop_conditions = ["</ANSWER>"]
         output = generator.generate(prompts, max_new_tokens=max_new_tokens, gen_settings=generator.settings, stop_conditions=stop_conditions, encode_special_characters=False)
-    
-    
-
-    
-    # for line in output:
-    #     print("---")
-    #     print(line)
     return output
