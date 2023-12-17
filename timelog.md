@@ -220,3 +220,8 @@
 ### Sunday - 10 Dec 2023
 * *1 hour* Reading "REALTIME QA: What’s the Answer Right Now?"
 * *1 hour* Further work on promptification & simple retrieval
+
+### Sunday - 17 Dec 2023
+* *2 hours* Reading Llama2 paper in full
+* *1.5 hours* Re-reading RETRO paper in full
+* *1 hour* Revisiting existing RETRO implementations
