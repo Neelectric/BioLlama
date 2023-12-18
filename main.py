@@ -21,4 +21,4 @@ from utilities.inference import inference
 # output = llm(model_directory, promptified_question, 35, generator_mode="alt")
 # print(f"output: {output}")
 
-inference(inference_mode="alt")
+inference(inference_mode="std")

@@ -7,6 +7,7 @@ from utilities.llm import llm as llm
 from src.count_tokens import count_tokens
 from utilities.parse_benchmark import parse_benchmark, parse_bioASQ_no_snippet, parse_BioASQ_with_snippet, parse_MedQA, parse_PubMedQA, parse_MedMCQA
 from utilities.prompts2 import promptify, promptify_for_judging
+from utilities.db_retrieval import simple_FAISS_retrieval
 
 #method summary:
 # 1. Load specified benchmark
@@ -21,7 +22,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
               b_end = 1, 
               max_new_tokens = 30,
               inference_mode = "std",
-              retrieval = False):
+              retrieval_mode = None):
     
     #preparatory steps
     start_time = time.time() # time before batch inference
@@ -30,9 +31,18 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     benchmark_questions, benchmark_answers = parse_benchmark(benchmark) #load benchmark
     prompts = []
     raw_responses = []
-    for question in benchmark_questions[b_start:min(b_end, len(benchmark_questions))]:
-        prompts.append(promptify(benchmark, question)) #promptify questions
 
+    #retrieving chunks for questions all at once
+    if retrieval_mode != None:
+        retrieval = True
+        retrieved_chunks = simple_FAISS_retrieval(benchmark_questions)
+
+
+    for question in benchmark_questions[b_start:min(b_end, len(benchmark_questions))]:
+        prompts.append(promptify(benchmark=benchmark, question=question, retrieval=retrieval, retrieved_chunks=retrieved_chunks)) #promptify questions
+
+    
+    
     print(f"--------------Start of inference of {model} on questions {b_start} to {b_end}------------------")
 
     #helper function for batch inference
@@ -122,6 +132,8 @@ def inference(model="Llama-2-70B-chat-GPTQ",
 #main method
 if __name__ == "__main__":
     #parse arguments
+    #retrieval commented out for now... if calling inference.py from CLI directly, how could we possibly specify
+    #retrieved chunks?
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="Llama-2-70B-chat-GPTQ", help="specify model to use")
     parser.add_argument("--benchmark", default="MedMCQA", help="specify benchmark to use")
@@ -129,7 +141,7 @@ if __name__ == "__main__":
     parser.add_argument("--b_end", default=1, help="specify index of last question in benchmark to end with")
     parser.add_argument("--max_new_tokens", default=30, help="specify maximum number of tokens to generate")
     parser.add_argument("--inference_mode", default="std", help="specify inference mode")
-    parser.add_argument("--retrieval", default=False, help="specify whether to perform retrieval")
+    parser.add_argument("--retrieval_mode", default=False, help="specify whether and how to perform retrieval")
     args = parser.parse_args()
 
     inference(model=args.model, 
@@ -138,4 +150,5 @@ if __name__ == "__main__":
               b_end = int(args.b_end), 
               max_new_tokens = int(args.max_new_tokens),
               inference_mode = args.inference_mode,
-              retrieval = bool(args.retrieval))
+              retrieval_mode = args.retrieval_mode
+              )

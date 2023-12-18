@@ -225,3 +225,6 @@
 * *2 hours* Reading Llama2 paper in full
 * *1.5 hours* Re-reading RETRO paper in full
 * *1 hour* Revisiting existing RETRO implementations
+
+### Monday - 18 Dec 2023
+* *1 hour* Further work on simple retrieval, including FAISS indices
