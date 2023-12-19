@@ -1,3 +1,8 @@
+# Part of the exllama library
+# Taken directly from https://github.com/turboderp/exllama, which has an MIT License
+# Implements the Llama2 model itself
+
+
 import sys
 min_version = (3, 9)
 if sys.version_info < min_version:

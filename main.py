@@ -19,10 +19,12 @@ inference(inference_mode="std",
         model=model,
         benchmark=benchmark,
         b_start=10,
-        b_end=1010,
+        b_end=20,
         max_new_tokens=30)
 
 accuracy = 100*exact_match(model=model, benchmark=benchmark)
 if retrieval_mode == "faiss":
     model = "RAGLlama"
+elif retrieval_mode == "retro":
+    model = "BioLlama"
 write_to_readme(model=model, benchmark=benchmark, result=accuracy)

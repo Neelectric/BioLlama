@@ -1,3 +1,7 @@
+# Part of the BioLlama library
+# Written by Neel Rajani
+# Implements building a FAISS index on text files, loading this index at inference and performing retrieval
+
 import json
 import re
 import argparse

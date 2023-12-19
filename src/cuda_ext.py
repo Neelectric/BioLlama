@@ -1,4 +1,7 @@
-# from abc import ABC
+# Part of the exllama library
+# Taken directly from https://github.com/turboderp/exllama, which has an MIT License
+# Constitutes an interface with the CUDA extension library
+
 import torch
 from torch.cuda.amp import custom_bwd, custom_fwd
 from torch.utils.cpp_extension import load

@@ -1,3 +1,7 @@
+# Part of the exllama library
+# Taken directly from https://github.com/turboderp/exllama, which has an MIT License
+# Implements a generator with the typical properties, supports beam search and LoRA
+
 import src.cuda_ext as cuda_ext
 from src.model import ExLlama, ExLlamaCache
 from src.lora import ExLlamaLora

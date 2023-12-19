@@ -1,3 +1,8 @@
+# Part of the exllama library
+# Taken directly from https://github.com/turboderp/exllama, which has an MIT License
+# Manages globals
+
+
 import os
 
 def set_affinity_mask(affinity_mask = None):

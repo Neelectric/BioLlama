@@ -36,7 +36,9 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     #retrieving chunks for questions all at once
     if retrieval_mode != None:
         retrieved_chunks = simple_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name)
-    
+    else:
+        retrieved_chunks = [i for i in range(min(b_end, len(benchmark_questions)) - b_start)]
+
     #promptifying questions
     chunk_index = 0
     for question in benchmark_questions[b_start:min(b_end, len(benchmark_questions))]:

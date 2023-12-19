@@ -1,3 +1,7 @@
+# Part of the exllama library
+# Taken directly from https://github.com/turboderp/exllama, which has an MIT License
+# Implements an exllama tokenizer for Llama2
+
 from sentencepiece import SentencePieceProcessor
 import os
 import torch

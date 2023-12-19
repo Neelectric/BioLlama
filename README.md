@@ -27,11 +27,20 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 
 
+
+
+
 ## Changelog
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
 
 
  * 2023-12-19 01:04:03 | RAGLlama | MedMCQA | 50.0
+
+ * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
+
+ * 2023-12-19 10:33:54 | Llama-2-70B-chat-GPTQ | MedMCQA | 44.4
+
+ * 2023-12-19 11:09:42 | RAGLlama | MedMCQA | 50.0
 
 <!-- changelog -->
 

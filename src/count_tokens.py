@@ -1,3 +1,7 @@
+# Part of the BioLlama library
+# Written by Neel Rajani
+# Implements simple token counting for a given sequence
+
 from src.tokenizer import ExLlamaTokenizer
 import os
 

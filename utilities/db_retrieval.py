@@ -1,4 +1,7 @@
-#this code is taken adapted from Kenneth Leung's repository
+# Part of the BioLlama library
+# Adapted from https://github.com/kennethleungty/Llama-2-Open-Source-LLM-CPU-Inference, which has an MIT License
+# Implements building a FAISS index on text files, loading this index at inference and performing retrieval
+
 import box
 import yaml
 import glob
@@ -13,7 +16,6 @@ from sentence_transformers import SentenceTransformer
 
 # with open('../config/config.yml', 'r', encoding='utf8') as ymlfile:
 #     cfg = box.Box(yaml.safe_load(ymlfile))
-
 
 #builds a FAISS index for a given database
 def build_index(db_name):

@@ -1,3 +1,7 @@
+# Part of the exllama library
+# Taken directly from https://github.com/turboderp/exllama, which has an MIT License
+# Implements LoRA for exllama
+
 from src.model import ExLlamaConfig, Ex4bitLinear
 import torch
 import json

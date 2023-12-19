@@ -1,3 +1,7 @@
+# Part of the exllama library
+# Taken directly from https://github.com/turboderp/exllama, which has an MIT License
+# Implements an alternative generator which supports stop tokens instead of batch inference
+
 import src.cuda_ext as cuda_ext
 from src.model import ExLlama, ExLlamaCache
 from src.tokenizer import ExLlamaTokenizer
