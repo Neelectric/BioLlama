@@ -230,3 +230,9 @@
 * *1 hour* Update on db_build.py to build initial 20k RCT datastore
 * *1 hour* Changes to inference.py to make retrieval in prompt possible
 * *1.5 hours* Refactor of db_build.py into db_retrieval.py to compartmentalise both building and retrieval
+
+### Tuesday - 19 Dec 2023
+* *1 hour* Succesful implementation of Retrieval in Prompt
+* *0.5 hours* Eleventh meeting with supervisor
+* *1.5 hours* First benchmarks of Llama2 70B without retrieval on MedMCQA, after refactor
+* *1.5 hours* Benchmarking of RiP Llama2 70b on MedMCQA, slight performance increase
