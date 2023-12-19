@@ -94,10 +94,12 @@ def inference(model="Llama-2-70B-chat-GPTQ",
         print("Raw response: " + raw_response  + "\n")
         response = re.findall(pattern, raw_response, re.DOTALL)
         print("Response: " + str(response) + "\n")
-        if len(response) > 1 and benchmark != "MedMCQA":
-            responses.append(response[1][2:])
-        elif len(response) > 1 and benchmark == "MedMCQA":
+        if len(response) > 1 and benchmark == "MedMCQA":
             responses.append(response[2])
+        elif len(response) > 1 and benchmark == "MedQA":
+            responses.append(response[2])
+        elif len(response) > 1:
+            responses.append(response[1][2:])
         else:
             responses.append("LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: " + raw_response)
 
