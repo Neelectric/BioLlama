@@ -227,4 +227,6 @@
 * *1 hour* Revisiting existing RETRO implementations
 
 ### Monday - 18 Dec 2023
-* *1 hour* Further work on simple retrieval, including FAISS indices
+* *1 hour* Update on db_build.py to build initial 20k RCT datastore
+* *1 hour* Changes to inference.py to make retrieval in prompt possible
+* *1.5 hours* Refactor of db_build.py into db_retrieval.py to compartmentalise both building and retrieval

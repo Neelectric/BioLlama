@@ -16,8 +16,8 @@ The table below shows preliminary results, as reported by other papers or record
 | M42        | 70B    | -                   | -          | 61.5          | 60.9      |
 | Med-PaLM   | 540B   | -                   | 79.0       | 67.6          | 57.6      |
 | Med-PaLM 2 | 540B   | -                   | 81.8       | 86.5          | 72.3      |
-| RAGLlama   | 70B    |                     |            |               |           |
-| BioLlama   | 70B    |                     | 99.99      |               |           |
+| RAGLlama   | 70B    |                     |            |               | 50.0      |
+| BioLlama   | 70B    |                     |            |               |           |
 <!-- table -->
 
 ## 🔎 Dissertation
@@ -27,16 +27,11 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 
 
-
-
 ## Changelog
- * 2023-11-28 01:25:06 | BioLlama | PubMedQA | 99.99
+ * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
 
- * 2023-11-28 01:25:07 | BioLlama | PubMedQA | 99.99
 
- * 2023-11-28 01:25:21 | BioLlama | PubMedQA | 99.99
-
- * 2023-11-28 01:25:22 | BioLlama | PubMedQA | 99.99
+ * 2023-12-19 01:04:03 | RAGLlama | MedMCQA | 50.0
 
 <!-- changelog -->
 

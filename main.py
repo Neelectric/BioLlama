@@ -6,19 +6,23 @@
 # -b : the benchmark to use. Options are BioASQ5b_factoid_with_snippet, MedQA, PubMedQA, MedMCQA
 # -e : the evaluation method to use. Options are exact_match and judging
 
-from utilities.llm import llm
-from utilities.old_prompts import promptify_MedMCQA_question
 from utilities.inference import inference
+from utilities.exact_match import exact_match
+from utilities.utilities import write_to_readme
 
-# model_directory =  "../models/Llama-2-70B-chat-GPTQ/"
+model =  "Llama-2-70B-chat-GPTQ"
+benchmark = "MedMCQA"
+retrieval_mode = "faiss"
 
-# question = "Chronic urethral obstruction due to benign prismatic hyperplasia can lead to the following change in kidney parenchyma (1) Hyperplasia (2) Hyperophy (3) Atrophy (4) Dyplasia"
-# marking_scheme = 3
+inference(inference_mode="std",
+        retrieval_mode=retrieval_mode,
+        model=model,
+        benchmark=benchmark,
+        b_start=10,
+        b_end=1010,
+        max_new_tokens=30)
 
-# promptified_question = promptify_MedMCQA_question(question)
-# print(f"promptified question: {promptified_question}")
-
-# output = llm(model_directory, promptified_question, 35, generator_mode="alt")
-# print(f"output: {output}")
-
-inference(inference_mode="std")
+accuracy = 100*exact_match(model=model, benchmark=benchmark)
+if retrieval_mode == "faiss":
+    model = "RAGLlama"
+write_to_readme(model=model, benchmark=benchmark, result=accuracy)

@@ -31,16 +31,26 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     benchmark_questions, benchmark_answers = parse_benchmark(benchmark) #load benchmark
     prompts = []
     raw_responses = []
+    db_name = "RCT20ktrain"
 
     #retrieving chunks for questions all at once
     if retrieval_mode != None:
-        retrieval = True
-        retrieved_chunks = simple_FAISS_retrieval(benchmark_questions)
-
-
+        retrieved_chunks = simple_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name)
+    
+    #promptifying questions
+    chunk_index = 0
     for question in benchmark_questions[b_start:min(b_end, len(benchmark_questions))]:
-        prompts.append(promptify(benchmark=benchmark, question=question, retrieval=retrieval, retrieved_chunks=retrieved_chunks)) #promptify questions
+        prompts.append(promptify(benchmark=benchmark, question=question, retrieval_mode=retrieval_mode, retrieved_chunks=retrieved_chunks[chunk_index])) #promptify questions
+        chunk_index += 1
 
+    # print("Question: " + str(benchmark_questions[b_start]))
+    # print("Retrieved chunks: ")
+    # chunks = retrieved_chunks[0]
+    # for chunk in chunks:
+    #     print(chunk)
+    #     print("\n")
+
+    print("Prompt: " + str(prompts[0]))
     
     
     print(f"--------------Start of inference of {model} on questions {b_start} to {b_end}------------------")
@@ -76,13 +86,16 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     #detect answers to benchmark questions in response from the LLM
     pattern = r'<ANSWER>(.*?)</[aA][nN][sS][wW][eE][rR]>'
     responses = []
+    
 
     for raw_response in raw_responses:
+        print("Raw response: " + raw_response  + "\n")
         response = re.findall(pattern, raw_response, re.DOTALL)
+        print("Response: " + str(response) + "\n")
         if len(response) > 1 and benchmark != "MedMCQA":
             responses.append(response[1][2:])
         elif len(response) > 1 and benchmark == "MedMCQA":
-            responses.append(response[1])
+            responses.append(response[2])
         else:
             responses.append("LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: " + raw_response)
 

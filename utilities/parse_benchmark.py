@@ -150,7 +150,7 @@ def parse_benchmark(benchmark):
        benchmark_questions, benchmark_answers = parse_bioASQ_no_snippet("5b")
     if(benchmark == "bioASQ_with_snippet"):
         benchmark_questions, benchmark_answers = parse_BioASQ_with_snippet("5b")
-    elif(benchmark == "MedQA_US"):
+    elif(benchmark == "MedQA"):
         benchmark_questions, benchmark_answers = parse_MedQA("US")
     elif(benchmark == "PubMedQA"):
         benchmark_questions, benchmark_answers = parse_PubMedQA()

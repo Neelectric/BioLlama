@@ -8,7 +8,7 @@ import pandas as pd
 from io import StringIO
 import datetime
 
-with open('../config/config.yml', 'r', encoding='utf8') as ymlfile:
+with open('config/config.yml', 'r', encoding='utf8') as ymlfile:
     cfg = box.Box(yaml.safe_load(ymlfile))
 
 def load_knowledge_db(knowledge_db_name):
@@ -35,7 +35,7 @@ def load_benchmark(benchmark_filepath, type):
 
 def write_to_readme(model, benchmark, result):
     #read README file
-    with open('../README.md', 'r') as file:
+    with open('README.md', 'r') as file:
         readme = file.read()
     
     #split README into parts
@@ -77,9 +77,9 @@ def write_to_readme(model, benchmark, result):
     print(new_readme)
 
     #write to README
-    with open('../README.md', 'w') as file:
+    with open('README.md', 'w') as file:
         file.write(new_readme)
     return
 
-write_to_readme("BioLlama", "PubMedQA", 99.99 )
+#write_to_readme("BioLlama", "PubMedQA", 99.99 )
 
