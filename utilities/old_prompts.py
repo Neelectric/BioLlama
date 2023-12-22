@@ -1,4 +1,7 @@
-#retired file, old prompting approach
+# Part of the BioLlama library
+# Written by Neel Rajani
+# Retired file, old prompting approach
+
 def promptify_BioASQ_question_no_snippet(question):
     promptified = (
         "You are an excellently helpful AI assistant. For the following, your response MUST start with <ANSWER> and end with </ANSWER>. Given your training on biomedical data, you are an expert on questions related to biology and medicine, such as:<QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION><ANSWER>castration-resistant prostate cancer</ANSWER> You must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words. <QUESTION>"

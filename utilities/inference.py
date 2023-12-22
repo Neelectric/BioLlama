@@ -1,3 +1,8 @@
+# Part of the BioLlama library
+# Written by Neel Rajani
+# Primary file that allows for batch or alt inference of a GPTQ Llama2 model on a given benchmark
+# Also callable from CLI if given arguments as specified at the bottom of this file
+
 import json
 import re
 import time
@@ -88,18 +93,13 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     #detect answers to benchmark questions in response from the LLM
     pattern = r'<ANSWER>(.*?)</[aA][nN][sS][wW][eE][rR]>'
     responses = []
-    
 
     for raw_response in raw_responses:
-        print("Raw response: " + raw_response  + "\n")
+        # print("Raw response: " + raw_response  + "\n")
         response = re.findall(pattern, raw_response, re.DOTALL)
-        print("Response: " + str(response) + "\n")
-        if len(response) > 1 and benchmark == "MedMCQA":
+        # print("Response: " + str(response) + "\n")
+        if len(response) > 2:
             responses.append(response[2])
-        elif len(response) > 1 and benchmark == "MedQA":
-            responses.append(response[2])
-        elif len(response) > 1:
-            responses.append(response[1][2:])
         else:
             responses.append("LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: " + raw_response)
 
@@ -146,11 +146,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
 
     print("Time for batch inference: " + str(time.time() - start_time))
 
-#main method
 if __name__ == "__main__":
-    #parse arguments
-    #retrieval commented out for now... if calling inference.py from CLI directly, how could we possibly specify
-    #retrieved chunks?
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="Llama-2-70B-chat-GPTQ", help="specify model to use")
     parser.add_argument("--benchmark", default="MedMCQA", help="specify benchmark to use")

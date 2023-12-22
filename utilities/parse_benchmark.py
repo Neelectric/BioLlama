@@ -1,3 +1,7 @@
+# Part of the BioLlama library
+# Written by Neel Rajani
+# Creates support for parsing of benchmark questions from JSON files, for use in inference
+
 import json
 import argparse
 

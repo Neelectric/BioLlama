@@ -1,4 +1,7 @@
-#core file that creates the callable "llm" object, some code adapted from exllama's "test_benchmark_inference.py"
+# Part of the BioLlama library
+# Written by Neel Rajani
+# Primary method for creation of callable "llm" object, adapted from exllama's "test_benchmark_inference.py"
+
 from src.model import ExLlama, ExLlamaCache, ExLlamaConfig
 from src.tokenizer import ExLlamaTokenizer
 from src.generator import ExLlamaGenerator

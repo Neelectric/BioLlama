@@ -222,7 +222,7 @@
 * *1 hour* Further work on promptification & simple retrieval
 
 ### Sunday - 17 Dec 2023
-* *2 hours* Reading Llama2 paper in full
+* *2 hours* Starting to look further into Llama2 paper
 * *1.5 hours* Re-reading RETRO paper in full
 * *1 hour* Revisiting existing RETRO implementations
 
@@ -236,3 +236,9 @@
 * *0.5 hours* Eleventh meeting with supervisor
 * *1.5 hours* First benchmarks of Llama2 70B without retrieval on MedMCQA, after refactor
 * *1.5 hours* Benchmarking of RiP Llama2 70b on MedMCQA, slight performance increase
+
+### Wednesday - 20 Dec 2023
+* *2 hours* Finishing Llama2 paper in full
+
+### Friday - 21 Dec 2023
+* *0.5 hours* Further post-refactor benchmarking and RiP work

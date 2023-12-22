@@ -1,3 +1,7 @@
+# Part of the BioLlama library
+# Written by Neel Rajani
+# Implements judging of LLM output on benchmarks given the marking scheme, using Llama2 70B as a judge
+
 import json
 import argparse
 from tqdm import tqdm
