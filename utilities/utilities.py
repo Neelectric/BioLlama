@@ -51,7 +51,9 @@ def write_to_readme(model, benchmark, result):
     df['Model'] = df['Model'].str.strip()
 
     #take note of old value of cell, then change and print it
-    old_result = df.loc[df['Model'] == model, benchmark]
+    old_result = df.loc[df['Model'] == model, benchmark].values[0]
+    #strip whitespace from old result
+    old_result = old_result.strip()
     df.loc[df['Model'] == model, benchmark] = result
     print("Changed " + str(old_result) + " to " + str(result) + " for " + model + " on " + benchmark)
     df = df.drop(columns=['Unnamed: 0'])
@@ -63,7 +65,8 @@ def write_to_readme(model, benchmark, result):
     #prepare combinations & new changelog, then write result
     before_changelog_after_table, changelog, after_changelog_after_table = after_table.split("<!-- changelog -->")
     now = datetime.datetime.now()
-    changelog += " * " + now.strftime("%Y-%m-%d %H:%M:%S") + " | " + model + " | " + benchmark + " | " + str(old_result) + " --> " + str(result) + "\n"
+    new_change = " * " + now.strftime("%H:%M:%S, %d.%m.%Y") + " | " + model + " | " + benchmark + " | " + str(old_result) + " --> " + str(result) + "\n"
+    changelog = new_change + changelog
     after_table = before_changelog_after_table + '<!-- changelog -->\n' + changelog + "\n<!-- changelog -->"+ after_changelog_after_table
     new_readme = before_table + '<!-- table -->\n' + new_table + "\n<!-- table -->"+ after_table
     print(new_table)

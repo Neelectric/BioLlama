@@ -39,8 +39,10 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     db_name = "RCT20ktrain"
 
     #retrieving chunks for questions all at once
-    if retrieval_mode != None:
+    if retrieval_mode == "simple":
         retrieved_chunks = simple_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name)
+    elif retrieval_mode == "medcpt":
+        retrieved_chunks = medcpt_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name)
     else:
         retrieved_chunks = [i for i in range(min(b_end, len(benchmark_questions)) - b_start)]
 
@@ -50,14 +52,14 @@ def inference(model="Llama-2-70B-chat-GPTQ",
         prompts.append(promptify(benchmark=benchmark, question=question, retrieval_mode=retrieval_mode, retrieved_chunks=retrieved_chunks[chunk_index])) #promptify questions
         chunk_index += 1
 
+    #uncomment to print question, retrieved chunks and created prompt as sanity check
     # print("Question: " + str(benchmark_questions[b_start]))
     # print("Retrieved chunks: ")
     # chunks = retrieved_chunks[0]
     # for chunk in chunks:
     #     print(chunk)
     #     print("\n")
-
-    print("Prompt: " + str(prompts[0]))
+    #print("Prompt: " + str(prompts[0]))
     
     
     print(f"--------------Start of inference of {model} on questions {b_start} to {b_end}------------------")
@@ -71,10 +73,18 @@ def inference(model="Llama-2-70B-chat-GPTQ",
         return llm_output
 
     #perform batch inference
+    #TODO: IF NUM OF PROMPTS IS NOT A MULTIPLE OF 10, AM I MISSING THE LAST FEW PROMPTS?
     if inference_mode == "std":
         if len(prompts) > 10:
             for i in tqdm(range(len(prompts)//10), desc="Batch Inference"):
                 temp_prompts = list(prompts[i*10:(i+1)*10])
+                #print the largest prompt length by string length
+                #print("Largest prompt length: " + str(max([len(prompt) for prompt in temp_prompts])))
+                #print list of string length per prompt
+                for temp_prompt in temp_prompts:
+                    print(temp_prompt)                
+                print([len(prompt) for prompt in temp_prompts])
+                
                 raw_responses += batch_llm_inference(temp_prompts, max_new_tokens)  
             with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
                 json.dump(raw_responses, outfile)
@@ -98,7 +108,9 @@ def inference(model="Llama-2-70B-chat-GPTQ",
         # print("Raw response: " + raw_response  + "\n")
         response = re.findall(pattern, raw_response, re.DOTALL)
         # print("Response: " + str(response) + "\n")
-        if len(response) > 2:
+        if len(response) > 2 and benchmark=="MedQA":
+            responses.append(response[2][2:])
+        elif len(response) > 2:
             responses.append(response[2])
         else:
             responses.append("LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: " + raw_response)
