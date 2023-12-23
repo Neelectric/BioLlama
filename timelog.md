@@ -240,5 +240,8 @@
 ### Wednesday - 20 Dec 2023
 * *2 hours* Finishing Llama2 paper in full
 
-### Friday - 21 Dec 2023
-* *0.5 hours* Further post-refactor benchmarking and RiP work
+### Friday - 22 Dec 2023
+* *1 hour* Further post-refactor benchmarking and RiP work
+
+### Saturday - 23 Dec 2023
+* *1 hour* Starting to add MedCPT support
