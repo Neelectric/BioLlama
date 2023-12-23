@@ -12,7 +12,7 @@ from utilities.llm import llm as llm
 from src.count_tokens import count_tokens
 from utilities.parse_benchmark import parse_benchmark, parse_bioASQ_no_snippet, parse_BioASQ_with_snippet, parse_MedQA, parse_PubMedQA, parse_MedMCQA
 from utilities.prompts2 import promptify, promptify_for_judging
-from utilities.db_retrieval import simple_FAISS_retrieval
+from utilities.db_retrieval import gte_FAISS_retrieval, medcpt_FAISS_retrieval
 
 #method summary:
 # 1. Load specified benchmark
@@ -39,27 +39,26 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     db_name = "RCT20ktrain"
 
     #retrieving chunks for questions all at once
-    if retrieval_mode == "simple":
-        retrieved_chunks = simple_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name)
+    if retrieval_mode == "gte-large":
+        retrieved_chunks = gte_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name)
     elif retrieval_mode == "medcpt":
         retrieved_chunks = medcpt_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name)
     else:
-        retrieved_chunks = [i for i in range(min(b_end, len(benchmark_questions)) - b_start)]
+        retrieved_chunks = [str(i) for i in range(min(b_end, len(benchmark_questions)) - b_start)]
 
     #promptifying questions
     chunk_index = 0
     for question in benchmark_questions[b_start:min(b_end, len(benchmark_questions))]:
         prompts.append(promptify(benchmark=benchmark, question=question, retrieval_mode=retrieval_mode, retrieved_chunks=retrieved_chunks[chunk_index])) #promptify questions
         chunk_index += 1
-
     #uncomment to print question, retrieved chunks and created prompt as sanity check
-    # print("Question: " + str(benchmark_questions[b_start]))
+    #print("Question: " + str(benchmark_questions[b_start]))
     # print("Retrieved chunks: ")
     # chunks = retrieved_chunks[0]
     # for chunk in chunks:
     #     print(chunk)
     #     print("\n")
-    #print("Prompt: " + str(prompts[0]))
+    print("Prompt: " + str(prompts[0]))
     
     
     print(f"--------------Start of inference of {model} on questions {b_start} to {b_end}------------------")
@@ -81,15 +80,19 @@ def inference(model="Llama-2-70B-chat-GPTQ",
                 #print the largest prompt length by string length
                 #print("Largest prompt length: " + str(max([len(prompt) for prompt in temp_prompts])))
                 #print list of string length per prompt
-                for temp_prompt in temp_prompts:
-                    print(temp_prompt)                
-                print([len(prompt) for prompt in temp_prompts])
+                # for temp_prompt in temp_prompts:
+                #     print(temp_prompt)                
+                # print([len(prompt) for prompt in temp_prompts])
                 
                 raw_responses += batch_llm_inference(temp_prompts, max_new_tokens)  
             with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
                 json.dump(raw_responses, outfile)
         else:
             raw_responses += batch_llm_inference(prompts, max_new_tokens)
+            #if there is only one prompt, ensure that raw_responses is a list containing this prompt string:
+            #print("Raw responses: " + str(raw_responses))
+            if type(raw_responses) != type([]):
+                raw_responses = [raw_responses]
             with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
                 json.dump(raw_responses, outfile)
         print("We have generated " + str(len(raw_responses)) + " responses.")

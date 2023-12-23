@@ -10,20 +10,20 @@ from utilities.inference import inference
 from utilities.exact_match import exact_match
 from utilities.utilities import write_to_readme
 
-model =  "Llama-2-13B-chat-GPTQ"
-benchmark = "MedQA"
-retrieval_mode = "simple"
+model =  "Llama-2-70B-chat-GPTQ"
+benchmark = "MedMCQA"
+retrieval_mode = "medcpt"
 
 inference(inference_mode="std",
         retrieval_mode=retrieval_mode,
         model=model,
         benchmark=benchmark,
-        b_start=997,
+        b_start=10,
         b_end=1010,
         max_new_tokens=30)
 
 accuracy = 100*exact_match(model=model, benchmark=benchmark)
-if retrieval_mode == "simple":
+if retrieval_mode == "gte-large":
     model = "RAGLlama"
 elif retrieval_mode == "medcpt":
     model = "RiPLlama"

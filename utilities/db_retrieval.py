@@ -16,11 +16,7 @@ import numpy as np
 from tqdm import tqdm
 from sentence_transformers import SentenceTransformer
 
-# with open('../config/config.yml', 'r', encoding='utf8') as ymlfile:
-#     cfg = box.Box(yaml.safe_load(ymlfile))
-
-#builds a FAISS index for a given database
-def build_index_gte_large(db_name):
+def read_chunks(db_name):
     chunk = ""
     chunks = []
     n_chunks = 0
@@ -30,12 +26,11 @@ def build_index_gte_large(db_name):
     print(txt_files)
     if db_name in txt_files:
         file_name = db_name
-        print("Found the requested file, building FAISS index")
+        print("Found the requested file, reading chunks")
     else:
         file_name = txt_files[0]
     if len(txt_files) != 1:
         raise Exception("There should be exactly one .txt file in the data directory.")
-    
     with open(file_name, 'r') as file:
         for line in tqdm(file, desc="Processing chunks",):
             n_lines += 1
@@ -46,18 +41,26 @@ def build_index_gte_large(db_name):
                 chunk = ""
             else:
                 chunk += line
+    return chunks, chunks_dict
 
+def prepare_folders(db_name, embedding_model):
     #omit ".txt" from db_name
     db_name = db_name[0:-4]
-
     #in case the folders for the two datastores don't exist yet, we create them here:
-    faiss_folder_path = "../vectorstores/" + db_name + "/db_faiss/"
+    faiss_folder_path = "../vectorstores/" + db_name + "/" + embedding_model + "/db_faiss/"
     if not os.path.exists(faiss_folder_path):
         os.makedirs(faiss_folder_path)
-    json_folder_path = "../vectorstores/" + db_name + "/db_JSON/"
+    json_folder_path = "../vectorstores/" + db_name + "/" + embedding_model + "/db_JSON/"
     if not os.path.exists(json_folder_path):
         os.makedirs(json_folder_path)
-            
+    return faiss_folder_path, json_folder_path
+
+#builds a FAISS index for a given database
+def build_index_gte(db_name):
+    print("Building index with gte-large")
+    chunks, chunks_dict = read_chunks(db_name)
+    faiss_folder_path, json_folder_path = prepare_folders(db_name, "gte-large")
+    db_name = db_name[0:-4]
     #build index
     print("len(chunks): " + str(len(chunks)))
     time_before_index = time.time()
@@ -78,43 +81,9 @@ def build_index_gte_large(db_name):
 
 def build_index_medcpt(db_name):
     print("Building index with MedCPT")
-    chunk = ""
-    chunks = []
-    n_chunks = 0
-    n_lines = 0
-    chunks_dict = {}
-    txt_files = glob.glob("../database/*.txt")
-    print(txt_files)
-    if db_name in txt_files:
-        file_name = db_name
-        print("Found the requested file, building FAISS index")
-    else:
-        file_name = txt_files[0]
-    if len(txt_files) != 1:
-        raise Exception("There should be exactly one .txt file in the data directory.")
-    
-    with open(file_name, 'r') as file:
-        for line in tqdm(file, desc="Processing chunks",):
-            n_lines += 1
-            if not line.strip():
-                chunks.append(chunk)
-                chunks_dict[n_chunks] = chunk
-                n_chunks += 1
-                chunk = ""
-            else:
-                chunk += line
-
-    #omit ".txt" from db_name
+    chunks, chunks_dict = read_chunks(db_name)
+    faiss_folder_path, json_folder_path = prepare_folders(db_name, "medcpt")
     db_name = db_name[0:-4]
-
-    #in case the folders for the two datastores don't exist yet, we create them here:
-    faiss_folder_path = "../vectorstores/" + db_name + "/db_faiss_medcpt/"
-    if not os.path.exists(faiss_folder_path):
-        os.makedirs(faiss_folder_path)
-    json_folder_path = "../vectorstores/" + db_name + "/db_JSON_medcpt/"
-    if not os.path.exists(json_folder_path):
-        os.makedirs(json_folder_path)
-            
     #build index
     print("len(chunks): " + str(len(chunks)))
     time_before_index = time.time()
@@ -152,16 +121,51 @@ def build_index_medcpt(db_name):
         json.dump(chunks_dict, json_file, indent=4)
 
 
-def load_db(db_name):
-    index_path_faiss = "vectorstores/" + db_name + "/db_faiss/" + db_name + '.index'
-    index_path_json = "vectorstores/" + db_name + "/db_JSON/" + db_name + '.json'
+def load_db(embedding_model, db_name):
+    index_path_faiss = "vectorstores/" + db_name + "/" + embedding_model +"/db_faiss/" + db_name + '.index'
+    index_path_json = "vectorstores/" + db_name + "/" + embedding_model + "/db_JSON/" + db_name + '.json'
     print("Attempting to load FAISS index for " + index_path_faiss)
     with open(index_path_json, "r") as json_file:
         knowledge_db_as_JSON = json.load(json_file)
     return faiss.read_index(index_path_faiss), knowledge_db_as_JSON
+
+def medcpt_FAISS_retrieval(questions, db_name):
+    db_faiss, db_json = load_db("medcpt", db_name)
+    model = AutoModel.from_pretrained("ncbi/MedCPT-Query-Encoder")
+    tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")
+    #i will first try embedding of question and retrieval on a question by question basis, and time it
+    #this is with arbitrary choices: k=1, max_length (how many tokens are in input i think?) = 480
+    time_before_retrieval = time.time()
+    k = 1
+    chunk_list = []
+    for question in questions:
+        chunks = []
+        with torch.no_grad():
+            # tokenize the queries
+            encoded = tokenizer(
+                question, 
+                truncation=True, 
+                padding=True, 
+                return_tensors='pt', 
+                max_length=480,
+            )
+            # encode the queries (use the [CLS] last hidden states as the representations)
+            embeds = model(**encoded).last_hidden_state[:, 0, :]
+        #question_embedding = np.array([embeds])
+        distances, indices = db_faiss.search(embeds, k)
+        distances = distances.flatten()
+        indices = indices.flatten()
+        print("Distances shape: " + str(distances.shape))
+        for i in range(len(distances)):
+            print("Distance: " + str(distances[i]) + " Index: " + str(indices[i]))
+            chunks.append(db_json[str(indices[i]+1)])
+        chunk_list.append(chunks)   
+    time_after_retrieval = time.time()
+    print("Time to retrieve chunks: " + str(time_after_retrieval - time_before_retrieval) + " seconds.")
+    return chunk_list
     
-def simple_FAISS_retrieval(questions, db_name):
-    db_faiss, db_json = load_db(db_name)
+def gte_FAISS_retrieval(questions, db_name):
+    db_faiss, db_json = load_db("gte-large", db_name)
     #if db is a faiss index, print that
     print("db: " + str(db_faiss))
     k = 1
@@ -183,10 +187,10 @@ def simple_FAISS_retrieval(questions, db_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--db_name', type=str, default="train.txt", help="Name of the database to build index for.")
+    parser.add_argument('--db_name', type=str, default="RCT20ktrain.txt", help="Name of the database to build index for.")
     parser.add_argument('--embedding_type', type=str, default="gte-large", help='Type of embedding to use.')
     args = parser.parse_args()
     if args.embedding_type == "gte-large":
-        build_index_gte_large(args.db_name)
+        build_index_gte(args.db_name)
     elif args.embedding_type =="medcpt":
         build_index_medcpt(args.db_name)
