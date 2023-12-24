@@ -1,6 +1,7 @@
 #ignore any data files
 /raw_data/
 /data/
+database/
 /database/
 vectorstore/db_faiss/train.txt.index
 vectorstore/db_JSON/train.txt.json

@@ -16,7 +16,7 @@ import numpy as np
 from tqdm import tqdm
 from sentence_transformers import SentenceTransformer
 
-def read_chunks(db_name):
+def read_chunks(db_name, mode):
     chunk = ""
     chunks = []
     n_chunks = 0
@@ -24,42 +24,94 @@ def read_chunks(db_name):
     chunks_dict = {}
     txt_files = glob.glob("../database/*.txt")
     print(txt_files)
-    if db_name in txt_files:
-        file_name = db_name
+    if "../database/" + db_name in txt_files:
+        file_name = "../database/" + db_name
         print("Found the requested file, reading chunks")
     else:
         file_name = txt_files[0]
     if len(txt_files) != 1:
-        raise Exception("There should be exactly one .txt file in the data directory.")
+        #raise Exception("There should be exactly one .txt file in the data directory.")
+        print("FYI: Found more than one .txt file in the data directory. Using file " + file_name)
+
+    full_lengths = []
+    bomrc_lengths = []
+    brc_lengths = []
+
     with open(file_name, 'r') as file:
-        for line in tqdm(file, desc="Processing chunks",):
+        id = ""
+        dict = {}
+        for line in tqdm(file, desc="Processing chunks"):
             n_lines += 1
+            if id == "": 
+                id = line.strip()
+                #background, objective, methods, results, conclusions
+                dict = {'ID': id,
+                        'BACKGROUND': '',
+                        'OBJECTIVE': "",
+                        'METHODS': "",
+                        'RESULTS': "",
+                        'CONCLUSIONS': ""}
+            elif line.startswith('BACKGROUND'):
+                dict['BACKGROUND'] += line[10:-2].strip() + ". "
+            elif line.startswith('OBJECTIVE'):
+                dict['OBJECTIVE'] += line[9:-2].strip() + ". "
+            elif line.startswith('METHODS'):
+                dict['METHODS'] += line[7:-2].strip() + ". "
+            elif line.startswith('RESULTS'):
+                dict['RESULTS'] += line[7:-2].strip() + ". "
+            elif line.startswith('CONCLUSIONS'):
+                dict['CONCLUSIONS'] += line[11:-2].strip() + ". "
             if not line.strip():
-                chunks.append(chunk)
-                chunks_dict[n_chunks] = chunk
+                b_o_m_r_c = dict['BACKGROUND'] + dict['OBJECTIVE'] + dict['METHODS'] + dict['RESULTS'] + dict['CONCLUSIONS']
+                b_r_c = dict['BACKGROUND'] + dict['RESULTS'] + dict['CONCLUSIONS']
+                #quick study on effect of removing extra words with dict
+                #and then on only taking background, results, conclusions
+                full_lengths.append(len(chunk))
+                bomrc_lengths.append(len(b_o_m_r_c))
+                brc_lengths.append(len(b_r_c))     
+
+                if mode == "full":
+                    chunks.append(chunk)
+                    chunks_dict[n_chunks] = chunk
+                elif mode == "bomrc":
+                    chunks.append(b_o_m_r_c)
+                    chunks_dict[n_chunks] = b_o_m_r_c
+                elif mode == "brc":
+                    chunks.append(b_r_c)
+                    chunks_dict[n_chunks] = b_r_c
+
                 n_chunks += 1
                 chunk = ""
+                id = ""
             else:
                 chunk += line
+    
+    #find average lengths
+    full_avg = np.mean(full_lengths)
+    bomrc_avg = np.mean(bomrc_lengths)
+    brc_avg = np.mean(brc_lengths)
+    print("full_avg: " + str(full_avg))
+    print("bomrc_avg: " + str(bomrc_avg))
+    print("brc_avg: " + str(brc_avg))
     return chunks, chunks_dict
 
-def prepare_folders(db_name, embedding_model):
+def prepare_folders(db_name, embedding_model, mode):
     #omit ".txt" from db_name
     db_name = db_name[0:-4]
     #in case the folders for the two datastores don't exist yet, we create them here:
-    faiss_folder_path = "../vectorstores/" + db_name + "/" + embedding_model + "/db_faiss/"
+    faiss_folder_path = "../vectorstores/" + db_name + "/" + embedding_model + "/" + mode + "/db_faiss/"
     if not os.path.exists(faiss_folder_path):
         os.makedirs(faiss_folder_path)
-    json_folder_path = "../vectorstores/" + db_name + "/" + embedding_model + "/db_JSON/"
+    json_folder_path = "../vectorstores/" + db_name + "/" + embedding_model + "/" + mode + "/db_JSON/"
     if not os.path.exists(json_folder_path):
         os.makedirs(json_folder_path)
     return faiss_folder_path, json_folder_path
 
-#builds a FAISS index for a given database
-def build_index_gte(db_name):
+def build_index_gte(db_name, mode):
+    print("CURRENTLY UNSURE IF WORKS AS INTENDED")
     print("Building index with gte-large")
-    chunks, chunks_dict = read_chunks(db_name)
-    faiss_folder_path, json_folder_path = prepare_folders(db_name, "gte-large")
+    chunks, chunks_dict = read_chunks(db_name, mode)
+    faiss_folder_path, json_folder_path = prepare_folders(db_name, "gte-large", mode)
     db_name = db_name[0:-4]
     #build index
     print("len(chunks): " + str(len(chunks)))
@@ -69,8 +121,10 @@ def build_index_gte(db_name):
     print("Embeddings shape: " + str(chunk_embeddings.shape))
     index = faiss.IndexFlatL2(chunk_embeddings.shape[1])
     index.add(chunk_embeddings)
-    print("Saving index to " + faiss_folder_path + db_name + '.index')
-    faiss.write_index(index, faiss_folder_path + db_name + '.index')
+
+    faiss_file_path = faiss_folder_path + db_name + '.index'
+    print("Saving index to " + faiss_file_path)
+    faiss.write_index(index, faiss_file_path)
     time_after_index = time.time()
     print("Time to build index: " + str(time_after_index - time_before_index) + " seconds.")
 
@@ -79,10 +133,10 @@ def build_index_gte(db_name):
     with open(json_file_path, "w") as json_file:
         json.dump(chunks_dict, json_file, indent=4)
 
-def build_index_medcpt(db_name):
+def build_index_medcpt(db_name, mode):
     print("Building index with MedCPT")
-    chunks, chunks_dict = read_chunks(db_name)
-    faiss_folder_path, json_folder_path = prepare_folders(db_name, "medcpt")
+    chunks, chunks_dict = read_chunks(db_name, mode)
+    faiss_folder_path, json_folder_path = prepare_folders(db_name, "medcpt", mode)
     db_name = db_name[0:-4]
     #build index
     print("len(chunks): " + str(len(chunks)))
@@ -110,16 +164,17 @@ def build_index_medcpt(db_name):
             chunk_embeddings = embedding_model(**encoded).last_hidden_state[:, 0, :]
             index.add(chunk_embeddings)
 
-    print("Saving index to " + faiss_folder_path + db_name + '.index')
-    faiss.write_index(index, faiss_folder_path + db_name + '.index')
+    faiss_file_path = faiss_folder_path + db_name + '.index'
+    json_file_path = json_folder_path + db_name + '.json'
+
+    print("Saving index to " + faiss_file_path)
+    faiss.write_index(index, faiss_file_path)
     time_after_index = time.time()
     print("Time to build index: " + str(time_after_index - time_before_index) + " seconds.")
 
     #save as JSON objects too for convenience 
-    json_file_path = json_folder_path + db_name + '.json'
     with open(json_file_path, "w") as json_file:
         json.dump(chunks_dict, json_file, indent=4)
-
 
 def load_db(embedding_model, db_name):
     index_path_faiss = "vectorstores/" + db_name + "/" + embedding_model +"/db_faiss/" + db_name + '.index'
@@ -189,8 +244,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--db_name', type=str, default="RCT20ktrain.txt", help="Name of the database to build index for.")
     parser.add_argument('--embedding_type', type=str, default="gte-large", help='Type of embedding to use.')
+    parser.add_argument('--mode', type=str, default="full", help='Whether to embed full text or combo of background, objective, methods, results, conclusions.')
     args = parser.parse_args()
     if args.embedding_type == "gte-large":
-        build_index_gte(args.db_name)
+        build_index_gte(args.db_name, args.mode)
     elif args.embedding_type =="medcpt":
-        build_index_medcpt(args.db_name)
+        build_index_medcpt(args.db_name, args.mode)
+        # print("reading chunks for medcpt")
+        # read_chunks(args.db_name, args.mode)
