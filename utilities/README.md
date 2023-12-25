@@ -18,7 +18,7 @@ The table below shows preliminary results, as reported by other papers or record
 | Med-PaLM 2            | 540B   | -                   | 81.8       | 86.5    | 72.3      |
 | RAGLlama              | 70B    |                     |            |         | 46.3      |
 | RiPLlama              | 70B    |                     |            |         | 46.9      |
-| BioLlama              | 70B    |                     |            |         |           |
+| BioLlama              | 70B    |                     | 99.99      |         |           |
 <!-- table -->
 
 ## 🔎 Dissertation
@@ -29,6 +29,8 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 18:55:47, 25.12.2023 | BioLlama | PubMedQA |  --> 99.99
+
  * 13:05:10, 23.12.2023 | RiPLlama | MedMCQA |  --> 46.9
 
  * 00:15:32, 23.12.2023 | RAGLlama | MedQA | 30.0 --> 20.0
@@ -62,5 +64,6 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
 
 <!-- changelog -->

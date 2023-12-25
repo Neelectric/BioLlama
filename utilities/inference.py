@@ -27,7 +27,9 @@ def inference(model="Llama-2-70B-chat-GPTQ",
               b_end = 1, 
               max_new_tokens = 30,
               inference_mode = "std",
-              retrieval_mode = None):
+              retrieval_model = None,
+              retrieval_text_mode = "full",
+              db_name = "RCT20ktrain"):
     
     #preparatory steps
     start_time = time.time() # time before batch inference
@@ -36,20 +38,20 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     benchmark_questions, benchmark_answers = parse_benchmark(benchmark) #load benchmark
     prompts = []
     raw_responses = []
-    db_name = "RCT20ktrain"
 
     #retrieving chunks for questions all at once
-    if retrieval_mode == "gte-large":
-        retrieved_chunks = gte_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name)
-    elif retrieval_mode == "medcpt":
-        retrieved_chunks = medcpt_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name)
-    else:
-        retrieved_chunks = [str(i) for i in range(min(b_end, len(benchmark_questions)) - b_start)]
+    if retrieval_model == "gte-large":
+        retrieved_chunks = gte_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name, retrieval_text_mode)
+    elif retrieval_model == "medcpt":
+        retrieved_chunks = medcpt_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name, retrieval_text_mode)
+    #this seems dubious, just doing this so promptify does not complain...
+    # else:
+    #     retrieved_chunks = [str(i) for i in range(min(b_end, len(benchmark_questions)) - b_start)]
 
     #promptifying questions
     chunk_index = 0
     for question in benchmark_questions[b_start:min(b_end, len(benchmark_questions))]:
-        prompts.append(promptify(benchmark=benchmark, question=question, retrieval_mode=retrieval_mode, retrieved_chunks=retrieved_chunks[chunk_index])) #promptify questions
+        prompts.append(promptify(benchmark=benchmark, question=question, retrieval_mode=retrieval_model, retrieved_chunks=retrieved_chunks[chunk_index])) #promptify questions
         chunk_index += 1
     #uncomment to print question, retrieved chunks and created prompt as sanity check
     #print("Question: " + str(benchmark_questions[b_start]))
@@ -58,7 +60,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     # for chunk in chunks:
     #     print(chunk)
     #     print("\n")
-    print("Prompt: " + str(prompts[0]))
+    print("Prompts: " + str(prompts[0:2]))
     
     
     print(f"--------------Start of inference of {model} on questions {b_start} to {b_end}------------------")
@@ -119,7 +121,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
             responses.append("LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: " + raw_response)
 
     #parse the output and write it to file
-    if benchmark == "BioASQ5b":
+    if benchmark == "bioASQ_no_snippet":
         output = []
         for i in range(len(responses)):
             instance = []
@@ -178,5 +180,5 @@ if __name__ == "__main__":
               b_end = int(args.b_end), 
               max_new_tokens = int(args.max_new_tokens),
               inference_mode = args.inference_mode,
-              retrieval_mode = args.retrieval_mode
+              retrieval_model = args.retrieval_mode
               )

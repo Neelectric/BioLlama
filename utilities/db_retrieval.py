@@ -108,7 +108,6 @@ def prepare_folders(db_name, embedding_model, mode):
     return faiss_folder_path, json_folder_path
 
 def build_index_gte(db_name, mode):
-    print("CURRENTLY UNSURE IF WORKS AS INTENDED")
     print("Building index with gte-large")
     chunks, chunks_dict = read_chunks(db_name, mode)
     faiss_folder_path, json_folder_path = prepare_folders(db_name, "gte-large", mode)
@@ -176,16 +175,17 @@ def build_index_medcpt(db_name, mode):
     with open(json_file_path, "w") as json_file:
         json.dump(chunks_dict, json_file, indent=4)
 
-def load_db(embedding_model, db_name):
-    index_path_faiss = "vectorstores/" + db_name + "/" + embedding_model +"/db_faiss/" + db_name + '.index'
-    index_path_json = "vectorstores/" + db_name + "/" + embedding_model + "/db_JSON/" + db_name + '.json'
+def load_db(embedding_model, db_name, retrieval_text_mode):
+    index_path_faiss = "vectorstores/" + db_name + "/" + embedding_model + "/"+ retrieval_text_mode + "/db_faiss/" + db_name + '.index'
+    index_path_json = "vectorstores/" + db_name + "/" + embedding_model + "/" + retrieval_text_mode + "/db_JSON/" + db_name + '.json'
     print("Attempting to load FAISS index for " + index_path_faiss)
     with open(index_path_json, "r") as json_file:
         knowledge_db_as_JSON = json.load(json_file)
     return faiss.read_index(index_path_faiss), knowledge_db_as_JSON
 
-def medcpt_FAISS_retrieval(questions, db_name):
-    db_faiss, db_json = load_db("medcpt", db_name)
+def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode):
+    #print("questions we are given: " + str(questions))
+    db_faiss, db_json = load_db("medcpt", db_name, retrieval_text_mode)
     model = AutoModel.from_pretrained("ncbi/MedCPT-Query-Encoder")
     tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")
     #i will first try embedding of question and retrieval on a question by question basis, and time it
@@ -219,8 +219,8 @@ def medcpt_FAISS_retrieval(questions, db_name):
     print("Time to retrieve chunks: " + str(time_after_retrieval - time_before_retrieval) + " seconds.")
     return chunk_list
     
-def gte_FAISS_retrieval(questions, db_name):
-    db_faiss, db_json = load_db("gte-large", db_name)
+def gte_FAISS_retrieval(questions, db_name, retrieval_text_mode):
+    db_faiss, db_json = load_db("gte-large", db_name, retrieval_text_mode)
     #if db is a faiss index, print that
     print("db: " + str(db_faiss))
     k = 1

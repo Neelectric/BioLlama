@@ -11,8 +11,9 @@ import json
 import pandas as pd
 from io import StringIO
 import datetime
+import pytz
 
-with open('config/config.yml', 'r', encoding='utf8') as ymlfile:
+with open('../config/config.yml', 'r', encoding='utf8') as ymlfile:
     cfg = box.Box(yaml.safe_load(ymlfile))
 
 #retired method
@@ -40,7 +41,7 @@ def load_benchmark(benchmark_filepath, type):
     return questions, exact_answers
 
 def write_to_readme(model, benchmark, result):
-    with open('README.md', 'r') as file:
+    with open('../README.md', 'r') as file:
         readme = file.read()
     before_table, table, after_table = readme.split("<!-- table -->")
 
@@ -64,7 +65,14 @@ def write_to_readme(model, benchmark, result):
 
     #prepare combinations & new changelog, then write result
     before_changelog_after_table, changelog, after_changelog_after_table = after_table.split("<!-- changelog -->")
-    now = datetime.datetime.now()
+    #print all three components
+    # print("before changelog: " + before_changelog_after_table)
+    # print("changelog: " + changelog)
+    # print("after changelog: " + after_changelog_after_table)
+
+    machine_timezone = pytz.timezone(pytz.country_timezones['DE'][0])
+
+    now = datetime.datetime.now(machine_timezone)
     new_change = " * " + now.strftime("%H:%M:%S, %d.%m.%Y") + " | " + model + " | " + benchmark + " | " + str(old_result) + " --> " + str(result) + "\n"
     changelog = new_change + changelog
     after_table = before_changelog_after_table + '<!-- changelog -->\n' + changelog + "\n<!-- changelog -->"+ after_changelog_after_table
@@ -75,4 +83,4 @@ def write_to_readme(model, benchmark, result):
         file.write(new_readme)
     return
 
-#write_to_readme("BioLlama", "PubMedQA", 99.99 )
+write_to_readme("BioLlama", "PubMedQA", 99.99 )
