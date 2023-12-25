@@ -11,9 +11,9 @@ from utilities.exact_match import exact_match
 from utilities.utilities import write_to_readme
 
 model =  "Llama-2-70B-chat-GPTQ"
-benchmark = "bioASQ_no_snippet"
+benchmark = "MedQA"
 db_name = "RCT200ktrain"
-retrieval_model = "gte-large"
+retrieval_model = "medcpt"
 retrieval_text_mode = "brc"
 
 inference(model=model,
@@ -33,4 +33,4 @@ elif retrieval_model == "medcpt":
     model = "RiPLlama"
 elif retrieval_model == "retro":
     model = "BioLlama"
-#write_to_readme(model=model, benchmark=benchmark, result=accuracy)
+# write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode)

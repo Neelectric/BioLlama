@@ -3,6 +3,8 @@ Public repository to accompany the Level 4 Research Project "Retrieval enhanceme
 
 The aim of this project is to enhance models of varying sizes from the Llama2 family with retrieval methods, potentially through RAG, RETRO, FID and other methods. Using zero-shot, one-shot and few-shot prompting techniques, an initial baseline is created to see how much performance can be "tickled" out of vanilla Llama2 in its 7B, 13B and 70B variants. Retrieval then creates an extension on top of this to investigate its downstream impact. Performance is measured using standard Biomedical QA and OpenQA benchmarks such as BioASQ, MedQA and PubMedQA and MedMCQA.
 
+Currently, "RAGLlama" implies that retrieval was done with GTE-Large as an embedding model, "RiPLlama" implies it occured with MedCPT, and BioLlama is a RETRO-fitted Llama2
+
 ## Results
 The table below shows preliminary results, as reported by other papers or recorded by me
 
@@ -16,7 +18,7 @@ The table below shows preliminary results, as reported by other papers or record
 | M42                   | 70B    | -                   | -          | 61.5    | 60.9      |
 | Med-PaLM              | 540B   | -                   | 79.0       | 67.6    | 57.6      |
 | Med-PaLM 2            | 540B   | -                   | 81.8       | 86.5    | 72.3      |
-| RAGLlama              | 70B    |                     |            |         | 46.3      |
+| RAGLlama              | 70B    |                     |            | 34.0    | 46.3      |
 | RiPLlama              | 70B    |                     |            |         | 46.9      |
 | BioLlama              | 70B    |                     |            |         |           |
 <!-- table -->
@@ -29,6 +31,10 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 19:11:47, 25.12.2023 | RAGLlama | MedQA | 33.0 --> 34.0 (1*bomrc RCT200k)
+
+ * 19:06:31, 25.12.2023 | RAGLlama | MedQA |  --> 33.0 (1*brc RCT200k)
+
  * 13:05:10, 23.12.2023 | RiPLlama | MedMCQA |  --> 46.9
 
  * 00:15:32, 23.12.2023 | RAGLlama | MedQA | 30.0 --> 20.0
@@ -62,5 +68,10 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
+
+
+
+
 
 <!-- changelog -->

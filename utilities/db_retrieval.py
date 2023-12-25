@@ -250,5 +250,3 @@ if __name__ == "__main__":
         build_index_gte(args.db_name, args.mode)
     elif args.embedding_type =="medcpt":
         build_index_medcpt(args.db_name, args.mode)
-        # print("reading chunks for medcpt")
-        # read_chunks(args.db_name, args.mode)

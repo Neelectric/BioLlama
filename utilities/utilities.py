@@ -13,7 +13,7 @@ from io import StringIO
 import datetime
 import pytz
 
-with open('../config/config.yml', 'r', encoding='utf8') as ymlfile:
+with open('config/config.yml', 'r', encoding='utf8') as ymlfile:
     cfg = box.Box(yaml.safe_load(ymlfile))
 
 #retired method
@@ -40,8 +40,8 @@ def load_benchmark(benchmark_filepath, type):
     print("Returning " + str(num) + " questions.")
     return questions, exact_answers
 
-def write_to_readme(model, benchmark, result):
-    with open('../README.md', 'r') as file:
+def write_to_readme(model, benchmark, result, db_name, retrieval_text_mode):
+    with open('README.md', 'r') as file:
         readme = file.read()
     before_table, table, after_table = readme.split("<!-- table -->")
 
@@ -73,7 +73,7 @@ def write_to_readme(model, benchmark, result):
     machine_timezone = pytz.timezone(pytz.country_timezones['DE'][0])
 
     now = datetime.datetime.now(machine_timezone)
-    new_change = " * " + now.strftime("%H:%M:%S, %d.%m.%Y") + " | " + model + " | " + benchmark + " | " + str(old_result) + " --> " + str(result) + "\n"
+    new_change = " * " + now.strftime("%H:%M:%S, %d.%m.%Y") + " | " + model + " | " + benchmark + " | " + str(old_result) + " --> " + str(result) + "(1*" + retrieval_text_mode + " " + db_name + ")\n"
     changelog = new_change + changelog
     after_table = before_changelog_after_table + '<!-- changelog -->\n' + changelog + "\n<!-- changelog -->"+ after_changelog_after_table
     new_readme = before_table + '<!-- table -->\n' + new_table + "\n<!-- table -->"+ after_table
@@ -83,4 +83,5 @@ def write_to_readme(model, benchmark, result):
         file.write(new_readme)
     return
 
-write_to_readme("BioLlama", "PubMedQA", 99.99 )
+if __name__ == "__main__":
+    write_to_readme("BioLlama", "PubMedQA", 99.99 )

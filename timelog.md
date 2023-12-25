@@ -245,3 +245,8 @@
 
 ### Saturday - 23 Dec 2023
 * *1 hour* Starting to add MedCPT support
+
+### Sunday - 25 Dec 2023
+
+### Monday - 26 Dec 2023
+* *1 hour* Fixing write_to_readme
