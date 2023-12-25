@@ -33,7 +33,9 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 <!-- changelog -->
  * 19:11:47, 25.12.2023 | RAGLlama | MedQA | 33.0 --> 34.0 (1*bomrc RCT200k)
 
- * 19:06:31, 25.12.2023 | RAGLlama | MedQA |  --> 33.0 (1*brc RCT200k)
+ * 19:06:31, 25.12.2023 | RAGLlama | MedQA | 33.0 --> 33.0 (1*brc RCT200k)
+
+ * 18:43:21, 25.12.2023 | RAGLlama | MedQA |  --> 33.0 (1*full RCT200k)
 
  * 13:05:10, 23.12.2023 | RiPLlama | MedMCQA |  --> 46.9
 
