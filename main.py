@@ -13,13 +13,13 @@ from utilities.utilities import write_to_readme
 model =  "Llama-2-70B-chat-GPTQ"
 benchmark = "MedQA"
 db_name = "RCT200ktrain"
-retrieval_model = "medcpt"
-retrieval_text_mode = "brc"
+retrieval_model = "gte-large"
+retrieval_text_mode = "full"
 
 inference(model=model,
         benchmark=benchmark,
         b_start=13,
-        b_end=15,
+        b_end=113,
         max_new_tokens=30,
         inference_mode="std",
         retrieval_model=retrieval_model,

@@ -191,7 +191,7 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode):
     #i will first try embedding of question and retrieval on a question by question basis, and time it
     #this is with arbitrary choices: k=1, max_length (how many tokens are in input i think?) = 480
     time_before_retrieval = time.time()
-    k = 1
+    k = 5
     chunk_list = []
     for question in questions:
         chunks = []
@@ -213,6 +213,7 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode):
         print("Distances shape: " + str(distances.shape))
         for i in range(len(distances)):
             print("Distance: " + str(distances[i]) + " Index: " + str(indices[i]))
+            print("Chunk: " + str(db_json[str(indices[i]+1)]))
             chunks.append(db_json[str(indices[i]+1)])
         chunk_list.append(chunks)   
     time_after_retrieval = time.time()
@@ -223,6 +224,7 @@ def gte_FAISS_retrieval(questions, db_name, retrieval_text_mode):
     db_faiss, db_json = load_db("gte-large", db_name, retrieval_text_mode)
     #if db is a faiss index, print that
     print("db: " + str(db_faiss))
+    time_before_retrieval = time.time()
     k = 1
     chunk_list = []
     embedding_model = SentenceTransformer("thenlper/gte-large")
@@ -235,8 +237,11 @@ def gte_FAISS_retrieval(questions, db_name, retrieval_text_mode):
         print("Distances shape: " + str(distances.shape))
         for i in range(len(distances)):
             print("Distance: " + str(distances[i]) + " Index: " + str(indices[i]))
+            print("Chunk: " + str(db_json[str(indices[i]+1)]))
             chunks.append(db_json[str(indices[i]+1)])
         chunk_list.append(chunks)        
+    time_after_retrieval = time.time()
+    print("Time to retrieve chunks: " + str(time_after_retrieval - time_before_retrieval) + " seconds.")
     return chunk_list
 
 
