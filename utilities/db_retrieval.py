@@ -192,8 +192,8 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode):
     #i will first try embedding of question and retrieval on a question by question basis, and time it
     #this is with arbitrary choices: k=1, max_length (how many tokens are in input i think?) = 480
     time_before_retrieval = time.time()
-    k = 10
-    top_k = 5
+    k = 5
+    top_k = 1
     chunk_list = []
     for question in questions:
         chunks = []
@@ -211,6 +211,7 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode):
         distances, indices = db_faiss.search(embeds, k)
         distances = distances.flatten()
         indices = indices.flatten()
+        # print(indices)
 
         if k>1:
             #reranking step
@@ -241,17 +242,15 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode):
                 # print("last positive score: ")
                 if np.where(sorted_indices>0)[0].size>0:
                     last_positive = np.where(sorted_indices>0)[0][-1]
-                    print(last_positive)
                 else:
                     # print("None")
+                    last_positive = 0
                     pass
+                print(last_positive)
                 chunks = [x[0] for x in sorted_scores]
-                chunks = chunks[0:min(last_positive, top_k-1)]
+                chunks = chunks[0]
 
-        for i in range(len(distances)):
-            chunks.append(db_json[str(indices[i])])
         chunk_list.append(chunks)   
-        # print(chunks[0:2])
     time_after_retrieval = time.time()
     print("Time to retrieve chunks: " + str(time_after_retrieval - time_before_retrieval) + " seconds.")
     return chunk_list

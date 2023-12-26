@@ -60,7 +60,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     # for chunk in chunks:
     #     print(chunk)
     #     print("\n")
-    print("Prompts: " + str(prompts[0:2]))
+    # print("Prompts: " + str(prompts[0:2]))
     
     
     print(f"--------------Start of inference of {model} on questions {b_start} to {b_end}------------------")
