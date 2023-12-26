@@ -11,7 +11,7 @@ import json
 import faiss
 import os
 import torch
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel, AutoModelForSequenceClassification
 import numpy as np
 from tqdm import tqdm
 from sentence_transformers import SentenceTransformer
@@ -73,10 +73,10 @@ def read_chunks(db_name, mode):
                 if mode == "full":
                     chunks.append(chunk)
                     chunks_dict[n_chunks] = chunk
-                elif mode == "bomrc":
+                elif mode == "bomrc" and b_o_m_r_c != "":
                     chunks.append(b_o_m_r_c)
                     chunks_dict[n_chunks] = b_o_m_r_c
-                elif mode == "brc":
+                elif mode == "brc" and b_r_c != "":
                     chunks.append(b_r_c)
                     chunks_dict[n_chunks] = b_r_c
 
@@ -188,10 +188,12 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode):
     db_faiss, db_json = load_db("medcpt", db_name, retrieval_text_mode)
     model = AutoModel.from_pretrained("ncbi/MedCPT-Query-Encoder")
     tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")
+
     #i will first try embedding of question and retrieval on a question by question basis, and time it
     #this is with arbitrary choices: k=1, max_length (how many tokens are in input i think?) = 480
     time_before_retrieval = time.time()
-    k = 5
+    k = 10
+    top_k = 5
     chunk_list = []
     for question in questions:
         chunks = []
@@ -202,20 +204,54 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode):
                 truncation=True, 
                 padding=True, 
                 return_tensors='pt', 
-                max_length=480,
+                max_length=512,
             )
             # encode the queries (use the [CLS] last hidden states as the representations)
             embeds = model(**encoded).last_hidden_state[:, 0, :]
-        #question_embedding = np.array([embeds])
         distances, indices = db_faiss.search(embeds, k)
         distances = distances.flatten()
         indices = indices.flatten()
-        print("Distances shape: " + str(distances.shape))
+
+        if k>1:
+            #reranking step
+            rerank_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Cross-Encoder")
+            rerank_model = AutoModelForSequenceClassification.from_pretrained("ncbi/MedCPT-Cross-Encoder")
+            chunks = [db_json[str(indices[i])] for i in range(len(distances))]
+            #print("chunks: " + str(chunks))
+            pairs = [[question, chunk] for chunk in chunks]
+            with torch.no_grad():
+                encoded = rerank_tokenizer(
+                    pairs, 
+                    truncation=True, 
+                    padding=True, 
+                    return_tensors='pt', 
+                    max_length=512,
+                )
+                # encode the queries (use the [CLS] last hidden states as the representations)
+                logits = rerank_model(**encoded).logits.squeeze(dim =1).numpy()
+                # print("logits: " + str(logits))
+                #in logits, print the index of the last score which is positive
+                
+                #"logits" now gives us relevance scores. we want to use to resort the chunks array
+                #by the relevance scores in logits, where higher relevance should be first
+                #we can do this by sorting the indices of logits, and then using those indices to sort chunks
+                sorted_scores = sorted(zip(chunks, logits), key=lambda x: x[1], reverse=True)
+                sorted_indices = np.array([x[1] for x in sorted_scores])
+                # print("logits after: " + str([x[1] for x in sorted_scores]))
+                # print("last positive score: ")
+                if np.where(sorted_indices>0)[0].size>0:
+                    last_positive = np.where(sorted_indices>0)[0][-1]
+                    print(last_positive)
+                else:
+                    # print("None")
+                    pass
+                chunks = [x[0] for x in sorted_scores]
+                chunks = chunks[0:min(last_positive, top_k-1)]
+
         for i in range(len(distances)):
-            print("Distance: " + str(distances[i]) + " Index: " + str(indices[i]))
-            print("Chunk: " + str(db_json[str(indices[i]+1)]))
-            chunks.append(db_json[str(indices[i]+1)])
+            chunks.append(db_json[str(indices[i])])
         chunk_list.append(chunks)   
+        # print(chunks[0:2])
     time_after_retrieval = time.time()
     print("Time to retrieve chunks: " + str(time_after_retrieval - time_before_retrieval) + " seconds.")
     return chunk_list
@@ -225,7 +261,7 @@ def gte_FAISS_retrieval(questions, db_name, retrieval_text_mode):
     #if db is a faiss index, print that
     print("db: " + str(db_faiss))
     time_before_retrieval = time.time()
-    k = 1
+    k = 5
     chunk_list = []
     embedding_model = SentenceTransformer("thenlper/gte-large")
     for question in questions:
@@ -237,8 +273,8 @@ def gte_FAISS_retrieval(questions, db_name, retrieval_text_mode):
         print("Distances shape: " + str(distances.shape))
         for i in range(len(distances)):
             print("Distance: " + str(distances[i]) + " Index: " + str(indices[i]))
-            print("Chunk: " + str(db_json[str(indices[i]+1)]))
-            chunks.append(db_json[str(indices[i]+1)])
+            print("Chunk: " + str(db_json[str(indices[i])]))
+            chunks.append(db_json[str(indices[i])])
         chunk_list.append(chunks)        
     time_after_retrieval = time.time()
     print("Time to retrieve chunks: " + str(time_after_retrieval - time_before_retrieval) + " seconds.")

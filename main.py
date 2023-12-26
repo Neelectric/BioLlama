@@ -12,9 +12,9 @@ from utilities.utilities import write_to_readme
 
 model =  "Llama-2-70B-chat-GPTQ"
 benchmark = "MedQA"
-db_name = "RCT200ktrain"
-retrieval_model = "gte-large"
-retrieval_text_mode = "full"
+db_name = "RCT20ktrain"
+retrieval_model = "medcpt"
+retrieval_text_mode = "brc"
 
 inference(model=model,
         benchmark=benchmark,
@@ -33,4 +33,4 @@ elif retrieval_model == "medcpt":
     model = "RiPLlama"
 elif retrieval_model == "retro":
     model = "BioLlama"
-# write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode)
+write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode)
