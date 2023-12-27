@@ -60,7 +60,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     # for chunk in chunks:
     #     print(chunk)
     #     print("\n")
-    # print("Prompts: " + str(prompts[0:2]))
+    # print("Prompts: " + str(prompts[0]))
     
     
     print(f"--------------Start of inference of {model} on questions {b_start} to {b_end}------------------")
@@ -125,7 +125,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
         output = []
         for i in range(len(responses)):
             instance = []
-            instance.append(benchmark_questions[i+b_start][1])
+            instance.append(benchmark_questions[i+b_start])
             if type(benchmark_answers[i+b_start][0]) != type("String lol"):
                 instance.append(benchmark_answers[i+b_start][0][0])
             else:

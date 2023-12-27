@@ -247,6 +247,12 @@
 * *1 hour* Starting to add MedCPT support
 
 ### Sunday - 25 Dec 2023
+* *1.5 hours* Creating vectorstores for RCT20k train on GTE-Large and MedCPT in "bomrc", "brc" and "full" settings
 
 ### Monday - 26 Dec 2023
 * *1 hour* Fixing write_to_readme
+* *2.5 hours* Extensive work creating vectorstores for RCT200ktrain on GTE-Large and MedCPT in "bomrc", "brc" and "full" settings
+
+### Tuesday - 27
+* *1 hour* Trials in improving retrieval with reranker
+* *1 hour* Adding "bc" and "input_segmentation" settings to RCT200ktrain on MedCPT

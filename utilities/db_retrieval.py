@@ -16,12 +16,12 @@ import numpy as np
 from tqdm import tqdm
 from sentence_transformers import SentenceTransformer
 
-def read_chunks(db_name, mode):
-    chunk = ""
-    chunks = []
-    n_chunks = 0
+def read_documents(db_name, mode):
+    document = ""
+    documents = []
+    n_documents = 0
     n_lines = 0
-    chunks_dict = {}
+    documents_dict = {}
     txt_files = glob.glob("../database/*.txt")
     print(txt_files)
     if "../database/" + db_name in txt_files:
@@ -33,9 +33,14 @@ def read_chunks(db_name, mode):
         #raise Exception("There should be exactly one .txt file in the data directory.")
         print("FYI: Found more than one .txt file in the data directory. Using file " + file_name)
 
+    #for read_documents, input segmentation behaves the same as bomrc
+    if mode == "input_segmentation":
+        print("mode is input_segmentation, changing to bomrc")
+        mode = "bomrc"
     full_lengths = []
     bomrc_lengths = []
     brc_lengths = []
+    bc_lengths = []
 
     with open(file_name, 'r') as file:
         id = ""
@@ -64,27 +69,31 @@ def read_chunks(db_name, mode):
             if not line.strip():
                 b_o_m_r_c = dict['BACKGROUND'] + dict['OBJECTIVE'] + dict['METHODS'] + dict['RESULTS'] + dict['CONCLUSIONS']
                 b_r_c = dict['BACKGROUND'] + dict['RESULTS'] + dict['CONCLUSIONS']
+                b_c = dict['BACKGROUND'] + dict['CONCLUSIONS']
                 #quick study on effect of removing extra words with dict
                 #and then on only taking background, results, conclusions
-                full_lengths.append(len(chunk))
+                full_lengths.append(len(document))
                 bomrc_lengths.append(len(b_o_m_r_c))
-                brc_lengths.append(len(b_r_c))     
+                brc_lengths.append(len(b_r_c))  
+                bc_lengths.append(len(b_c)) 
 
                 if mode == "full":
-                    chunks.append(chunk)
-                    chunks_dict[n_chunks] = chunk
+                    documents.append(document)
+                    documents_dict[n_documents] = document
                 elif mode == "bomrc" and b_o_m_r_c != "":
-                    chunks.append(b_o_m_r_c)
-                    chunks_dict[n_chunks] = b_o_m_r_c
+                    documents.append(b_o_m_r_c)
+                    documents_dict[n_documents] = b_o_m_r_c
                 elif mode == "brc" and b_r_c != "":
-                    chunks.append(b_r_c)
-                    chunks_dict[n_chunks] = b_r_c
-
-                n_chunks += 1
-                chunk = ""
+                    documents.append(b_r_c)
+                    documents_dict[n_documents] = b_r_c
+                elif mode == "bc" and b_c != "":
+                    documents.append(b_c)
+                    documents_dict[n_documents] = b_c
+                n_documents += 1
+                document = ""
                 id = ""
             else:
-                chunk += line
+                document += line
     
     #find average lengths
     full_avg = np.mean(full_lengths)
@@ -93,7 +102,8 @@ def read_chunks(db_name, mode):
     print("full_avg: " + str(full_avg))
     print("bomrc_avg: " + str(bomrc_avg))
     print("brc_avg: " + str(brc_avg))
-    return chunks, chunks_dict
+    print("bc_avg: " + str(np.mean(bc_lengths)))
+    return documents, documents_dict
 
 def prepare_folders(db_name, embedding_model, mode):
     #omit ".txt" from db_name
@@ -109,7 +119,7 @@ def prepare_folders(db_name, embedding_model, mode):
 
 def build_index_gte(db_name, mode):
     print("Building index with gte-large")
-    chunks, chunks_dict = read_chunks(db_name, mode)
+    chunks, chunks_dict = read_documents(db_name, "gte-large")
     faiss_folder_path, json_folder_path = prepare_folders(db_name, "gte-large", mode)
     db_name = db_name[0:-4]
     #build index
@@ -132,13 +142,13 @@ def build_index_gte(db_name, mode):
     with open(json_file_path, "w") as json_file:
         json.dump(chunks_dict, json_file, indent=4)
 
-def build_index_medcpt(db_name, mode):
+def build_index_medcpt(db_name, mode, chunk_length):
     print("Building index with MedCPT")
-    chunks, chunks_dict = read_chunks(db_name, mode)
+    documents, documents_dict = read_documents(db_name, mode)
     faiss_folder_path, json_folder_path = prepare_folders(db_name, "medcpt", mode)
     db_name = db_name[0:-4]
     #build index
-    print("len(chunks): " + str(len(chunks)))
+    print("len(documents): " + str(len(documents)))
     time_before_index = time.time()
     embedding_model = AutoModel.from_pretrained("ncbi/MedCPT-Article-Encoder")
     embedding_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Article-Encoder")
@@ -146,34 +156,68 @@ def build_index_medcpt(db_name, mode):
     #medcpt article encoder has 768 dimensions
     index = faiss.IndexFlatL2(768)
 
-    #we get too many embeddings to do everything in RAM, so we do it in batches
-    batch_size = 100
-    for i in tqdm(range(len(chunks)//batch_size), desc="Batch Inference"):
-        temp_chunks = list(chunks[i*batch_size:(i+1)*batch_size])
-        with torch.no_grad():
-            # tokenize the articles
-            encoded = embedding_tokenizer(
-                temp_chunks, 
+    if mode != "input_segmentation":
+        #we get too many embeddings to do everything in RAM, so we do it in batches
+        batch_size = 100
+        for i in tqdm(range(len(documents)//batch_size), desc="Batch Inference"):
+            temp_documents = list(documents[i*batch_size:(i+1)*batch_size])
+            with torch.no_grad():
+                # tokenize the articles
+                encoded = embedding_tokenizer(
+                    temp_documents, 
+                    truncation=True, 
+                    padding=True, 
+                    return_tensors='pt', 
+                    max_length=512,
+                )
+                # encode the queries (use the [CLS] last hidden states as the representations)
+                chunk_embeddings = embedding_model(**encoded).last_hidden_state[:, 0, :]
+                index.add(chunk_embeddings)
+    else:
+        print("Performing input segmentation")
+        for i in tqdm(range(len(documents))):
+            document = documents[i]
+            # segment input chunks into chunks of length chunk_length, override json file
+            tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Article-Encoder")
+            encoded = tokenizer(
+                document, 
                 truncation=True, 
                 padding=True, 
                 return_tensors='pt', 
                 max_length=512,
             )
-            # encode the queries (use the [CLS] last hidden states as the representations)
-            chunk_embeddings = embedding_model(**encoded).last_hidden_state[:, 0, :]
-            index.add(chunk_embeddings)
+            #print the number of tokens the tokenizer spits out
+            # print("Number of tokens: " + str(len(encoded['input_ids'][0])))
+            m = chunk_length
+            #we want to split the document into m chunks, padding with empty strings if necessary
+            # print(len(documents[i]))
+            # for i in range((len(document)//m)+1):
+            #     if i != (len(document)//m):
+            #         print("chunk " + str(i))
+            #         print("start: " + str(i*m))
+            #         chunk = document[i*m:(i+1)*m]
+            #     else:
+            #         chunk = document[i*m:]
+            #         print("last")
+            #         print("chunk " + str(i))
+            #         print("start: " + str(i*m))
+            #         #pad chunk with empty spaces so that it has len 16
+            #         chunk += " "*(m-len(chunk))
+            #     print(chunk)
 
-    faiss_file_path = faiss_folder_path + db_name + '.index'
-    json_file_path = json_folder_path + db_name + '.json'
 
-    print("Saving index to " + faiss_file_path)
-    faiss.write_index(index, faiss_file_path)
-    time_after_index = time.time()
-    print("Time to build index: " + str(time_after_index - time_before_index) + " seconds.")
 
-    #save as JSON objects too for convenience 
-    with open(json_file_path, "w") as json_file:
-        json.dump(chunks_dict, json_file, indent=4)
+    # faiss_file_path = faiss_folder_path + db_name + '.index'
+    # json_file_path = json_folder_path + db_name + '.json'
+
+    # print("Saving index to " + faiss_file_path)
+    # faiss.write_index(index, faiss_file_path)
+    # time_after_index = time.time()
+    # print("Time to build index: " + str(time_after_index - time_before_index) + " seconds.")
+
+    # #save as JSON objects too for convenience 
+    # with open(json_file_path, "w") as json_file:
+    #     json.dump(chunks_dict, json_file, indent=4)
 
 def load_db(embedding_model, db_name, retrieval_text_mode):
     index_path_faiss = "vectorstores/" + db_name + "/" + embedding_model + "/"+ retrieval_text_mode + "/db_faiss/" + db_name + '.index'
@@ -195,7 +239,9 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode):
     k = 5
     top_k = 1
     chunk_list = []
+    retrieval_quality = []
     for question in questions:
+        print(question)
         chunks = []
         with torch.no_grad():
             # tokenize the queries
@@ -218,7 +264,7 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode):
             rerank_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Cross-Encoder")
             rerank_model = AutoModelForSequenceClassification.from_pretrained("ncbi/MedCPT-Cross-Encoder")
             chunks = [db_json[str(indices[i])] for i in range(len(distances))]
-            #print("chunks: " + str(chunks))
+            # print("chunks: " + str(chunks))
             pairs = [[question, chunk] for chunk in chunks]
             with torch.no_grad():
                 encoded = rerank_tokenizer(
@@ -230,28 +276,34 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode):
                 )
                 # encode the queries (use the [CLS] last hidden states as the representations)
                 logits = rerank_model(**encoded).logits.squeeze(dim =1).numpy()
-                # print("logits: " + str(logits))
-                #in logits, print the index of the last score which is positive
-                
-                #"logits" now gives us relevance scores. we want to use to resort the chunks array
-                #by the relevance scores in logits, where higher relevance should be first
-                #we can do this by sorting the indices of logits, and then using those indices to sort chunks
-                sorted_scores = sorted(zip(chunks, logits), key=lambda x: x[1], reverse=True)
-                sorted_indices = np.array([x[1] for x in sorted_scores])
-                # print("logits after: " + str([x[1] for x in sorted_scores]))
-                # print("last positive score: ")
-                if np.where(sorted_indices>0)[0].size>0:
-                    last_positive = np.where(sorted_indices>0)[0][-1]
-                else:
-                    # print("None")
-                    last_positive = 0
-                    pass
-                print(last_positive)
-                chunks = [x[0] for x in sorted_scores]
-                chunks = chunks[0]
+            print("logits: " + str(logits))
+            #in logits, print the index of the last score which is positive
+            
+            #"logits" now gives us relevance scores. we want to use to resort the chunks array
+            #by the relevance scores in logits, where higher relevance should be first
+            #we can do this by sorting the indices of logits, and then using those indices to sort chunks
+            sorted_scores = sorted(zip(chunks, logits), key=lambda x: x[1], reverse=True)
+            sorted_indices = np.array([x[1] for x in sorted_scores])
+            print("logits after: " + str(sorted_indices))
+            print("last positive score: ")
+            if np.where(sorted_indices>0)[0].size>0:
+                last_positive = np.where(sorted_indices>0)[0][-1]
+            else:
+                # print("None")
+                last_positive = 0
+                pass
+            print(last_positive)
+            chunks = [x[0] for x in sorted_scores]
+            chunks = chunks[0]
+            print(chunks)
+            retrieval_quality.append(sorted_indices[0])
 
         chunk_list.append(chunks)   
     time_after_retrieval = time.time()
+    retrieval_quality = np.array(retrieval_quality)
+    print(retrieval_quality)
+    avg_retrieval_quality = np.mean(retrieval_quality)
+    print("Avg retrieval quality: " + str(avg_retrieval_quality))
     print("Time to retrieve chunks: " + str(time_after_retrieval - time_before_retrieval) + " seconds.")
     return chunk_list
     
@@ -285,8 +337,10 @@ if __name__ == "__main__":
     parser.add_argument('--db_name', type=str, default="RCT20ktrain.txt", help="Name of the database to build index for.")
     parser.add_argument('--embedding_type', type=str, default="gte-large", help='Type of embedding to use.')
     parser.add_argument('--mode', type=str, default="full", help='Whether to embed full text or combo of background, objective, methods, results, conclusions.')
+    parser.add_argument('--chunk_length', type=int, default=16, help='Length of chunks to embed.')
     args = parser.parse_args()
     if args.embedding_type == "gte-large":
         build_index_gte(args.db_name, args.mode)
     elif args.embedding_type =="medcpt":
-        build_index_medcpt(args.db_name, args.mode)
+        build_index_medcpt(args.db_name, args.mode, args.chunk_length)
+        # read_chunks("RCT200ktrain.txt", "medcpt", "sixteen")

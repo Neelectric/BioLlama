@@ -13,8 +13,8 @@ from io import StringIO
 import datetime
 import pytz
 
-with open('config/config.yml', 'r', encoding='utf8') as ymlfile:
-    cfg = box.Box(yaml.safe_load(ymlfile))
+# with open('config/config.yml', 'r', encoding='utf8') as ymlfile:
+#     cfg = box.Box(yaml.safe_load(ymlfile))
 
 #retired method
 def load_knowledge_db(knowledge_db_name):
@@ -73,12 +73,12 @@ def write_to_readme(model, benchmark, result, db_name, retrieval_text_mode):
     machine_timezone = pytz.timezone(pytz.country_timezones['DE'][0])
 
     now = datetime.datetime.now(machine_timezone)
-    new_change = " * " + now.strftime("%H:%M:%S, %d.%m.%Y") + " | " + model + " | " + benchmark + " | " + str(old_result) + " --> " + str(result) + "(1*" + retrieval_text_mode + " " + db_name + ")\n"
+    new_change = " * " + now.strftime("%H:%M:%S, %d.%m.%Y") + " | " + model + " | " + benchmark + " | " + str(old_result) + " --> " + str(result) + " (1*" + retrieval_text_mode + " " + db_name + ")\n"
     changelog = new_change + changelog
     after_table = before_changelog_after_table + '<!-- changelog -->\n' + changelog + "\n<!-- changelog -->"+ after_changelog_after_table
     new_readme = before_table + '<!-- table -->\n' + new_table + "\n<!-- table -->"+ after_table
-    print(new_table)
-    print(changelog)
+    # print(new_table)
+    # print(changelog)
     with open('README.md', 'w') as file:
         file.write(new_readme)
     return

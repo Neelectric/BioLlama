@@ -11,26 +11,27 @@ from utilities.exact_match import exact_match
 from utilities.utilities import write_to_readme
 
 model =  "Llama-2-70B-chat-GPTQ"
-benchmark = "MedQA"
-db_name = "RCT20ktrain"
+benchmark = "bioASQ_no_snippet"
+db_name = "RCT200ktrain"
 retrieval_model = "medcpt"
-retrieval_text_mode = "brc"
+retrieval_text_mode = "full"
 
 inference(model=model,
         benchmark=benchmark,
         b_start=13,
-        b_end=113,
+        b_end=1013,
         max_new_tokens=30,
         inference_mode="std",
         retrieval_model=retrieval_model,
         retrieval_text_mode=retrieval_text_mode,
         db_name=db_name)
 
-accuracy = 100*exact_match(model=model, benchmark=benchmark)
+if benchmark == "MedQA" or benchmark == "PubMedQA" or benchmark == "MedMCQA":
+    accuracy = 100*exact_match(model=model, benchmark=benchmark)
 if retrieval_model == "gte-large":
     model = "RAGLlama"
 elif retrieval_model == "medcpt":
     model = "RiPLlama"
 elif retrieval_model == "retro":
     model = "BioLlama"
-write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode)
+# write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode)
