@@ -14,7 +14,8 @@ model =  "Llama-2-70B-chat-GPTQ"
 benchmark = "bioASQ_no_snippet"
 db_name = "RCT200ktrain"
 retrieval_model = "medcpt"
-retrieval_text_mode = "full"
+retrieval_text_mode = "input_segmentation"
+chunk_length = 16
 
 inference(model=model,
         benchmark=benchmark,
@@ -24,6 +25,7 @@ inference(model=model,
         inference_mode="std",
         retrieval_model=retrieval_model,
         retrieval_text_mode=retrieval_text_mode,
+        chunk_length=chunk_length,
         db_name=db_name)
 
 if benchmark == "MedQA" or benchmark == "PubMedQA" or benchmark == "MedMCQA":

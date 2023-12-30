@@ -29,6 +29,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
               inference_mode = "std",
               retrieval_model = None,
               retrieval_text_mode = "full",
+              chunk_length = 16,
               db_name = "RCT20ktrain"):
     
     #preparatory steps
@@ -43,7 +44,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     if retrieval_model == "gte-large":
         retrieved_chunks = gte_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name, retrieval_text_mode)
     elif retrieval_model == "medcpt":
-        retrieved_chunks = medcpt_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name, retrieval_text_mode)
+        retrieved_chunks = medcpt_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name, retrieval_text_mode, chunk_length=chunk_length)
     #this seems dubious, just doing this so promptify does not complain...
     # else:
     #     retrieved_chunks = [str(i) for i in range(min(b_end, len(benchmark_questions)) - b_start)]
