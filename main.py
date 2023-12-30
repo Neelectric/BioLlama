@@ -13,9 +13,9 @@ from utilities.utilities import write_to_readme
 model =  "Llama-2-70B-chat-GPTQ"
 benchmark = "bioASQ_no_snippet"
 db_name = "RCT200ktrain"
-retrieval_model = "medcpt"
-retrieval_text_mode = "input_segmentation"
-chunk_length = 16
+retrieval_model = None
+retrieval_text_mode = None
+chunk_length = None
 
 inference(model=model,
         benchmark=benchmark,
