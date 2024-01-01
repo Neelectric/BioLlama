@@ -253,6 +253,18 @@
 * *1 hour* Fixing write_to_readme
 * *2.5 hours* Extensive work creating vectorstores for RCT200ktrain on GTE-Large and MedCPT in "bomrc", "brc" and "full" settings
 
-### Tuesday - 27
+### Tuesday - 27 Dec 2023
 * *1 hour* Trials in improving retrieval with reranker
 * *1 hour* Adding "bc" and "input_segmentation" settings to RCT200ktrain on MedCPT
+
+### Saturday - 30 Dec 2023
+* *1 hour* Further modifications on retrieval
+* *1.5 hours* Deep diving into exllama's exact model architecture
+
+### Sunday - 31 Dec 2023
+* *1 hour* Watching Karpathy's "Intro to LLMs" on YouTube
+* *1.5 hours* Further deep diving into exllama
+* *1.5 hours* Revisiting all materials on RETRO-fitting (RETRO, BioReader, RETRO++ and InstructRETRO)
+
+### Monday - 01 Dec 2023
+* *1 hour* Debugging exllama to get a better feeling for model setup

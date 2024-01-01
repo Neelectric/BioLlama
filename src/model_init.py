@@ -2,7 +2,6 @@
 # Taken directly from https://github.com/turboderp/exllama, which has an MIT License
 # Implements support for loading and initialising GPTQ Llama2 models
 
-
 from src.model import ExLlama, ExLlamaCache, ExLlamaConfig
 from src.tokenizer import ExLlamaTokenizer
 import argparse, sys, os, glob
