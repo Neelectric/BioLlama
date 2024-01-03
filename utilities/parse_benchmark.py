@@ -4,6 +4,8 @@
 
 import json
 import argparse
+import glob
+import os
 
 def parse_bioASQ_no_snippet(version="5b"):
     #read in raw benchmark
@@ -64,6 +66,10 @@ def parse_BioASQ_with_snippet(version="5b"):
 def parse_MedQA(version="US"):
     #load raw data from benchmarks/MedQA-USMLE/US/train.jsonl, which has a dictionary on each line
     data = []
+    # txt_files = glob.glob("../benchmarks")
+    # print(txt_files)
+    # dir_path = os.path.dirname(os.path.realpath(__file__))
+    # print(dir_path)
     with open('benchmarks/MedQA-USMLE/US/train.jsonl', 'r') as file:
         for line in file:
             record = json.loads(line)

@@ -268,3 +268,7 @@
 
 ### Monday - 01 Dec 2023
 * *1 hour* Debugging exllama to get a better feeling for model setup
+* *1 hour* Further perusing of RETRO papers
+
+### Tuesday - 02 Dec 2023
+* *1 hour* First finetune of Llama2 7B with frozen layers

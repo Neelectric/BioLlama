@@ -14,6 +14,11 @@ benchmarks/BioASQ/
 benchmarks/MedMCQA/train.json
 benchmarks/MedQA-USMLE/
 benchmarks/PubMedQA/
+artifacts/
+wandb/
+alpaca_gpt4_data.json
+alpaca_gpt4_eval.jsonl
+alpaca_gpt4_train.jsonl
 
 #add to gitignore all files in the vectorestore directory:
 vectorstores/

@@ -1,6 +1,6 @@
 # Part of the exllama library
 # Taken directly from https://github.com/turboderp/exllama, which has an MIT License
-# Implements the Llama2 model itself
+# Implements the Llama2 model itself, minor adaptations by Neel Rajani
 
 import sys
 min_version = (3, 9)
@@ -747,6 +747,9 @@ class ExLlama:
                 self.config.device_map.embed_tokens = "cpu"
                 self.config.device_map.layers = ["cuda10"] + ["?"] * (self.config.num_hidden_layers - 1)
 
+                #keys = f.keys()
+
+                #here we just identify decoder/head/norm sizes
                 for key in f.keys():
 
                     if _skip_key(key): continue
