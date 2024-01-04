@@ -2,6 +2,9 @@
 # Taken directly from https://github.com/turboderp/exllama, which has an MIT License
 # Implements the Llama2 model itself, minor adaptations by Neel Rajani
 
+# https://ai.plainenglish.io/understanding-llama2-kv-cache-grouped-query-attention-rotary-embedding-and-more-c17e5f49a6d7
+# this blog post (assisted by furious debugging) was hugely helpful in understanding what is going on here!
+
 import sys
 min_version = (3, 9)
 if sys.version_info < min_version:
@@ -226,7 +229,11 @@ class Ex4bitLinear:
 
 
 # Llama MLP
-
+    
+#exllama calls this a Multilayer perceptron (MLP), which according to wikipedia is actually
+#a misnomer for modern feedforward layers (FFW). It consists of fully connected neurons with
+#a nonlinear activation function (in this case SwiGLU). It follows the attention layer and 
+#normalization
 class ExLlamaMLP:
 
     def __init__(self, config, tensors, key):
@@ -237,6 +244,8 @@ class ExLlamaMLP:
         self.up_proj = Ex4bitLinear(config, self.config.hidden_size, self.config.intermediate_size, False, tensors, key + ".up_proj")
         self.down_proj = Ex4bitLinear(config, self.config.intermediate_size, self.config.hidden_size, False, tensors, key + ".down_proj")
 
+        #this applies SwiGLU (Swish Gate Linear Unit), which is one of 
+        #Llama's architectural changes to GPT. First introduced in PaLM, then Llama, now Llama2
         self.act_fn = nn.SiLU()
 
     def fused(self, x, buffer, post_attention_layernorm, lora):
@@ -747,7 +756,7 @@ class ExLlama:
                 self.config.device_map.embed_tokens = "cpu"
                 self.config.device_map.layers = ["cuda10"] + ["?"] * (self.config.num_hidden_layers - 1)
 
-                #keys = f.keys()
+                keys = f.keys()
 
                 #here we just identify decoder/head/norm sizes
                 for key in f.keys():
@@ -841,6 +850,7 @@ class ExLlama:
             tensors[key] = tensor
 
         del f
+        tensor_list = list(tensors)
 
         # Head
 

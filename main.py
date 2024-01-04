@@ -10,7 +10,7 @@ from utilities.inference import inference
 from utilities.exact_match import exact_match
 from utilities.utilities import write_to_readme
 
-model =  "Llama-2-70B-chat-GPTQ"
+model =  "Llama-2-7B-chat-GPTQ"
 benchmark = "MedQA"
 db_name = None
 retrieval_model = None

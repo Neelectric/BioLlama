@@ -1,6 +1,12 @@
 {
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
+    "python.formatting.provider": "none",
+    "env": {
+      "PYDEVD_CONTAINER_RANDOM_ACCESS_MAX_ITEMS": 1000
     },
-    "python.formatting.provider": "none"
-}
+    "[python]" : {
+      "editor.defaultFormatter": "ms-python.black-formatter",
+      "env": {
+        "PYDEVD_CONTAINER_RANDOM_ACCESS_MAX_ITEMS": 1000
+      }
+    }
+  }

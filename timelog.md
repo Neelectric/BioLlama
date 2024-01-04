@@ -275,3 +275,8 @@
 
 ### Wednesday - 03 Dec 2023
 * *2 hours* Further work finetuning Llama2 7B with frozen layers
+
+### Thursday - 04 Dec 2023
+* *1 hour* Further research on RETRO implementations, T5-base and T5-11B
+* *0.5 hours* Full debug of Llama-2-7B-GPTQ 
+* *1.5 hours* Deep dive into Llama-2 and RETRO architecture comparison implementations

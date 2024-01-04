@@ -1,0 +1,77 @@
+{"biollama": {
+    "layers" : {
+        "embeddings": 0,
+        "DecoderLayer0": {
+            "input_layernorm": "RMS_Norm",
+            "Attention": {
+                "q_proj": "Ex4bit_linear",
+                "k_proj": "Ex4bit_linear",
+                "v_proj": "Ex4bit_linear",
+                "o_proj": "Ex4bit_linear"
+            },
+            "some form of plus?":"who knows",
+            "post_attention_layernorm": "RMS_Norm",
+            "MLP": {
+                "gate_proj": "Ex4bit_linear",
+                "up_proj": "Ex4bit_linear",
+                "down_proj": "Ex4bit_linear",
+                "act_fn": "nn.silu"
+            }
+        },
+        "DecoderLayer1": {
+            "input_layernorm": "RMS_Norm",
+            "Attention": {
+                "q_proj": "Ex4bit_linear",
+                "k_proj": "Ex4bit_linear",
+                "v_proj": "Ex4bit_linear",
+                "o_proj": "Ex4bit_linear"
+            },
+            "some form of plus?":"who knows",
+            "post_attention_layernorm": "RMS_Norm",
+            "MLP": {
+                "gate_proj": "Ex4bit_linear",
+                "up_proj": "Ex4bit_linear",
+                "down_proj": "Ex4bit_linear",
+                "act_fn": "nn.silu"
+            }
+        },
+        "DecoderLayer2": {
+            "input_layernorm": "RMS_Norm",
+            "Attention": {
+                "q_proj": "Ex4bit_linear",
+                "k_proj": "Ex4bit_linear",
+                "v_proj": "Ex4bit_linear",
+                "o_proj": "Ex4bit_linear"
+            },
+            "some form of plus?":"who knows",
+            "post_attention_layernorm": "RMS_Norm",
+            "MLP": {
+                "gate_proj": "Ex4bit_linear",
+                "up_proj": "Ex4bit_linear",
+                "down_proj": "Ex4bit_linear",
+                "act_fn": "nn.silu"
+            }
+        },
+        "..." : "here you have a bunch more decoder layers",
+        "DecoderLayer31": {
+            "input_layernorm": "RMS_Norm",
+            "Attention": {
+                "q_proj": "Ex4bit_linear",
+                "k_proj": "Ex4bit_linear",
+                "v_proj": "Ex4bit_linear",
+                "o_proj": "Ex4bit_linear"
+            },
+            "some form of plus?":"who knows",
+            "post_attention_layernorm": "RMS_Norm",
+            "MLP": {
+                "gate_proj": "Ex4bit_linear",
+                "up_proj": "Ex4bit_linear",
+                "down_proj": "Ex4bit_linear",
+                "act_fn": "nn.silu"
+            }
+        },
+        "post_decoder_layers_attention_layernorm": "RMS_Norm",
+        "Linear" : "?",
+        "Softmax" : "?"
+    }
+}}
