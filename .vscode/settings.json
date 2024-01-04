@@ -1,4 +1,5 @@
 {
+    "jupyter.debugJustMyCode": false,
     "python.formatting.provider": "none",
     "env": {
       "PYDEVD_CONTAINER_RANDOM_ACCESS_MAX_ITEMS": 1000
