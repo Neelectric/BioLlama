@@ -1,5 +1,8 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
 
+def temp(hello):
+    return None
+
 model_name_or_path = "TheBloke/Llama-2-7b-Chat-GPTQ"
 # To use a different branch, change revision
 # For example: revision="gptq-4bit-64g-actorder_True"
