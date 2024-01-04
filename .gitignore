@@ -9,6 +9,7 @@ vectorstore/db_JSON/train.txt.json
 # benchmarks/MedMCQA/
 # benchmarks/MedQA-USMLE
 # benchmarks/PubMedQA/
+finetuning/custom_transformers_implementation
 
 benchmarks/BioASQ/
 benchmarks/MedMCQA/train.json
