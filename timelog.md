@@ -271,4 +271,7 @@
 * *1 hour* Further perusing of RETRO papers
 
 ### Tuesday - 02 Dec 2023
-* *1 hour* First finetune of Llama2 7B with frozen layers
+* *1 hour* Setup work on finetuning Llama2 7B 
+
+### Wednesday - 03 Dec 2023
+* *2 hours* Further work finetuning Llama2 7B with frozen layers

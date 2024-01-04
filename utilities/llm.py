@@ -56,7 +56,7 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
         generator = ExLlamaGenerator(model, tokenizer, cache)   # create generator
         generator.disallow_tokens([tokenizer.eos_token_id])
         generator.settings.token_repetition_penalty_max = 1.2
-        generator.settings.temperature = 0.01
+        generator.settings.temperature = 0.00
         generator.settings.top_p = 0.65
         generator.settings.top_k = 100
         generator.settings.typical = 0.5
@@ -68,7 +68,7 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
         cache = ExLlamaCache(model, batch_size = 1)  # create cache for inference
         generator = ExLlamaAltGenerator(model, tokenizer, cache)
         generator.settings.token_repetition_penalty_max = 1.2
-        generator.settings.temperature = 0.01
+        generator.settings.temperature = 0.00
         generator.settings.top_p = 0.65
         generator.settings.top_k = 100
         generator.settings.typical = 0.5
