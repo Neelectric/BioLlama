@@ -285,4 +285,4 @@
 
 ### Friday - 05 Dec 2023
 * *1 hour* Creating Figma diagram comparison of Llama2, BioLlama and RETRO decoders
-* *1 hour* First work implementing new BioLlama architecture using local transformers/optimum/AutoGPTQ/PEFT stack
+* *3 hours* First work implementing new BioLlama architecture using local transformers/optimum/AutoGPTQ/PEFT stack
