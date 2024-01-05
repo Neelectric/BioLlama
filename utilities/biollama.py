@@ -14,6 +14,8 @@ else:
 import time
 # from .db_retrieval import medcpt_FAISS_retrieval
 
+
+#randomly initialize Retro encoder and crossattention? according to InstructRetro paper
 class CCA(torch.nn.Module):
     def __init__(self, attn):
         super().__init__()
