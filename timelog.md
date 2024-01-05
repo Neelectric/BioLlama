@@ -282,3 +282,7 @@
 * *1.5 hours* Deep dive into Llama-2 and RETRO architecture comparison implementations
 * *1 hour* New attempt at finetuning different Llama2 variants
 * *3.5 hours* Full local downloads of transformers, optimum, AutoGPTQ and PEFT libraries with import rerouting
+
+### Friday - 05 Dec 2023
+* *1 hour* Creating Figma diagram comparison of Llama2, BioLlama and RETRO decoders
+* *1 hour* First work implementing new BioLlama architecture using local transformers/optimum/AutoGPTQ/PEFT stack

@@ -12,6 +12,7 @@ import faiss
 import os
 import torch
 from transformers import AutoTokenizer, AutoModel, AutoModelForSequenceClassification
+local_transformers = False
 import numpy as np
 from tqdm import tqdm
 from sentence_transformers import SentenceTransformer
@@ -158,6 +159,8 @@ def build_index_medcpt(db_name, mode, chunk_length):
     #build index
     print("len(documents): " + str(len(documents)))
     time_before_index = time.time()
+    # if local_transformers:
+    #     from ..finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModel
     embedding_model = AutoModel.from_pretrained("ncbi/MedCPT-Article-Encoder")
     embedding_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Article-Encoder")
 
@@ -250,6 +253,7 @@ def load_db(embedding_model, db_name, retrieval_text_mode, chunk_length=None):
         index_path_faiss = "vectorstores/" + db_name + "/" + embedding_model + "/"+ retrieval_text_mode + "/db_faiss/" + db_name + '.index'
         index_path_json = "vectorstores/" + db_name + "/" + embedding_model + "/" + retrieval_text_mode + "/db_JSON/" + db_name + '.json'
     print("Attempting to load FAISS index for " + index_path_faiss)
+    print(os.getcwd())
     with open(index_path_json, "r") as json_file:
         knowledge_db_as_JSON = json.load(json_file)
     return faiss.read_index(index_path_faiss), knowledge_db_as_JSON
@@ -257,6 +261,10 @@ def load_db(embedding_model, db_name, retrieval_text_mode, chunk_length=None):
 def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length=None):
     #print("questions we are given: " + str(questions))
     db_faiss, db_json = load_db("medcpt", db_name, retrieval_text_mode, chunk_length=chunk_length)
+    # print(db_json["0"])
+    # if local_transformers:
+        # from ..finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModel
+        # from ..finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModel
     model = AutoModel.from_pretrained("ncbi/MedCPT-Query-Encoder")
     tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")
 
@@ -289,6 +297,8 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
 
         if k>1:
             #reranking step
+            # if local_transformers:
+            #     from ..finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModel, AutoModelForSequenceClassification
             rerank_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Cross-Encoder")
             rerank_model = AutoModelForSequenceClassification.from_pretrained("ncbi/MedCPT-Cross-Encoder")
             chunks = [db_json[str(indices[i])] for i in range(len(distances))]
@@ -322,11 +332,12 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
                 pass
             # print(last_positive)
             chunks = [x[0] for x in sorted_scores]
-            chunks = chunks[0]
+            print(chunks[0:5])
+            top_chunk = chunks[0]
             # print(chunks)
             retrieval_quality.append(sorted_indices[0])
 
-        chunk_list.append(chunks)   
+        chunk_list.append(top_chunk)   
     time_after_retrieval = time.time()
     retrieval_quality = np.array(retrieval_quality)
     print(retrieval_quality)
@@ -363,7 +374,7 @@ def gte_FAISS_retrieval(questions, db_name, retrieval_text_mode):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--db_name', type=str, default="RCT20ktrain.txt", help="Name of the database to build index for.")
-    parser.add_argument('--embedding_type', type=str, default="gte-large", help='Type of embedding to use.')
+    parser.add_argument('--embedding_type', type=str, help='Type of embedding to use.')
     parser.add_argument('--mode', type=str, default="full", help='Whether to embed full text or combo of background, objective, methods, results, conclusions.')
     parser.add_argument('--chunk_length', type=int, default=16, help='Length of chunks to embed.')
     args = parser.parse_args()
@@ -372,3 +383,8 @@ if __name__ == "__main__":
     elif args.embedding_type =="medcpt":
         build_index_medcpt(args.db_name, args.mode, args.chunk_length)
         # read_chunks("RCT200ktrain.txt", "medcpt", "sixteen")
+    elif args.embedding_type =="debug":
+        questions = ["Which is the main calcium pump of the sarcoplasmic reticulum?"]
+        medcpt_FAISS_retrieval(questions=questions, db_name="RCT200ktrain", retrieval_text_mode="input_segmentation", chunk_length=16)
+# questions = ["Which is the main calcium pump of the sarcoplasmic reticulum?"]
+# medcpt_FAISS_retrieval(questions=questions, db_name="RCT200ktrain", retrieval_text_mode="input_segmentation", chunk_length=16)

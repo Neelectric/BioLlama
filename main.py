@@ -32,6 +32,7 @@ if benchmark == "MedQA" or benchmark == "PubMedQA" or benchmark == "MedMCQA":
     accuracy = 100*exact_match(model=model, benchmark=benchmark)
 if retrieval_model == "gte-large":
     model = "RAGLlama"
+    
 elif retrieval_model == "medcpt":
     model = "RiPLlama"
 elif retrieval_model == "retro":
