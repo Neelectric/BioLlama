@@ -281,4 +281,4 @@
 * *0.5 hours* Full debug of Llama-2-7B-GPTQ 
 * *1.5 hours* Deep dive into Llama-2 and RETRO architecture comparison implementations
 * *1 hour* New attempt at finetuning different Llama2 variants
-* *2.5 hours* Full local downloads of transformers, optimum, AutoGPTQ and PEFT libraries with import rerouting
+* *3.5 hours* Full local downloads of transformers, optimum, AutoGPTQ and PEFT libraries with import rerouting
