@@ -14,14 +14,20 @@ chunk_length = 32
 time_before_setup = time.time()
 BioLlama = BioLlama(model_id=model_id, chunk_length=chunk_length)
 time_before_generation = time.time()
-text = BioLlama.generate(prompt=prompt, max_length=30)
+text = BioLlama.generate(prompt=prompt, max_length=2)
+# text = BioLlama.generate(prompt=text, max_length=23)
+
+for i in range(5):
+    text = BioLlama.generate(prompt=text, max_length=18)
+    print(text)
+
 time_after = time.time()
 
 print("***Generating***")
 print(text)
-actual_response = text[len(prompt):]
-print(actual_response)
-print(f"Actual response length: {len(actual_response)}")
+# actual_response = text[len(prompt):]
+# print(actual_response)
+# print(f"Actual response length: {len(actual_response)}")
 print(f"Time taken for setup: {time_before_generation - time_before_setup}")
 print(f"Time taken for generation: {time_after - time_before_generation}")
 print(f"Time total: {time_after - time_before_setup}")

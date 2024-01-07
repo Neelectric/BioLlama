@@ -293,4 +293,5 @@
 * *2.5 hours* Further sketching of CCA changes, and CCA implementation
 
 ### Sunday - 07 Dec 2023
-* *1 hour* Synchronizing the length of existing input embedding, and retrieved chunk embedding
+* *2 hours* Synchronizing the length of existing input embedding, and retrieved chunk embedding
+* *1 hour* Getting BioLlama7B to talk for the first time!

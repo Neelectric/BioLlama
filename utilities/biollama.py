@@ -55,9 +55,10 @@ class CCA(torch.nn.Module):
         tokens = self.model.tokenizer.decode(input_ids)[4:]
         
         # with this unencoded sequence, we then do medCPT FAISS retrieval, returning a chunk
-        #retrieved_chunk = medcpt_FAISS_retrieval(tokens, db_name="RCT200ktrain", retrieval_text_mode="input_segmentation", chunk_length=16)
-        retrieved_chunk = '[CLS] sarcoplasmic reticulum ( sr ) ca ( 2 + ) - handling proteins play' #hardcoded while transformers bugs me
-
+        retrieved_chunk = medcpt_FAISS_retrieval(tokens, db_name="RCT200ktrain", retrieval_text_mode="input_segmentation", chunk_length=32)
+        # retrieved_chunk = '[CLS] sarcoplasmic reticulum ( sr ) ca ( 2 + ) - handling proteins play' #hardcoded while transformers bugs me
+        # retrieved_chunk = "and stimulation of sarcoplasmic reticulum calcium atpase. we examined the hemodynamic, echocardiographic, and neurohormonal effects of intravenous istaroxime in patients hospitalized with"
+        
         # we then use the llama2 tokenizer to encode this chunk
         encoded_chunk = self.model.tokenizer(retrieved_chunk, return_tensors="pt")
         chunk_input_ids = encoded_chunk.input_ids
@@ -67,10 +68,10 @@ class CCA(torch.nn.Module):
         # the input sequence/context, which was originally given to model has size 22
         # our chunk has size 27. so we need to prune it to make the residual connection work
         # im pruning the last tokens off...
-        print(type(chunk_input_ids))
         unnested_chunk_input_ids = torch.unbind(chunk_input_ids, dim=0)[0]
-        sliced_chunk_input_ids = unnested_chunk_input_ids[0:22]
-        chunk_input_ids = sliced_chunk_input_ids.reshape((1,22))
+        cutoff = len(input_ids)
+        sliced_chunk_input_ids = unnested_chunk_input_ids[0:cutoff]
+        chunk_input_ids = sliced_chunk_input_ids.reshape((1,cutoff))
         print(f"chunk_input_ids now has size {chunk_input_ids.size()}")
         print("so far everything has worked")
         # then embed them

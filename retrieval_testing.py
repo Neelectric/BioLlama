@@ -14,5 +14,6 @@ benchmark_questions = ["Which is the main calcium pump of the sarcoplasmic retic
 answer = ["Sarcoplasmic reticulum Ca(2+)-ATPase"]
 db_name = "RCT200ktrain"
 retrieval_text_mode = "input_segmentation"
-chunk_length = 16
+chunk_length = 32
 retrieved_chunks = medcpt_FAISS_retrieval(benchmark_questions, db_name, retrieval_text_mode, chunk_length=chunk_length)
+print(retrieved_chunks)
