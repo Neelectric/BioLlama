@@ -4,7 +4,7 @@
 # Hugely aided by https://github.com/nrimsky/LM-exp/blob/main/intermediate_decoding/intermediate_decoding.ipynb
 
 import torch
-local_transformers = False
+local_transformers = True
 if local_transformers:
     from .finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModelForCausalLM
     from .finetuning.cti.transformers.transformers.src.transformers.models.llama.modeling_llama import LlamaRMSNorm
@@ -37,14 +37,16 @@ import time
 
 #randomly initialize Retro encoder and crossattention? according to InstructRetro paper
 class CCA(torch.nn.Module):
-    def __init__(self, model):
+    def __init__(self, model, layer):
         super().__init__()
         self.training = False # apparently by default it thinks we're training
         self.pre_CCA_layernorm = None
         self.model = model
-        self.embed_tokens = torch.nn.Embedding(model.config.vocab_size, model.config.hidden_size, model.config.pad_token_id)
+        self.config = model.model.config
+        self.embed_tokens = torch.nn.Embedding(self.config.vocab_size, self.config.hidden_size, self.config.pad_token_id)
+        self.layer = layer
 
-    def forward(self, input_ids):
+    def forward(self, input_ids, attention_mask, position_ids, past_key_value, output_attentions,use_cache):
         # we perform chunked cross attention at every decoding step, with sequences that are 16 tokens long?
 
         # first we use the llama2 tokenizer to decode the input_ids
@@ -57,21 +59,29 @@ class CCA(torch.nn.Module):
 
         # we then use the llama2 tokenizer to encode this chunk
         encoded_chunk = self.model.tokenizer(retrieved_chunk, return_tensors="pt")
-        input_ids = encoded_chunk.input_ids
+        chunk_input_ids = encoded_chunk.input_ids
 
         print("so far everything has worked")
         # then embed them
-        inputs_embeds = self.embed_tokens(input_ids)
+        inputs_embeds = self.embed_tokens(chunk_input_ids)
+        embeds_shape = inputs_embeds.shape
         hidden_states = inputs_embeds
 
         # then do pre_CCA_layernorm
         hidden_states = self.pre_CCA_layernorm(hidden_states)
 
         # then self attention
+        hidden_states, self_attn_weights, present_key_value = self.layer.self_attn(
+            hidden_states=hidden_states,
+            attention_mask=attention_mask,
+            position_ids=position_ids,
+            past_key_value=past_key_value,
+            output_attentions=output_attentions,
+            use_cache=use_cache,
+            # **kwargs,
+        )
         
-        
-        output = None
-        return output
+        return hidden_states
 
 # We wrap layers, who's ids are designated as RETRO blocks, with this RETROLayer class
 class RETROLayer(torch.nn.Module):
@@ -85,7 +95,7 @@ class RETROLayer(torch.nn.Module):
         
         #adding the two new components that differentiate BioLlama from vanilla Llama2
         self.pre_CCA_layernorm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps) # this gets initiated with hidden_size
-        self.CCA = CCA(model)
+        self.CCA = CCA(model, layer)
         self.CCA.pre_CCA_layernorm = self.pre_CCA_layernorm
         
     
@@ -131,7 +141,12 @@ class RETROLayer(torch.nn.Module):
 
         residual = hidden_states
         # hidden_states = self.pre_CCA_layernorm(hidden_states) # think this should happen within CCA...
-        hidden_states = self.CCA.forward(input_ids)
+        hidden_states = self.CCA.forward(input_ids=input_ids, 
+                                        attention_mask=attention_mask,
+                                        position_ids=position_ids,
+                                        past_key_value=past_key_value,
+                                        output_attentions=output_attentions,
+                                        use_cache=use_cache)
         hidden_states = residual + hidden_states
 
 
