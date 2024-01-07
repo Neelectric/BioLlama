@@ -288,3 +288,6 @@
 * *5 hours* First work implementing new BioLlama architecture using local transformers/optimum/AutoGPTQ/PEFT stack
 * *1 hour* Further studying of existing RETRO implementations (lucidrains, labml.ai, megatron)
 * *0.5 hours* Collating all the different medical lama1/2 finetunes
+
+### Saturday = 06 Dec 2023
+* *2.5 hours* Further sketching of CCA changes, and CCA implementation

@@ -42,26 +42,34 @@ class CCA(torch.nn.Module):
         self.training = False # apparently by default it thinks we're training
         self.pre_CCA_layernorm = None
         self.model = model
+        self.embed_tokens = torch.nn.Embedding(model.config.vocab_size, model.config.hidden_size, model.config.pad_token_id)
 
     def forward(self, input_ids):
         # we perform chunked cross attention at every decoding step, with sequences that are 16 tokens long?
 
         # first we use the llama2 tokenizer to decode the input_ids
         # tokens = self.model.tokenizer.decode(input_ids)
-        tokens = self.model.tokenizer.convert_ids_to_tokens(input_ids)
+        tokens = self.model.tokenizer.decode(input_ids)[4:]
         
         # with this unencoded sequence, we then do medCPT FAISS retrieval, returning a chunk
-        retrieved_chunk = medcpt_FAISS_retrieval(tokens)
-        
+        #retrieved_chunk = medcpt_FAISS_retrieval(tokens, db_name="RCT200ktrain", retrieval_text_mode="input_segmentation", chunk_length=16)
+        retrieved_chunk = '[CLS] sarcoplasmic reticulum ( sr ) ca ( 2 + ) - handling proteins play' #hardcoded while transformers bugs me
+
         # we then use the llama2 tokenizer to encode this chunk
         encoded_chunk = self.model.tokenizer(retrieved_chunk, return_tensors="pt")
         input_ids = encoded_chunk.input_ids
 
+        print("so far everything has worked")
         # then embed them
+        inputs_embeds = self.embed_tokens(input_ids)
+        hidden_states = inputs_embeds
+
         # then do pre_CCA_layernorm
+        hidden_states = self.pre_CCA_layernorm(hidden_states)
+
         # then self attention
-        chunk = None
-        hidden_states = self.pre_CCA_layernorm(chunk)
+        
+        
         output = None
         return output
 
@@ -167,7 +175,7 @@ class BioLlama:
         
     def generate(self, prompt, max_length=100):
         inputs = self.tokenizer(prompt, return_tensors="pt")
-        self.input_ids = inputs.input_ids
+        self.input_ids = [int(element) for element in inputs.input_ids[0]]
 
         encoded = self.tokenizer.encode(prompt)
         print(f"encoded has size {len(encoded)}")
@@ -175,6 +183,7 @@ class BioLlama:
         tokenized = self.tokenizer.tokenize(prompt)
         input_ids = inputs["input_ids"][0]
         print(f"tensor has size {len(input_ids)}")
+        tokens = self.tokenizer.convert_ids_to_tokens(input_ids)
 
         generate_ids = self.model.generate(inputs.input_ids.to(self.device), max_length=max_length)
         return self.tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]

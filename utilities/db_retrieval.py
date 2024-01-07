@@ -278,6 +278,12 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
     top_k = 1
     chunk_list = []
     retrieval_quality = []
+
+    # if "questions" is just a string, we make it a list so iteration is not character-wise
+    if type(questions) == str:
+        questions = [questions]
+
+
     #use tqdm here to get a progress bar
     for question in tqdm(questions, desc="Retrieving chunks"):
         # print(question)
