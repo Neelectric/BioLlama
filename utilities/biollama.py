@@ -67,6 +67,11 @@ class CCA(torch.nn.Module):
         # the input sequence/context, which was originally given to model has size 22
         # our chunk has size 27. so we need to prune it to make the residual connection work
         # im pruning the last tokens off...
+        print(type(chunk_input_ids))
+        unnested_chunk_input_ids = torch.unbind(chunk_input_ids, dim=0)[0]
+        sliced_chunk_input_ids = unnested_chunk_input_ids[0:22]
+        chunk_input_ids = sliced_chunk_input_ids.reshape((1,22))
+        print(f"chunk_input_ids now has size {chunk_input_ids.size()}")
         print("so far everything has worked")
         # then embed them
         inputs_embeds = self.embed_tokens(chunk_input_ids)
@@ -76,6 +81,18 @@ class CCA(torch.nn.Module):
         # then do pre_CCA_layernorm
         hidden_states = self.pre_CCA_layernorm(hidden_states)
 
+        # it complains "expected scalar type Float but found Half"
+        # i changed transformers qlinear_cuda_old implementation:
+        # before matmul iterations, if weights is torch.float16 and x is torch.float32, then weights gets put to torch.float32
+        
+
+        # if use_cache is true, this causes "Attention mask should be of size (1, 1, 22, 44), but is torch.Size([1, 1, 22, 22])"
+        # i think that (1,1,22,22) is actually correct: (1,1,22,44) comes from 
+        # (bsz, 1, q_len, kv_seq_len) --> kv_seq_len is too large, because self_attn on retrieved chunks messes up kv cache
+        # so we set use_cache to false for this attention. but on the whole it stays true
+        # note: even when use_cache gets passed as false, the forward pass on the qlinear still processes kv_seq_length
+        # so i added an if statement there
+
         # then self attention
         hidden_states, self_attn_weights, present_key_value = self.layer.self_attn(
             hidden_states=hidden_states,
@@ -83,7 +100,7 @@ class CCA(torch.nn.Module):
             position_ids=position_ids,
             past_key_value=past_key_value,
             output_attentions=output_attentions,
-            use_cache=use_cache,
+            use_cache=False,
             # **kwargs,
         )
         
@@ -134,7 +151,7 @@ class RETROLayer(torch.nn.Module):
         )
         hidden_states = residual + hidden_states
 
-        print(f"Before FFW, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}")
+        print(f"Before CCA, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}")
 
         # Chunked Cross Attention
         #lets think this through step by step: this comes in at this point with shape [1, 1, 4096]
@@ -168,6 +185,7 @@ class RETROLayer(torch.nn.Module):
             outputs += (self_attn_weights,)
         if use_cache:
             outputs += (present_key_value,)
+        # potential issue: returned as dtype: torch.float16?
         return outputs
 
 class BioLlama:
@@ -182,6 +200,7 @@ class BioLlama:
             if i in RETRO_layer_ids:
                 self.model.model.layers[i] = RETROLayer(id=i, layer=layer, config=self.model.config, model=self)
 
+        self.model.config.use_cache = False # testing this in hopes of less cca isszes
     def inference(self, questions, db_name, retrieval_text_mode):
         #generate neighbours
         # neighbours = medcpt_FAISS_retrieval(questions=questions,db_name=db_name, retrieval_text_mode=retrieval_text_mode)

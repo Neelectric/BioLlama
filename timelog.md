@@ -289,5 +289,8 @@
 * *1 hour* Further studying of existing RETRO implementations (lucidrains, labml.ai, megatron)
 * *0.5 hours* Collating all the different medical lama1/2 finetunes
 
-### Saturday = 06 Dec 2023
+### Saturday - 06 Dec 2023
 * *2.5 hours* Further sketching of CCA changes, and CCA implementation
+
+### Sunday - 07 Dec 2023
+* *1 hour* Synchronizing the length of existing input embedding, and retrieved chunk embedding
