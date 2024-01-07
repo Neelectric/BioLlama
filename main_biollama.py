@@ -9,7 +9,7 @@ retrieval_text_mode = "input_segmentation"
 
 prompt = questions[0]
 model_id = "TheBloke/Llama-2-7b-chat-GPTQ"
-chunk_length = 16
+chunk_length = 32
 
 time_before_setup = time.time()
 BioLlama = BioLlama(model_id=model_id, chunk_length=chunk_length)

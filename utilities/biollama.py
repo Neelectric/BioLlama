@@ -51,6 +51,7 @@ class CCA(torch.nn.Module):
 
         # first we use the llama2 tokenizer to decode the input_ids
         # tokens = self.model.tokenizer.decode(input_ids)
+        print(f"input_ids has len {len(input_ids)}")
         tokens = self.model.tokenizer.decode(input_ids)[4:]
         
         # with this unencoded sequence, we then do medCPT FAISS retrieval, returning a chunk
@@ -61,6 +62,11 @@ class CCA(torch.nn.Module):
         encoded_chunk = self.model.tokenizer(retrieved_chunk, return_tensors="pt")
         chunk_input_ids = encoded_chunk.input_ids
 
+        print(f"chunk_input_ids has size {chunk_input_ids.size()}")
+
+        # the input sequence/context, which was originally given to model has size 22
+        # our chunk has size 27. so we need to prune it to make the residual connection work
+        # im pruning the last tokens off...
         print("so far everything has worked")
         # then embed them
         inputs_embeds = self.embed_tokens(chunk_input_ids)
@@ -128,7 +134,7 @@ class RETROLayer(torch.nn.Module):
         )
         hidden_states = residual + hidden_states
 
-        # print(f"Before FFW, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}")
+        print(f"Before FFW, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}")
 
         # Chunked Cross Attention
         #lets think this through step by step: this comes in at this point with shape [1, 1, 4096]
@@ -140,7 +146,6 @@ class RETROLayer(torch.nn.Module):
         # I need to call self.tokenizer(prompt, return_tensors="pt")
 
         residual = hidden_states
-        # hidden_states = self.pre_CCA_layernorm(hidden_states) # think this should happen within CCA...
         hidden_states = self.CCA.forward(input_ids=input_ids, 
                                         attention_mask=attention_mask,
                                         position_ids=position_ids,
