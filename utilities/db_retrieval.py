@@ -11,11 +11,15 @@ import json
 import faiss
 import os
 import torch
-from transformers import AutoTokenizer, AutoModel, AutoModelForSequenceClassification
 local_transformers = False
+if local_transformers:
+    from .finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModel, AutoModelForSequenceClassification
+else:
+    from sentence_transformers import SentenceTransformer
+    from transformers import AutoTokenizer, AutoModel, AutoModelForSequenceClassification
 import numpy as np
 from tqdm import tqdm
-from sentence_transformers import SentenceTransformer
+
 
 def read_documents(db_name, mode):
     document = ""
@@ -159,8 +163,7 @@ def build_index_medcpt(db_name, mode, chunk_length):
     #build index
     print("len(documents): " + str(len(documents)))
     time_before_index = time.time()
-    # if local_transformers:
-    #     from ..finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModel
+    
     embedding_model = AutoModel.from_pretrained("ncbi/MedCPT-Article-Encoder")
     embedding_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Article-Encoder")
 
