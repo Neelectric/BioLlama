@@ -4,6 +4,7 @@
 # Hugely aided by https://github.com/nrimsky/LM-exp/blob/main/intermediate_decoding/intermediate_decoding.ipynb
 
 import torch
+import time
 local_transformers = True
 if local_transformers:
     from .finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModelForCausalLM
@@ -31,11 +32,7 @@ if local_transformers == False:
             hidden_states = hidden_states * torch.rsqrt(variance + self.variance_epsilon)
             return self.weight * hidden_states.to(input_dtype)
 
-import time
-# from .db_retrieval import medcpt_FAISS_retrieval
-
-
-#randomly initialize Retro encoder and crossattention? according to InstructRetro paper
+# InstructRetro Paper suggests random initialisation of RETRO CCA layer weights
 class CCA(torch.nn.Module):
     def __init__(self, model, layer):
         super().__init__()
@@ -79,6 +76,7 @@ class CCA(torch.nn.Module):
         embeds_shape = inputs_embeds.shape
         hidden_states = inputs_embeds
 
+        # AM I SURE THIS CCA LAYERNORM WORKS? IT GETS INITIALISED TO NONE AT CREATION
         # then do pre_CCA_layernorm
         hidden_states = self.pre_CCA_layernorm(hidden_states)
 

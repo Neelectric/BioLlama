@@ -188,12 +188,23 @@
  ### Tuesday - 07 Nov 2023
  * *0.5 hours* Seventh meeting with supervisor
 
+ ### Thursday - 09 Nov 2023
+ * *0.5 hours* Reading RA-DIT
+
+ ### Friday - 10 Nov 2023
+ * *1 hour* Repo refactoring work to make things cleaner
+
 ## Week 8
 ### Monday - 13 Nov 2023
  * *0.5 hours* Minor bugfixes
 
  ### Tuesday - 14 Nov 2023
  * *0.5 hours* Eigth meeting with supervisor
+ * *1 hour* Searching and finding OpenAI RAG talk
+
+ ### Saturday - 18 Nov 2023
+ * *0.5 hours* Re-reading MedPaLM 1
+ * *0.5 hours* Watching 30min video report on issues with MMLU
 
 ## Week 9
 ### Monday - 20 Nov 2023
@@ -201,6 +212,10 @@
 
  ### Tuesday - 21 Nov 2023
  * *0.5 hours* Ninth meeting with supervisor
+ * *0.5 hours* Skimming Chain-of-Note paper for improved retrieval incorporatoin
+
+ ### Sunday - 26 Nov 2023
+ * *1 hour* Automatic README changes on new benchmark trials
 
 ## Week 10
 ### Monday - 27 Nov 2023
@@ -210,6 +225,8 @@
  * *0.5 hours* Addition of automatic timelog to README
  * *0.5 hours* Tenth meeting with supervisor
 
+
+## Week 11
 ### Monday - 04 Dec 2023
  * *2 hours* First steps towards simple retrieval system
  * *1 hour* Important changes to promptification
