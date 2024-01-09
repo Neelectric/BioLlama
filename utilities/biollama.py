@@ -16,6 +16,7 @@ from .db_retrieval import medcpt_FAISS_retrieval
     
 
 if local_transformers == False:
+    # the following class is copied directly from huggingface
     class LlamaRMSNorm(torch.nn.Module):
         def __init__(self, hidden_size, eps=1e-6):
             """
@@ -45,11 +46,20 @@ class CCA(torch.nn.Module):
 
     def forward(self, input_ids, attention_mask, position_ids, past_key_value, output_attentions,use_cache):
         # we perform chunked cross attention at every decoding step, with sequences that are 16 tokens long?
-
-        # first we use the llama2 tokenizer to decode the input_ids
-        # tokens = self.model.tokenizer.decode(input_ids)
+        input_ids = [int(element) for element in input_ids[0]]
         print(f"input_ids has len {len(input_ids)}")
+
+        # here i should probably prune this to be the last "chunk_length" tokens right?
+        # but i guess i need to re-encode these tokens with the MedCPT query tokenizer...
+        # because otherwise its using llama token lengths, not MedCPT token lengths
+        chunk_length = self.model.chunk_length
+        if len(input_ids) > chunk_length:
+            print("we are exceeding chunk_length")
+        input_ids = input_ids[-chunk_length:]
+        
+        
         tokens = self.model.tokenizer.decode(input_ids)[4:]
+        
         
         # with this unencoded sequence, we then do medCPT FAISS retrieval, returning a chunk
         retrieved_chunk = medcpt_FAISS_retrieval(tokens, db_name="RCT200ktrain", retrieval_text_mode="input_segmentation", chunk_length=32)
@@ -60,7 +70,7 @@ class CCA(torch.nn.Module):
         encoded_chunk = self.model.tokenizer(retrieved_chunk, return_tensors="pt")
         chunk_input_ids = encoded_chunk.input_ids
 
-        print(f"chunk_input_ids has size {chunk_input_ids.size()}")
+        # print(f"chunk_input_ids has size {chunk_input_ids.size()}")
 
         # the input sequence/context, which was originally given to model has size 22
         # our chunk has size 27. so we need to prune it to make the residual connection work
@@ -69,8 +79,8 @@ class CCA(torch.nn.Module):
         cutoff = len(input_ids)
         sliced_chunk_input_ids = unnested_chunk_input_ids[0:cutoff]
         chunk_input_ids = sliced_chunk_input_ids.reshape((1,cutoff))
-        print(f"chunk_input_ids now has size {chunk_input_ids.size()}")
-        print("so far everything has worked")
+        # print(f"chunk_input_ids now has size {chunk_input_ids.size()}")
+        # print("so far everything has worked")
         # then embed them
         inputs_embeds = self.embed_tokens(chunk_input_ids)
         embeds_shape = inputs_embeds.shape
@@ -132,7 +142,7 @@ class RETROLayer(torch.nn.Module):
         past_key_value = kwargs["past_key_value"]
         output_attentions = kwargs["output_attentions"]
         use_cache=kwargs["use_cache"]
-        input_ids = self.model.input_ids
+        input_ids = self.model.model.input_ids_biollama
 
         residual = hidden_states
         hidden_states = self.layer.input_layernorm(hidden_states)
@@ -192,7 +202,8 @@ class BioLlama:
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
         self.model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto")
-        self.input_ids = None
+        self.model.input_ids_biollama = None
+        self.chunk_length = chunk_length
         RETRO_layer_ids = [15]
         for i, layer in enumerate(self.model.model.layers):
             #switch pre-specified decoder layers to be a RETRO layers
@@ -213,14 +224,14 @@ class BioLlama:
         
     def generate(self, prompt, max_length=100):
         inputs = self.tokenizer(prompt, return_tensors="pt")
-        self.input_ids = [int(element) for element in inputs.input_ids[0]]
+        self.model.input_ids_biollama = inputs["input_ids"]
 
         encoded = self.tokenizer.encode(prompt)
-        print(f"encoded has size {len(encoded)}")
+        # print(f"encoded has size {len(encoded)}")
         decoded = self.tokenizer.decode(encoded)
         tokenized = self.tokenizer.tokenize(prompt)
         input_ids = inputs["input_ids"][0]
-        print(f"tensor has size {len(input_ids)}")
+        # print(f"tensor has size {len(input_ids)}")
         tokens = self.tokenizer.convert_ids_to_tokens(input_ids)
 
         generate_ids = self.model.generate(inputs.input_ids.to(self.device), max_length=max_length)

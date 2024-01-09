@@ -255,13 +255,14 @@ def load_db(embedding_model, db_name, retrieval_text_mode, chunk_length=None):
     else:
         index_path_faiss = "vectorstores/" + db_name + "/" + embedding_model + "/"+ retrieval_text_mode + "/db_faiss/" + db_name + '.index'
         index_path_json = "vectorstores/" + db_name + "/" + embedding_model + "/" + retrieval_text_mode + "/db_JSON/" + db_name + '.json'
-    print("Attempting to load FAISS index for " + index_path_faiss)
-    print(os.getcwd())
+    # print("Attempting to load FAISS index for " + index_path_faiss)
+    # print(os.getcwd())
     with open(index_path_json, "r") as json_file:
         knowledge_db_as_JSON = json.load(json_file)
     return faiss.read_index(index_path_faiss), knowledge_db_as_JSON
 
 def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length=None):
+    time_before_retrieval = time.time()
     #print("questions we are given: " + str(questions))
     db_faiss, db_json = load_db("medcpt", db_name, retrieval_text_mode, chunk_length=chunk_length)
     # print(db_json["0"])
@@ -273,19 +274,18 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
 
     #i will first try embedding of question and retrieval on a question by question basis, and time it
     #this is with arbitrary choices: k=1, max_length (how many tokens are in input i think?) = 480
-    time_before_retrieval = time.time()
     k = 5
     top_k = 1
     chunk_list = []
     retrieval_quality = []
-
+    disable = False
     # if "questions" is just a string, we make it a list so iteration is not character-wise
     if type(questions) == str:
         questions = [questions]
-
-
-    #use tqdm here to get a progress bar
-    for question in tqdm(questions, desc="Retrieving chunks"):
+        disable = True
+    time_after_loading_models = time.time()
+        
+    for question in tqdm(questions, desc="Retrieving chunks", disable = disable):
         # print(question)
         chunks = []
         with torch.no_grad():
@@ -341,7 +341,7 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
                 pass
             # print(last_positive)
             chunks = [x[0] for x in sorted_scores]
-            print(chunks[0:5])
+            # print(chunks[0:5])
             top_chunk = chunks[0]
             # print(chunks)
             retrieval_quality.append(sorted_indices[0])
@@ -349,10 +349,10 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
         chunk_list.append(top_chunk)   
     time_after_retrieval = time.time()
     retrieval_quality = np.array(retrieval_quality)
-    print(retrieval_quality)
+    # print(retrieval_quality)
     avg_retrieval_quality = np.mean(retrieval_quality)
-    print("Avg retrieval quality: " + str(avg_retrieval_quality))
-    print("Time to retrieve chunks: " + str(time_after_retrieval - time_before_retrieval) + " seconds.")
+    print(f"Avg retrieval quality: {str(avg_retrieval_quality)}, chunk = {chunk_list}")
+    print(f"Time to load models: {str(time_after_loading_models-time_before_retrieval)}, to then retrieve chunks: {str(time_after_retrieval - time_after_loading_models)} seconds.")
     return chunk_list
     
 def gte_FAISS_retrieval(questions, db_name, retrieval_text_mode):

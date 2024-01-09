@@ -1,16 +1,8 @@
 # Timelog
 
 * Retrieval enhancement of biomodels in a compute-scarce environment
-* Neel Rajani
-* 2514211R
-* Jake Lever
-
-## Guidance
-
-* This file contains the time log for your project. It will be submitted along with your final dissertation.
-* **YOU MUST KEEP THIS UP TO DATE AND UNDER VERSION CONTROL.**
-* This timelog should be filled out honestly, regularly (daily) and accurately. It is for *your* benefit.
-* Follow the structure provided, grouping time by weeks.  Quantise time to the half hour.
+* By: Neel Rajani, 2514211R
+* Supervisor: Dr. Jake Lever
 
 ## Week 1 - 14 hours total
 
@@ -161,7 +153,7 @@
 ### Saturday - 28 Oct 2023
  * *1 hour* Starting to implement MedMCQA for full model comparisons
 
-## Week 6
+## Week 7 - 6 hours total
 ### Monday - 30 Oct 2023
  * *1 hour* Reading "Improving qa robustness" by Sebastian Riedel and Patrick Lewis 2020 paper on BioLLM SOTA
 
@@ -181,7 +173,7 @@
 ### Saturday - 04 Nov 2023
  * *1 hour* Continuation of classifier graph, data visualisations on MedMCQA
 
-## Week 7
+## Week 8 - 2.5 hours total
 ### Monday - 06 Nov 2023
  * *0.5 hours* Minor bugfixes
 
@@ -194,7 +186,7 @@
  ### Friday - 10 Nov 2023
  * *1 hour* Repo refactoring work to make things cleaner
 
-## Week 8
+## Week 8 - 3 hours total
 ### Monday - 13 Nov 2023
  * *0.5 hours* Minor bugfixes
 
@@ -206,18 +198,22 @@
  * *0.5 hours* Re-reading MedPaLM 1
  * *0.5 hours* Watching 30min video report on issues with MMLU
 
-## Week 9
+## Week 9 - 4 hours total
 ### Monday - 20 Nov 2023
  * *0.5 hours* Minor bugfixes
 
  ### Tuesday - 21 Nov 2023
  * *0.5 hours* Ninth meeting with supervisor
- * *0.5 hours* Skimming Chain-of-Note paper for improved retrieval incorporatoin
+ * *1 hour* Reading Chain-of-Note paper for improved retrieval incorporation
+ * *0.5 hours* Following-up on definition of exact_match metric, DPR paper
+
+ ### Friday - 24 Nov 2023
+ * *0.5 hours* Meeting with Dr Sean Macavaney on BioLlama retrieval component
 
  ### Sunday - 26 Nov 2023
  * *1 hour* Automatic README changes on new benchmark trials
 
-## Week 10
+## Week 10 - 6.5 hours total
 ### Monday - 27 Nov 2023
  * *2 hours* Small changes to automatic README changes
 
@@ -225,11 +221,19 @@
  * *0.5 hours* Addition of automatic timelog to README
  * *0.5 hours* Tenth meeting with supervisor
 
+### Wednesday - 29 Nov 2023
+ * *1.5 hours* Cloning of RETRO implementations and working through to see how they work
 
-## Week 11
+### Friday - 31 Nov 2023
+ * *2 hours* Reading flurry of papers from twitter rabbit hole on LLM prompting
+
+## Week 11 - 6 hours total
 ### Monday - 04 Dec 2023
  * *2 hours* First steps towards simple retrieval system
  * *1 hour* Important changes to promptification
+
+### Tuesday - 05 Dec 2023
+* *0.5 hours* Eleventh meeting with supervisor
 
 ### Saturday - 09 Dec 2023
 * *0.5 hours* Made parse_benchmark.py slightly more modular
@@ -238,11 +242,17 @@
 * *1 hour* Reading "REALTIME QA: What’s the Answer Right Now?"
 * *1 hour* Further work on promptification & simple retrieval
 
+## Week 12 - 5 hours total
+### Monday - 11 Dec 2023
+* *1 hour* Further rework of promptify and minor LLM call changes
+* *0.5 hours* Cleaning up repository and moving things into subdirectories
+
 ### Sunday - 17 Dec 2023
 * *2 hours* Starting to look further into Llama2 paper
 * *1.5 hours* Re-reading RETRO paper in full
 * *1 hour* Revisiting existing RETRO implementations
 
+## Week 13 - 15 hours
 ### Monday - 18 Dec 2023
 * *1 hour* Update on db_build.py to build initial 20k RCT datastore
 * *1 hour* Changes to inference.py to make retrieval in prompt possible
@@ -259,13 +269,16 @@
 
 ### Friday - 22 Dec 2023
 * *1 hour* Further post-refactor benchmarking and RiP work
+* *0.5 hours* Adding comments to fileheaders for increased attribution transparency
 
 ### Saturday - 23 Dec 2023
 * *1 hour* Starting to add MedCPT support
 
 ### Sunday - 25 Dec 2023
 * *1.5 hours* Creating vectorstores for RCT20k train on GTE-Large and MedCPT in "bomrc", "brc" and "full" settings
+* *1 hour* Further benchmarking of RiPLlama and RAGLlama
 
+## Week 14 - 12 hours
 ### Monday - 26 Dec 2023
 * *1 hour* Fixing write_to_readme
 * *2.5 hours* Extensive work creating vectorstores for RCT200ktrain on GTE-Large and MedCPT in "bomrc", "brc" and "full" settings
@@ -283,6 +296,7 @@
 * *1.5 hours* Further deep diving into exllama
 * *1.5 hours* Revisiting all materials on RETRO-fitting (RETRO, BioReader, RETRO++ and InstructRETRO)
 
+## Week 15 - 20 hours
 ### Monday - 01 Dec 2023
 * *1 hour* Debugging exllama to get a better feeling for model setup
 * *1 hour* Further perusing of RETRO papers
@@ -312,3 +326,11 @@
 ### Sunday - 07 Dec 2023
 * *2 hours* Synchronizing the length of existing input embedding, and retrieved chunk embedding
 * *1 hour* Getting BioLlama7B to talk for the first time!
+
+## Week 16 - 
+### Monday - 08 Dec 2023
+* *1.5 hours* Changing CCA such retrieved chunks are pruned to be no longer than the existing size of input_ids that the model is attending to
+
+### Tuesday - 09 Dec 2023
+* *1 hour* Performing quantitative error analysis on RiP impact on BioASQ5b
+* *1 hour* Performing quantitative performance analysis on MedCPT retrieval parameters
