@@ -332,5 +332,5 @@
 * *1.5 hours* Changing CCA such retrieved chunks are pruned to be no longer than the existing size of input_ids that the model is attending to
 
 ### Tuesday - 09 Dec 2023
-* *1 hour* Performing quantitative error analysis on RiP impact on BioASQ5b
-* *1 hour* Performing quantitative performance analysis on MedCPT retrieval parameters
+* *3 hours* Preparing post-break debrief presentation
+* *6 hours* Building new functionality to check from which sections chunks are mostly retrieved from

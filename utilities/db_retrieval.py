@@ -20,17 +20,27 @@ else:
 import numpy as np
 from tqdm import tqdm
 
-
-def read_documents(db_name, mode):
+def read_documents(db_name, mode, return_full_dict = False):
     document = ""
     documents = []
     n_documents = 0
     n_lines = 0
     documents_dict = {}
-    txt_files = glob.glob("../database/*.txt")
+    print(os.getcwd())
+    correct_prefix = None
+    # correct_prefix = "../"
+    if correct_prefix != None:
+        database_directory = correct_prefix + "database/"
+        database_directory_with_suffix = database_directory + "*.txt"
+    else:
+        database_directory = "database/"
+        database_directory_with_suffix = "database/*.txt"
+
+    txt_files = glob.glob(database_directory_with_suffix)
     print(txt_files)
-    if "../database/" + db_name in txt_files:
-        file_name = "../database/" + db_name
+    
+    if database_directory + db_name + ".txt" in txt_files:
+        file_name = database_directory + db_name + ".txt"
         print("Found the requested file, reading chunks")
     else:
         file_name = txt_files[0]
@@ -47,6 +57,9 @@ def read_documents(db_name, mode):
     brc_lengths = []
     bc_lengths = []
 
+    list_of_dicts = []
+    #the barebones version of this iteration (ie adding lines to a given chunk until an empty line is reached) was written by Copilot
+    #the specifics, however, ie using the dict and then computing averages at the end, was written by me (Neel Rajani)
     with open(file_name, 'r') as file:
         id = ""
         dict = {}
@@ -75,12 +88,13 @@ def read_documents(db_name, mode):
                 b_o_m_r_c = dict['BACKGROUND'] + dict['OBJECTIVE'] + dict['METHODS'] + dict['RESULTS'] + dict['CONCLUSIONS']
                 b_r_c = dict['BACKGROUND'] + dict['RESULTS'] + dict['CONCLUSIONS']
                 b_c = dict['BACKGROUND'] + dict['CONCLUSIONS']
-                #quick study on effect of removing extra words with dict
-                #and then on only taking background, results, conclusions
                 full_lengths.append(len(document))
                 bomrc_lengths.append(len(b_o_m_r_c))
                 brc_lengths.append(len(b_r_c))  
                 bc_lengths.append(len(b_c)) 
+                
+                if return_full_dict:
+                    list_of_dicts.append(dict)
 
                 if mode == "full":
                     documents.append(document)
@@ -99,6 +113,8 @@ def read_documents(db_name, mode):
                 id = ""
             else:
                 document += line
+    if return_full_dict:
+        documents_dict = list_of_dicts
     
     #find average lengths
     full_avg = np.mean(full_lengths)
@@ -154,6 +170,63 @@ def build_index_gte(db_name, mode):
     json_file_path = json_folder_path + db_name + '.json'
     with open(json_file_path, "w") as json_file:
         json.dump(chunks_dict, json_file, indent=4)
+
+# a bunch of code in here is probably not really necessary
+def build_lookupchart_medcpt(db_name, mode, chunk_length):
+    print("Building index with MedCPT")
+    documents, documents_dict = read_documents(db_name, mode)
+    # faiss_folder_path, json_folder_path = prepare_folders(db_name, "medcpt", mode, chunk_length=chunk_length)
+    db_name = db_name
+    print("len(documents): " + str(len(documents)))
+    time_before_index = time.time()
+    
+    embedding_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Article-Encoder")
+    documents_dict = {}
+    dict_counter = 0
+    print("Performing input segmentation with chunk size " + str(chunk_length) + " tokens.")
+
+    lookupchart = {}
+
+    for doc_num in tqdm(range(len(documents))):
+        document = documents[doc_num]
+        encoded = embedding_tokenizer(
+            document, 
+            truncation=True, 
+            padding=True, 
+            return_tensors='pt', 
+            max_length=512,
+        )
+        m = chunk_length
+        normal_iterations = len(encoded['input_ids'][0])//m
+        for i in range(normal_iterations):
+            chunk_tokens = encoded['input_ids'][0][i*m:(i+1)*m]
+            chunk_text = embedding_tokenizer.decode(chunk_tokens)
+            documents_dict[dict_counter] = chunk_text
+            lookupchart[dict_counter] = doc_num
+            dict_counter += 1
+        if(len(encoded['input_ids'][0])%m != 0):
+            #consider last chunk
+            last_chunk_tokens = encoded['input_ids'][0][normal_iterations*m:]
+            last_chunk_text = embedding_tokenizer.decode(last_chunk_tokens)
+            documents_dict[dict_counter] = chunk_text
+            lookupchart[dict_counter] = doc_num
+            dict_counter += 1
+
+    json_folder_path = "../vectorstores/" + db_name + "/" + "medcpt" + "/" + mode + "/db_JSON_" + str(chunk_length) + "/"
+    json_file_path = json_folder_path[3:] + db_name + "lookupchart" + '.json'
+    time_after_index = time.time()
+    print("Time to build index: " + str(time_after_index - time_before_index) + " seconds.")
+
+    # save as JSON objects too for convenience 
+    with open(json_file_path, "w") as json_file:
+        json.dump(lookupchart, json_file, indent=4)
+
+    # lets take chunk index 999 and check which document it is from
+    # chunk_id = 999
+    # abstract_id = lookupchart[chunk_id]
+    # abstract = documents_dict[abstract_id]
+    # print(f"chunk with id 999 comes from abstract {abstract_id}")
+    # print(f"its full text is {abstract}")
 
 def build_index_medcpt(db_name, mode, chunk_length):
     print("Building index with MedCPT")
@@ -247,7 +320,7 @@ def build_index_medcpt(db_name, mode, chunk_length):
     #save as JSON objects too for convenience 
     with open(json_file_path, "w") as json_file:
         json.dump(documents_dict, json_file, indent=4)
-
+    
 def load_db(embedding_model, db_name, retrieval_text_mode, chunk_length=None):
     if retrieval_text_mode == "input_segmentation":
         index_path_faiss = "vectorstores/" + db_name + "/" + embedding_model + "/"+ retrieval_text_mode + "/db_faiss_" + str(chunk_length) + "/" + db_name + '.index'
@@ -261,7 +334,7 @@ def load_db(embedding_model, db_name, retrieval_text_mode, chunk_length=None):
         knowledge_db_as_JSON = json.load(json_file)
     return faiss.read_index(index_path_faiss), knowledge_db_as_JSON
 
-def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length=None):
+def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length=None, verbose=False, with_indices=False):
     time_before_retrieval = time.time()
     #print("questions we are given: " + str(questions))
     db_faiss, db_json = load_db("medcpt", db_name, retrieval_text_mode, chunk_length=chunk_length)
@@ -284,6 +357,8 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
         questions = [questions]
         disable = True
     time_after_loading_models = time.time()
+    if verbose == True:
+        disable = False
         
     for question in tqdm(questions, desc="Retrieving chunks", disable = disable):
         # print(question)
@@ -330,6 +405,7 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
             #by the relevance scores in logits, where higher relevance should be first
             #we can do this by sorting the indices of logits, and then using those indices to sort chunks
             sorted_scores = sorted(zip(chunks, logits), key=lambda x: x[1], reverse=True)
+            sorted_chunkid_indices = sorted(zip(indices, logits), key=lambda x: x[1], reverse=True)
             sorted_indices = np.array([x[1] for x in sorted_scores])
             # print("logits after: " + str(sorted_indices))
             # print("last positive score: ")
@@ -340,18 +416,22 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
                 last_positive = 0
                 pass
             # print(last_positive)
-            chunks = [x[0] for x in sorted_scores]
+            new_chunks = [x[0] for x in sorted_scores]
             # print(chunks[0:5])
-            top_chunk = chunks[0]
+            top_chunk = new_chunks[0]
+            top_index = sorted_chunkid_indices[0][0]
             # print(chunks)
             retrieval_quality.append(sorted_indices[0])
 
-        chunk_list.append(top_chunk)   
+        if with_indices:
+            chunk_list.append([top_chunk, top_index])
+        else:
+            chunk_list.append(top_chunk)   
     time_after_retrieval = time.time()
     retrieval_quality = np.array(retrieval_quality)
     # print(retrieval_quality)
     avg_retrieval_quality = np.mean(retrieval_quality)
-    print(f"Avg retrieval quality: {str(avg_retrieval_quality)}, chunk = {chunk_list}")
+    print(f"Avg retrieval quality: {str(avg_retrieval_quality)}")
     print(f"Time to load models: {str(time_after_loading_models-time_before_retrieval)}, to then retrieve chunks: {str(time_after_retrieval - time_after_loading_models)} seconds.")
     return chunk_list
     
@@ -379,13 +459,63 @@ def gte_FAISS_retrieval(questions, db_name, retrieval_text_mode):
     print("Time to retrieve chunks: " + str(time_after_retrieval - time_before_retrieval) + " seconds.")
     return chunk_list
 
+#finds the local abstract id of a chunk in the input_segmentation JSON files with sizes 16 and 32
+def chunk_to_laid(chunk_id, chunk_length):
+    file_path = "vectorstores/RCT200ktrain/medcpt/input_segmentation/db_JSON_" + str(chunk_length) + "/RCT200ktrainlookupchart.json"
+    with open(file_path, "r") as f:
+        lookupchart = json.load(f)
+    return lookupchart[chunk_id]
 
+def given_chunkids_find_sections(chunks, chunk_ids, chunk_length):
+    import difflib
+    documents, documents_dict = read_documents("RCT200ktrain", "input_segmentation", return_full_dict=True)
+    full_section_scores = {
+        "BACKGROUND": 0,
+        "OBJECTIVE": 0,
+        "METHODS": 0,
+        "RESULTS": 0,
+        "CONCLUSIONS": 0
+    }
+    for i in tqdm(chunk_ids, desc="Assigning chunks to sections"):
+        chunk = chunks[i]
+        chunk_id = chunk_ids[i]
+        local_abstract_id = chunk_to_laid(str(chunk_id), chunk_length)
+        abstract = documents[local_abstract_id]
+        abstract_as_dict = documents_dict[local_abstract_id]
+
+        #now we run string comparison to see which section this chunk mostly belongs to
+        #the following code was written by Bard
+        section_scores = {}
+        for section, text in abstract_as_dict.items():
+            if (section!= "ID"):
+                text = text.lower()
+                similarity = difflib.SequenceMatcher(None, chunk, text).ratio()
+                section_scores[section] = similarity
+        best_match_section = max(section_scores, key=section_scores.get)
+        best_match_score = section_scores[best_match_section]
+        full_section_scores[best_match_section] += 1
+    return full_section_scores
+
+def section_distribution_stats(questions, chunk_length):
+    retrieved_chunks = medcpt_FAISS_retrieval(questions=questions, db_name="RCT200ktrain", retrieval_text_mode="input_segmentation", chunk_length=chunk_length, with_indices=True)
+    chunks = []
+    chunk_ids = []
+    for i in range(len(retrieved_chunks)):
+        chunk = retrieved_chunks[i][0]
+        print(chunk)
+        # chunks.append(chunk)
+        chunk_id = retrieved_chunks[i][1]
+        # print(chunk_id)
+        chunk_ids.append(chunk_id)
+    section_scores = given_chunkids_find_sections(chunks=chunks, chunk_ids=chunk_ids, chunk_length=chunk_length)        
+    return section_scores
 if __name__ == "__main__":
+    quit()
     parser = argparse.ArgumentParser()
-    parser.add_argument('--db_name', type=str, default="RCT20ktrain.txt", help="Name of the database to build index for.")
+    parser.add_argument('--db_name', type=str, help="Name of the database to build index for.")
     parser.add_argument('--embedding_type', type=str, help='Type of embedding to use.')
-    parser.add_argument('--mode', type=str, default="full", help='Whether to embed full text or combo of background, objective, methods, results, conclusions.')
-    parser.add_argument('--chunk_length', type=int, default=16, help='Length of chunks to embed.')
+    parser.add_argument('--mode', type=str, help='Whether to embed full text or combo of background, objective, methods, results, conclusions.')
+    parser.add_argument('--chunk_length', type=int, help='Length of chunks to embed.')
     args = parser.parse_args()
     if args.embedding_type == "gte-large":
         build_index_gte(args.db_name, args.mode)
