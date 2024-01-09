@@ -186,7 +186,7 @@
  ### Friday - 10 Nov 2023
  * *1 hour* Repo refactoring work to make things cleaner
 
-## Week 8 - 3 hours total
+## Week 9 - 3 hours total
 ### Monday - 13 Nov 2023
  * *0.5 hours* Minor bugfixes
 
@@ -198,7 +198,7 @@
  * *0.5 hours* Re-reading MedPaLM 1
  * *0.5 hours* Watching 30min video report on issues with MMLU
 
-## Week 9 - 4 hours total
+## Week 10 - 4 hours total
 ### Monday - 20 Nov 2023
  * *0.5 hours* Minor bugfixes
 
@@ -213,7 +213,7 @@
  ### Sunday - 26 Nov 2023
  * *1 hour* Automatic README changes on new benchmark trials
 
-## Week 10 - 6.5 hours total
+## Week 11 - 6.5 hours total
 ### Monday - 27 Nov 2023
  * *2 hours* Small changes to automatic README changes
 
@@ -227,7 +227,7 @@
 ### Friday - 31 Nov 2023
  * *2 hours* Reading flurry of papers from twitter rabbit hole on LLM prompting
 
-## Week 11 - 6 hours total
+## Week 12 - 6 hours total
 ### Monday - 04 Dec 2023
  * *2 hours* First steps towards simple retrieval system
  * *1 hour* Important changes to promptification
@@ -242,7 +242,7 @@
 * *1 hour* Reading "REALTIME QA: What’s the Answer Right Now?"
 * *1 hour* Further work on promptification & simple retrieval
 
-## Week 12 - 5 hours total
+## Week 13 - 5 hours total
 ### Monday - 11 Dec 2023
 * *1 hour* Further rework of promptify and minor LLM call changes
 * *0.5 hours* Cleaning up repository and moving things into subdirectories
@@ -252,7 +252,7 @@
 * *1.5 hours* Re-reading RETRO paper in full
 * *1 hour* Revisiting existing RETRO implementations
 
-## Week 13 - 15 hours
+## Week 14 - 15 hours
 ### Monday - 18 Dec 2023
 * *1 hour* Update on db_build.py to build initial 20k RCT datastore
 * *1 hour* Changes to inference.py to make retrieval in prompt possible
@@ -278,7 +278,7 @@
 * *1.5 hours* Creating vectorstores for RCT20k train on GTE-Large and MedCPT in "bomrc", "brc" and "full" settings
 * *1 hour* Further benchmarking of RiPLlama and RAGLlama
 
-## Week 14 - 12 hours
+## Week 15 - 12 hours
 ### Monday - 26 Dec 2023
 * *1 hour* Fixing write_to_readme
 * *2.5 hours* Extensive work creating vectorstores for RCT200ktrain on GTE-Large and MedCPT in "bomrc", "brc" and "full" settings
@@ -296,7 +296,7 @@
 * *1.5 hours* Further deep diving into exllama
 * *1.5 hours* Revisiting all materials on RETRO-fitting (RETRO, BioReader, RETRO++ and InstructRETRO)
 
-## Week 15 - 20 hours
+## Week 16 - 20 hours
 ### Monday - 01 Dec 2023
 * *1 hour* Debugging exllama to get a better feeling for model setup
 * *1 hour* Further perusing of RETRO papers
@@ -327,7 +327,7 @@
 * *2 hours* Synchronizing the length of existing input embedding, and retrieved chunk embedding
 * *1 hour* Getting BioLlama7B to talk for the first time!
 
-## Week 16 - 
+## Week 17 - 
 ### Monday - 08 Dec 2023
 * *1.5 hours* Changing CCA such retrieved chunks are pruned to be no longer than the existing size of input_ids that the model is attending to
 
