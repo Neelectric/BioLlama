@@ -332,5 +332,6 @@
 * *1.5 hours* Changing CCA such retrieved chunks are pruned to be no longer than the existing size of input_ids that the model is attending to
 
 ### Tuesday - 09 Dec 2023
-* *3 hours* Preparing post-break debrief presentation
+* *3.5 hours* Preparing post-break debrief presentation
 * *6 hours* Building new functionality to check from which sections chunks are mostly retrieved from
+* *2.5 hours* Collecting data on section stats and creating graphs

@@ -26,7 +26,7 @@ def read_documents(db_name, mode, return_full_dict = False):
     n_documents = 0
     n_lines = 0
     documents_dict = {}
-    print(os.getcwd())
+    # print(os.getcwd())
     correct_prefix = None
     # correct_prefix = "../"
     if correct_prefix != None:
@@ -37,11 +37,11 @@ def read_documents(db_name, mode, return_full_dict = False):
         database_directory_with_suffix = "database/*.txt"
 
     txt_files = glob.glob(database_directory_with_suffix)
-    print(txt_files)
+    # print(txt_files)
     
     if database_directory + db_name + ".txt" in txt_files:
         file_name = database_directory + db_name + ".txt"
-        print("Found the requested file, reading chunks")
+        # print("Found the requested file, reading chunks")
     else:
         file_name = txt_files[0]
     if len(txt_files) != 1:
@@ -50,7 +50,7 @@ def read_documents(db_name, mode, return_full_dict = False):
 
     #for read_documents, input segmentation behaves the same as bomrc
     if mode == "input_segmentation":
-        print("mode is input_segmentation, changing to bomrc")
+        # print("mode is input_segmentation, changing to bomrc")
         mode = "bomrc"
     full_lengths = []
     bomrc_lengths = []
@@ -120,10 +120,10 @@ def read_documents(db_name, mode, return_full_dict = False):
     full_avg = np.mean(full_lengths)
     bomrc_avg = np.mean(bomrc_lengths)
     brc_avg = np.mean(brc_lengths)
-    print("full_avg: " + str(full_avg))
-    print("bomrc_avg: " + str(bomrc_avg))
-    print("brc_avg: " + str(brc_avg))
-    print("bc_avg: " + str(np.mean(bc_lengths)))
+    # print("full_avg: " + str(full_avg))
+    # print("bomrc_avg: " + str(bomrc_avg))
+    # print("brc_avg: " + str(brc_avg))
+    # print("bc_avg: " + str(np.mean(bc_lengths)))
     return documents, documents_dict
 
 def prepare_folders(db_name, embedding_model, mode, chunk_length=None):
@@ -476,24 +476,28 @@ def given_chunkids_find_sections(chunks, chunk_ids, chunk_length):
         "RESULTS": 0,
         "CONCLUSIONS": 0
     }
-    for i in tqdm(chunk_ids, desc="Assigning chunks to sections"):
-        chunk = chunks[i]
-        chunk_id = chunk_ids[i]
-        local_abstract_id = chunk_to_laid(str(chunk_id), chunk_length)
-        abstract = documents[local_abstract_id]
-        abstract_as_dict = documents_dict[local_abstract_id]
+    for i in tqdm(range(len(chunk_ids)), desc="Assigning chunks to sections"):
+        if (i > len(chunks)-1) or (i > len(chunk_ids)-1):
+            print(f"i is {i} and this exceeds length? {len(chunks)} and {len(chunk_ids)}")
+            continue
+        else:
+            chunk = chunks[i]
+            chunk_id = chunk_ids[i]
+            local_abstract_id = chunk_to_laid(str(chunk_id), chunk_length)
+            abstract = documents[local_abstract_id]
+            abstract_as_dict = documents_dict[local_abstract_id]
 
-        #now we run string comparison to see which section this chunk mostly belongs to
-        #the following code was written by Bard
-        section_scores = {}
-        for section, text in abstract_as_dict.items():
-            if (section!= "ID"):
-                text = text.lower()
-                similarity = difflib.SequenceMatcher(None, chunk, text).ratio()
-                section_scores[section] = similarity
-        best_match_section = max(section_scores, key=section_scores.get)
-        best_match_score = section_scores[best_match_section]
-        full_section_scores[best_match_section] += 1
+            #now we run string comparison to see which section this chunk mostly belongs to
+            #the following code was written by Bard
+            section_scores = {}
+            for section, text in abstract_as_dict.items():
+                if (section!= "ID"):
+                    text = text.lower()
+                    similarity = difflib.SequenceMatcher(None, chunk, text).ratio()
+                    section_scores[section] = similarity
+            best_match_section = max(section_scores, key=section_scores.get)
+            best_match_score = section_scores[best_match_section]
+            full_section_scores[best_match_section] += 1
     return full_section_scores
 
 def section_distribution_stats(questions, chunk_length):
@@ -503,7 +507,7 @@ def section_distribution_stats(questions, chunk_length):
     for i in range(len(retrieved_chunks)):
         chunk = retrieved_chunks[i][0]
         print(chunk)
-        # chunks.append(chunk)
+        chunks.append(chunk)
         chunk_id = retrieved_chunks[i][1]
         # print(chunk_id)
         chunk_ids.append(chunk_id)
