@@ -335,3 +335,6 @@
 * *3.5 hours* Preparing post-break debrief presentation
 * *6 hours* Building new functionality to check from which sections chunks are mostly retrieved from
 * *2.5 hours* Collecting data on section stats and creating graphs
+
+### Wednesday - 10 Dec 2023
+* *4 hours* Further additions to presentation and new benchmarks alongside graphs

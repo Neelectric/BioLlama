@@ -7,10 +7,10 @@ import torch
 import time
 local_transformers = True
 if local_transformers:
-    from .finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModelForCausalLM
+    from .finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModel, AutoModelForCausalLM, AutoModelForSequenceClassification
     from .finetuning.cti.transformers.transformers.src.transformers.models.llama.modeling_llama import LlamaRMSNorm
 else:
-    from transformers import AutoTokenizer, AutoModelForCausalLM
+    from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM, AutoModelForSequenceClassification
     # from transformers import LlamaRMSNorm
 from .db_retrieval import medcpt_FAISS_retrieval
     
@@ -57,12 +57,10 @@ class CCA(torch.nn.Module):
             print("we are exceeding chunk_length")
         input_ids = input_ids[-chunk_length:]
         
-        
         tokens = self.model.tokenizer.decode(input_ids)[4:]
         
-        
         # with this unencoded sequence, we then do medCPT FAISS retrieval, returning a chunk
-        retrieved_chunk = medcpt_FAISS_retrieval(tokens, db_name="RCT200ktrain", retrieval_text_mode="input_segmentation", chunk_length=32)
+        retrieved_chunk = medcpt_FAISS_retrieval(tokens, db_name="RCT200ktrain", retrieval_text_mode="input_segmentation", chunk_length=32, query_tokenizer=self.model.query_tokenizer, query_model=self.model.query_model, rerank_tokenizer=self.model.rerank_tokenizer, rerank_model=self.model.rerank_model)
         # retrieved_chunk = '[CLS] sarcoplasmic reticulum ( sr ) ca ( 2 + ) - handling proteins play' #hardcoded while transformers bugs me
         # retrieved_chunk = "and stimulation of sarcoplasmic reticulum calcium atpase. we examined the hemodynamic, echocardiographic, and neurohormonal effects of intravenous istaroxime in patients hospitalized with"
         
@@ -129,7 +127,6 @@ class RETROLayer(torch.nn.Module):
         self.pre_CCA_layernorm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps) # this gets initiated with hidden_size
         self.CCA = CCA(model, layer)
         self.CCA.pre_CCA_layernorm = self.pre_CCA_layernorm
-        
     
     def forward(self, *args, **kwargs):
         #intermediate decoding implementation
@@ -210,29 +207,24 @@ class BioLlama:
             if i in RETRO_layer_ids:
                 self.model.model.layers[i] = RETROLayer(id=i, layer=layer, config=self.model.config, model=self)
 
+        self.query_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")
+        self.query_model = AutoModel.from_pretrained("ncbi/MedCPT-Query-Encoder")
+        self.rerank_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Cross-Encoder")
+        self.rerank_model = AutoModelForSequenceClassification.from_pretrained("ncbi/MedCPT-Cross-Encoder")
+            
         self.model.config.use_cache = False # testing this in hopes of less cca isszes
-    def inference(self, questions, db_name, retrieval_text_mode):
-        #generate neighbours
-        # neighbours = medcpt_FAISS_retrieval(questions=questions,db_name=db_name, retrieval_text_mode=retrieval_text_mode)
-
-        #promptify questions with neighbours, few-shot?
-
-        #batch inference
-
-        #write output
-        return
+        # self.model.generation_config.temperature = 0.1
         
     def generate(self, prompt, max_length=100):
         inputs = self.tokenizer(prompt, return_tensors="pt")
         self.model.input_ids_biollama = inputs["input_ids"]
 
         encoded = self.tokenizer.encode(prompt)
-        # print(f"encoded has size {len(encoded)}")
         decoded = self.tokenizer.decode(encoded)
         tokenized = self.tokenizer.tokenize(prompt)
         input_ids = inputs["input_ids"][0]
-        # print(f"tensor has size {len(input_ids)}")
         tokens = self.tokenizer.convert_ids_to_tokens(input_ids)
 
         generate_ids = self.model.generate(inputs.input_ids.to(self.device), max_length=max_length)
-        return self.tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+        num_tokens = len(generate_ids)
+        return num_tokens, self.tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]

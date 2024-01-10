@@ -334,7 +334,7 @@ def load_db(embedding_model, db_name, retrieval_text_mode, chunk_length=None):
         knowledge_db_as_JSON = json.load(json_file)
     return faiss.read_index(index_path_faiss), knowledge_db_as_JSON
 
-def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length=None, verbose=False, with_indices=False):
+def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length=None, verbose=False, with_indices=False, query_tokenizer=None, query_model=None, rerank_tokenizer=None, rerank_model=None):
     time_before_retrieval = time.time()
     #print("questions we are given: " + str(questions))
     db_faiss, db_json = load_db("medcpt", db_name, retrieval_text_mode, chunk_length=chunk_length)
@@ -342,8 +342,15 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
     # if local_transformers:
         # from ..finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModel
         # from ..finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModel
-    model = AutoModel.from_pretrained("ncbi/MedCPT-Query-Encoder")
-    tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")
+    if (query_tokenizer == None) or (query_model == None):
+        query_model = AutoModel.from_pretrained("ncbi/MedCPT-Query-Encoder")
+        query_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")
+        print("had to load query model?")
+
+    if (rerank_tokenizer == None) or (rerank_model == None):
+        rerank_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Cross-Encoder")
+        rerank_model = AutoModelForSequenceClassification.from_pretrained("ncbi/MedCPT-Cross-Encoder")
+        print("had to load rerank model?")
 
     #i will first try embedding of question and retrieval on a question by question basis, and time it
     #this is with arbitrary choices: k=1, max_length (how many tokens are in input i think?) = 480
@@ -361,11 +368,10 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
         disable = False
         
     for question in tqdm(questions, desc="Retrieving chunks", disable = disable):
-        # print(question)
         chunks = []
         with torch.no_grad():
             # tokenize the queries
-            encoded = tokenizer(
+            encoded = query_tokenizer(
                 question, 
                 truncation=True, 
                 padding=True, 
@@ -373,20 +379,16 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
                 max_length=512,
             )
             # encode the queries (use the [CLS] last hidden states as the representations)
-            embeds = model(**encoded).last_hidden_state[:, 0, :]
+            embeds = query_model(**encoded).last_hidden_state[:, 0, :]
         distances, indices = db_faiss.search(embeds, k)
         distances = distances.flatten()
         indices = indices.flatten()
-        # print(indices)
 
         if k>1:
             #reranking step
             # if local_transformers:
             #     from ..finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModel, AutoModelForSequenceClassification
-            rerank_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Cross-Encoder")
-            rerank_model = AutoModelForSequenceClassification.from_pretrained("ncbi/MedCPT-Cross-Encoder")
             chunks = [db_json[str(indices[i])] for i in range(len(distances))]
-            # print("chunks: " + str(chunks))
             pairs = [[question, chunk] for chunk in chunks]
             with torch.no_grad():
                 encoded = rerank_tokenizer(
@@ -398,8 +400,6 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
                 )
                 # encode the queries (use the [CLS] last hidden states as the representations)
                 logits = rerank_model(**encoded).logits.squeeze(dim =1).numpy()
-            # print("logits: " + str(logits))
-            #in logits, print the index of the last score which is positive
             
             #"logits" now gives us relevance scores. we want to use to resort the chunks array
             #by the relevance scores in logits, where higher relevance should be first
@@ -407,20 +407,16 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
             sorted_scores = sorted(zip(chunks, logits), key=lambda x: x[1], reverse=True)
             sorted_chunkid_indices = sorted(zip(indices, logits), key=lambda x: x[1], reverse=True)
             sorted_indices = np.array([x[1] for x in sorted_scores])
-            # print("logits after: " + str(sorted_indices))
-            # print("last positive score: ")
+
+            #can use the following to see "after which item do logits turn negative"
             if np.where(sorted_indices>0)[0].size>0:
                 last_positive = np.where(sorted_indices>0)[0][-1]
             else:
-                # print("None")
                 last_positive = 0
                 pass
-            # print(last_positive)
             new_chunks = [x[0] for x in sorted_scores]
-            # print(chunks[0:5])
             top_chunk = new_chunks[0]
             top_index = sorted_chunkid_indices[0][0]
-            # print(chunks)
             retrieval_quality.append(sorted_indices[0])
 
         if with_indices:
@@ -429,7 +425,6 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
             chunk_list.append(top_chunk)   
     time_after_retrieval = time.time()
     retrieval_quality = np.array(retrieval_quality)
-    # print(retrieval_quality)
     avg_retrieval_quality = np.mean(retrieval_quality)
     print(f"Avg retrieval quality: {str(avg_retrieval_quality)}")
     print(f"Time to load models: {str(time_after_loading_models-time_before_retrieval)}, to then retrieve chunks: {str(time_after_retrieval - time_after_loading_models)} seconds.")
