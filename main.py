@@ -11,7 +11,7 @@ from utilities.exact_match import exact_match
 from utilities.utilities import write_to_readme
 
 model =  "Llama-2-7B-chat-GPTQ"
-benchmark = "MedQA"
+benchmark = "bioASQ_no_snippet"
 db_name = None
 retrieval_model = None
 retrieval_text_mode = None
@@ -20,7 +20,7 @@ chunk_length = None
 inference(model=model,
         benchmark=benchmark,
         b_start=13,
-        b_end=1013,
+        b_end=14,
         max_new_tokens=30,
         inference_mode="std",
         retrieval_model=retrieval_model,

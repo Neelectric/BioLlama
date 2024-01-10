@@ -37,7 +37,7 @@ if local_transformers == False:
 class CCA(torch.nn.Module):
     def __init__(self, model, layer):
         super().__init__()
-        self.training = False # apparently by default it thinks we're training
+        self.training = True # apparently by default it thinks we're training, but does it even have an effect??
         self.pre_CCA_layernorm = None
         self.model = model
         self.config = model.model.config
@@ -68,8 +68,6 @@ class CCA(torch.nn.Module):
         encoded_chunk = self.model.tokenizer(retrieved_chunk, return_tensors="pt")
         chunk_input_ids = encoded_chunk.input_ids
 
-        # print(f"chunk_input_ids has size {chunk_input_ids.size()}")
-
         # the input sequence/context, which was originally given to model has size 22
         # our chunk has size 27. so we need to prune it to make the residual connection work
         # im pruning the last tokens off...
@@ -77,8 +75,7 @@ class CCA(torch.nn.Module):
         cutoff = len(input_ids)
         sliced_chunk_input_ids = unnested_chunk_input_ids[0:cutoff]
         chunk_input_ids = sliced_chunk_input_ids.reshape((1,cutoff))
-        # print(f"chunk_input_ids now has size {chunk_input_ids.size()}")
-        # print("so far everything has worked")
+
         # then embed them
         inputs_embeds = self.embed_tokens(chunk_input_ids)
         embeds_shape = inputs_embeds.shape
@@ -119,7 +116,7 @@ class RETROLayer(torch.nn.Module):
         super().__init__()
         print(f"Wrapping layer {id} with retro")
         self.layer = layer
-        self.training = False # apparently by default it thinks we're training
+        self.training = True # apparently by default it thinks we're training, but does it even have an effect?
         self.RETRO_id = id # tagging the RETRO layer with its id to identify it later
         self.model = model
         

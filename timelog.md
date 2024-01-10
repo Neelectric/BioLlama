@@ -338,3 +338,5 @@
 
 ### Wednesday - 10 Dec 2023
 * *4 hours* Further additions to presentation and new benchmarks alongside graphs
+* *4.5 hours* More benchmarking of retrieval, further work on presentation and changes to biollama
+* *1.5 hours* Preparation of BioLlama training/finetuning
