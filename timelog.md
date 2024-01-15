@@ -260,7 +260,7 @@
 
 ### Tuesday - 19 Dec 2023
 * *1 hour* Succesful implementation of Retrieval in Prompt
-* *0.5 hours* Eleventh meeting with supervisor
+* *0.5 hours* Twelfth meeting with supervisor
 * *1.5 hours* First benchmarks of Llama2 70B without retrieval on MedMCQA, after refactor
 * *1.5 hours* Benchmarking of RiP Llama2 70b on MedMCQA, slight performance increase
 
@@ -297,46 +297,53 @@
 * *1.5 hours* Revisiting all materials on RETRO-fitting (RETRO, BioReader, RETRO++ and InstructRETRO)
 
 ## Week 16 - 20 hours
-### Monday - 01 Dec 2023
+### Monday - 01 Jan 2023
 * *1 hour* Debugging exllama to get a better feeling for model setup
 * *1 hour* Further perusing of RETRO papers
 
-### Tuesday - 02 Dec 2023
+### Tuesday - 02 Jan 2023
 * *1 hour* Setup work on finetuning Llama2 7B 
 
-### Wednesday - 03 Dec 2023
+### Wednesday - 03 Jan 2023
 * *2 hours* Further work finetuning Llama2 7B with frozen layers
 
-### Thursday - 04 Dec 2023
+### Thursday - 04 Jan 2023
 * *1 hour* Further research on RETRO implementations, T5-base and T5-11B
 * *0.5 hours* Full debug of Llama-2-7B-GPTQ 
 * *1.5 hours* Deep dive into Llama-2 and RETRO architecture comparison implementations
 * *1 hour* New attempt at finetuning different Llama2 variants
 * *3.5 hours* Full local downloads of transformers, optimum, AutoGPTQ and PEFT libraries with import rerouting
 
-### Friday - 05 Dec 2023
+### Friday - 05 Jan 2023
 * *1 hour* Creating Figma diagram comparison of Llama2, BioLlama and RETRO decoders
 * *5 hours* First work implementing new BioLlama architecture using local transformers/optimum/AutoGPTQ/PEFT stack
 * *1 hour* Further studying of existing RETRO implementations (lucidrains, labml.ai, megatron)
 * *0.5 hours* Collating all the different medical lama1/2 finetunes
 
-### Saturday - 06 Dec 2023
+### Saturday - 06 Jan 2023
 * *2.5 hours* Further sketching of CCA changes, and CCA implementation
 
-### Sunday - 07 Dec 2023
+### Sunday - 07 Jan 2023
 * *2 hours* Synchronizing the length of existing input embedding, and retrieved chunk embedding
 * *1 hour* Getting BioLlama7B to talk for the first time!
 
-## Week 17 - 
-### Monday - 08 Dec 2023
+## Week 17 - 24 hours
+### Monday - 08 Jan 2023
 * *1.5 hours* Changing CCA such retrieved chunks are pruned to be no longer than the existing size of input_ids that the model is attending to
 
-### Tuesday - 09 Dec 2023
+### Tuesday - 09 Jan 2023
 * *3.5 hours* Preparing post-break debrief presentation
 * *6 hours* Building new functionality to check from which sections chunks are mostly retrieved from
 * *2.5 hours* Collecting data on section stats and creating graphs
 
-### Wednesday - 10 Dec 2023
+### Wednesday - 10 Jan 2023
 * *4 hours* Further additions to presentation and new benchmarks alongside graphs
 * *4.5 hours* More benchmarking of retrieval, further work on presentation and changes to biollama
 * *1.5 hours* Preparation of BioLlama training/finetuning
+
+### Thursday - 11 Jan 2023
+* *1 hour* Thirteenth meeting with supervisor
+
+## Week 18 - hours
+### Monday - 15 Jan 2023
+* *1 hour* Further investigation into training vanilla Llama 2
