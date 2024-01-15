@@ -346,4 +346,4 @@
 
 ## Week 18 - hours
 ### Monday - 15 Jan 2023
-* *1 hour* Further investigation into training vanilla Llama 2
+* *1 hour* Further efforts fighting with new HF transformers training code of L2 7B
