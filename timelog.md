@@ -347,3 +347,6 @@
 ## Week 18 - hours
 ### Monday - 15 Jan 2023
 * *1 hour* Further efforts fighting with new HF transformers training code of L2 7B
+
+### Tuesday - 16 Jan 2023
+* *1 hour* Working on transformers.training_arguments error
