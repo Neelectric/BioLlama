@@ -350,3 +350,4 @@
 
 ### Tuesday - 16 Jan 2023
 * *1 hour* Working on transformers.training_arguments error
+* *1 hour* First finetune of Llama 2 with last 8 layers and LM head!
