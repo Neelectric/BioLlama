@@ -353,7 +353,7 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
         print("had to load rerank model?")
 
     #i will first try embedding of question and retrieval on a question by question basis, and time it
-    #this is with arbitrary choices: k=1, max_length (how many tokens are in input i think?) = 480
+    #this is with arbitrary choices: k=1, max_length (how many tokens are in input i think?) = 512
     k = 5
     top_k = 1
     chunk_list = []
@@ -432,26 +432,25 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
     
 def gte_FAISS_retrieval(questions, db_name, retrieval_text_mode):
     db_faiss, db_json = load_db("gte-large", db_name, retrieval_text_mode)
-    #if db is a faiss index, print that
-    print("db: " + str(db_faiss))
+    # print("db: " + str(db_faiss))
     time_before_retrieval = time.time()
-    k = 5
+    k = 1
     chunk_list = []
     embedding_model = SentenceTransformer("thenlper/gte-large")
-    for question in questions:
+    for question in tqdm(questions, desc="Retrieving chunks"):
         chunks = []
         question_embedding = np.array([embedding_model.encode(question)])
         distances, indices = db_faiss.search(question_embedding, k)
         distances = distances.flatten()
         indices = indices.flatten()
-        print("Distances shape: " + str(distances.shape))
+        # print("Distances shape: " + str(distances.shape))
         for i in range(len(distances)):
-            print("Distance: " + str(distances[i]) + " Index: " + str(indices[i]))
-            print("Chunk: " + str(db_json[str(indices[i])]))
+            # print("Distance: " + str(distances[i]) + " Index: " + str(indices[i]))
+            # print("Chunk: " + str(db_json[str(indices[i])]))
             chunks.append(db_json[str(indices[i])])
         chunk_list.append(chunks)        
     time_after_retrieval = time.time()
-    print("Time to retrieve chunks: " + str(time_after_retrieval - time_before_retrieval) + " seconds.")
+    # print("Time to retrieve chunks: " + str(time_after_retrieval - time_before_retrieval) + " seconds.")
     return chunk_list
 
 #finds the local abstract id of a chunk in the input_segmentation JSON files with sizes 16 and 32

@@ -3,7 +3,7 @@
 # Utility methods for prompt engineering, culminating in "promptify"
 
 def system_prompt():
-    return "You are an excellently helpful AI assistant that answers biomedical questions."
+    return "You are an excellently helpful AI assistant that answers biomedical questions. "
 
 def retrieval_augmentation(chunks):
     output = "The following chunks were retrieved from biomedical literature to help you.\n"

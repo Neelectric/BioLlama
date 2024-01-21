@@ -46,12 +46,10 @@ def inference(model="Llama-2-70B-chat-GPTQ",
         retrieved_chunks = gte_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name, retrieval_text_mode)
     elif retrieval_model == "medcpt":
         retrieved_chunks = medcpt_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name, retrieval_text_mode, chunk_length=chunk_length)
+    #this seems dubious, just doing this so promptify does not complain...
     else:
         retrieved_chunks = np.zeros((min(b_end, len(benchmark_questions)) - b_start, 1))
-    #this seems dubious, just doing this so promptify does not complain...
-    # else:
-    #     retrieved_chunks = [str(i) for i in range(min(b_end, len(benchmark_questions)) - b_start)]
-
+    
     #promptifying questions
     chunk_index = 0
     for question in benchmark_questions[b_start:min(b_end, len(benchmark_questions))]:

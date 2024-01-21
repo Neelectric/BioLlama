@@ -351,3 +351,10 @@
 ### Tuesday - 16 Jan 2023
 * *1 hour* Working on transformers.training_arguments error
 * *1 hour* First finetune of Llama 2 with last 8 layers and LM head!
+
+### Wednesday - 17 Jan 2023
+* *0.5 hours* Fourteenth meeting with supervisor
+* *1.5 hours* Further finetuning accomplishments, saving finetuned checkpoint
+
+### Sunday - 18 Jan 2023
+* *1 hour* Revisiting old retrieval and inference pipelines, fixing issues that were introduced in BioLlama
