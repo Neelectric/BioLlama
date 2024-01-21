@@ -21,7 +21,7 @@ chunk_length = 32
 inference(model=model,
         benchmark=benchmark,
         b_start=10,
-        b_end=12,
+        b_end=1010,
         max_new_tokens=35,
         inference_mode="std",
         retrieval_model=retrieval_model,
@@ -32,9 +32,9 @@ inference(model=model,
 if benchmark == "MedQA" or benchmark == "PubMedQA" or benchmark == "MedMCQA":
     accuracy = 100*exact_match(model=model, benchmark=benchmark)
 if retrieval_model == "gte-large":
-    model = "RAGLlama"
+    model = "GTE"
 elif retrieval_model == "medcpt":
-    model = "RiPLlama"
+    model = "MedCPT"
 elif retrieval_model == "retro":
     model = "BioLlama"
-# write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode)
+write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode)

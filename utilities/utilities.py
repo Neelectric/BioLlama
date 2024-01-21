@@ -41,6 +41,8 @@ def load_benchmark(benchmark_filepath, type):
     return questions, exact_answers
 
 def write_to_readme(model, benchmark, result, db_name, retrieval_text_mode):
+    if model == "GTE" or model == "MedCPT":
+        model += "-Llama"
     with open('README.md', 'r') as file:
         readme = file.read()
     before_table, table, after_table = readme.split("<!-- table -->")
