@@ -13,15 +13,15 @@ from utilities.utilities import write_to_readme
 model =  "Llama-2-70B-chat-GPTQ" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ"
 benchmark = "MedQA" # eg. "MedQA", "PubMedQA", "MedMCQA"
 db_name = "RCT200ktrain"
-retrieval_model = None # eg. "gte-large", "medcpt"
-retrieval_text_mode = None # eg. "full", "input_segmentation
-chunk_length = None
+retrieval_model = "medcpt" # eg. "gte-large", "medcpt"
+retrieval_text_mode = "input_segmentation" # eg. "full", "input_segmentation
+chunk_length = 32
 
 
 inference(model=model,
         benchmark=benchmark,
         b_start=10,
-        b_end=1010,
+        b_end=12,
         max_new_tokens=35,
         inference_mode="std",
         retrieval_model=retrieval_model,

@@ -335,10 +335,9 @@ def load_db(embedding_model, db_name, retrieval_text_mode, chunk_length=None):
     return faiss.read_index(index_path_faiss), knowledge_db_as_JSON
 
 def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length=None, verbose=False, with_indices=False, query_tokenizer=None, query_model=None, rerank_tokenizer=None, rerank_model=None):
-    time_before_retrieval = time.time()
-    #print("questions we are given: " + str(questions))
+    time_start = time.time()
     db_faiss, db_json = load_db("medcpt", db_name, retrieval_text_mode, chunk_length=chunk_length)
-    # print(db_json["0"])
+    time_after_loading_db = time.time()
     # if local_transformers:
         # from ..finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModel
         # from ..finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModel
@@ -356,6 +355,8 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
     #this is with arbitrary choices: k=1, max_length (how many tokens are in input i think?) = 512
     k = 5
     top_k = 1
+    if retrieval_text_mode == "input_segmentation":
+        top_k = 3
     chunk_list = []
     retrieval_quality = []
     disable = False
@@ -415,9 +416,9 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
                 last_positive = 0
                 pass
             new_chunks = [x[0] for x in sorted_scores]
-            top_chunk = new_chunks[0]
-            top_index = sorted_chunkid_indices[0][0]
-            retrieval_quality.append(sorted_indices[0])
+            top_chunk = new_chunks[0:top_k]
+            top_index = [x[0] for x in sorted_chunkid_indices[0:top_k]]
+            retrieval_quality.append(sorted_indices[0]) # note that this is the score of the top chunk, not the average of the top k we return
 
         if with_indices:
             chunk_list.append([top_chunk, top_index])
@@ -427,7 +428,7 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
     retrieval_quality = np.array(retrieval_quality)
     avg_retrieval_quality = np.mean(retrieval_quality)
     print(f"Avg retrieval quality: {str(avg_retrieval_quality)}")
-    print(f"Time to load models: {str(time_after_loading_models-time_before_retrieval)}, to then retrieve chunks: {str(time_after_retrieval - time_after_loading_models)} seconds.")
+    print(f"Time to load db: {str(time_after_loading_db - time_start)}, then to load models: {str(time_after_loading_models - time_after_loading_db)}, to then retrieve chunks: {str(time_after_retrieval - time_after_loading_models)} seconds.")
     return chunk_list
     
 def gte_FAISS_retrieval(questions, db_name, retrieval_text_mode):

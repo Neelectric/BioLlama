@@ -6,10 +6,10 @@ def system_prompt():
     return "You are an excellently helpful AI assistant that answers biomedical questions. "
 
 def retrieval_augmentation(chunks):
-    output = "The following chunks were retrieved from biomedical literature to help you.\n"
+    output = "The following chunks were retrieved from biomedical literature to help you:\n"
     for chunk in chunks:
-        output += chunk
-    return output + "\n"
+        output += "\"" + chunk + "\",\n"
+    return output
 
 def few_shot(benchmark):
     format_string = "You start all of your responses with <ANSWER> and end them with </ANSWER>, as shown in the following example: "
@@ -30,6 +30,7 @@ def promptify(benchmark, question, retrieval_mode = None, retrieved_chunks = Non
     promptified += few_shot(benchmark)
     promptified += question
     promptified += "</QUESTION>\n<ANSWER> "
+    print(promptified)
     return promptified
 
 def promptify_for_judging(question, true_answer, model_response):

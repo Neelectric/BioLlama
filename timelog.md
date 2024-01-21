@@ -360,3 +360,4 @@
 * *1 hour* Revisiting old retrieval and inference pipelines, fixing issues that were introduced in BioLlama
 * *1.5 hours* Re-running old Llama2 7B benchmarks with and without retrieval
 * *1 hour* Investigating low Llama2 70B MedQA performance
+* *2 hours* Fixing low Llama2 70B MedQA performance, debugging retrieval pipeline for minor improvements
