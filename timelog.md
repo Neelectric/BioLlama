@@ -358,3 +358,5 @@
 
 ### Sunday - 18 Jan 2023
 * *1 hour* Revisiting old retrieval and inference pipelines, fixing issues that were introduced in BioLlama
+* *1.5 hours* Re-running old Llama2 7B benchmarks with and without retrieval
+* *1 hour* Investigating low Llama2 70B MedQA performance
