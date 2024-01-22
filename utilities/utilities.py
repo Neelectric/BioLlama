@@ -40,7 +40,7 @@ def load_benchmark(benchmark_filepath, type):
     print("Returning " + str(num) + " questions.")
     return questions, exact_answers
 
-def write_to_readme(model, benchmark, result, db_name, retrieval_text_mode):
+def write_to_readme(model, benchmark, result, db_name, retrieval_text_mode, top_k):
     if model == "GTE" or model == "MedCPT":
         model += "-Llama"
     with open('README.md', 'r') as file:
@@ -75,7 +75,10 @@ def write_to_readme(model, benchmark, result, db_name, retrieval_text_mode):
     machine_timezone = pytz.timezone(pytz.country_timezones['DE'][0])
 
     now = datetime.datetime.now(machine_timezone)
-    new_change = " * " + now.strftime("%H:%M:%S, %d.%m.%Y") + " | " + model + " | " + benchmark + " | " + str(old_result) + " --> " + str(result) + " (1*" + retrieval_text_mode + " " + db_name + ")\n"
+    # new_change = " * " + now.strftime("%H:%M:%S, %d.%m.%Y") + " | " + model + " | " + benchmark + " | " + str(old_result) + " --> " + str(result) + " (1*" + retrieval_text_mode + " " + db_name + ")\n"
+    #instead write this as an f-string
+    strftime = now.strftime("%H:%M:%S, %d.%m.%Y")
+    new_change = f" * {strftime} | {model} | {benchmark} | {old_result} --> {result} ({top_k}*{retrieval_text_mode} {db_name})\n"
     changelog = new_change + changelog
     after_table = before_changelog_after_table + '<!-- changelog -->\n' + changelog + "\n<!-- changelog -->"+ after_changelog_after_table
     new_readme = before_table + '<!-- table -->\n' + new_table + "\n<!-- table -->"+ after_table

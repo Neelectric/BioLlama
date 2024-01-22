@@ -334,7 +334,7 @@ def load_db(embedding_model, db_name, retrieval_text_mode, chunk_length=None):
         knowledge_db_as_JSON = json.load(json_file)
     return faiss.read_index(index_path_faiss), knowledge_db_as_JSON
 
-def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length=None, verbose=False, with_indices=False, query_tokenizer=None, query_model=None, rerank_tokenizer=None, rerank_model=None):
+def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length=None, verbose=False, with_indices=False, query_tokenizer=None, query_model=None, rerank_tokenizer=None, rerank_model=None, top_k=1):
     time_start = time.time()
     db_faiss, db_json = load_db("medcpt", db_name, retrieval_text_mode, chunk_length=chunk_length)
     time_after_loading_db = time.time()
@@ -354,7 +354,6 @@ def medcpt_FAISS_retrieval(questions, db_name, retrieval_text_mode, chunk_length
     #i will first try embedding of question and retrieval on a question by question basis, and time it
     #this is with arbitrary choices: k=1, max_length (how many tokens are in input i think?) = 512
     k = 5
-    top_k = 1
     if retrieval_text_mode == "input_segmentation":
         top_k = 3
     chunk_list = []
