@@ -33,6 +33,8 @@ inference(model=model,
 
 if benchmark == "MedQA" or benchmark == "PubMedQA" or benchmark == "MedMCQA":
     accuracy = 100*exact_match(model=model, benchmark=benchmark)
+    #convert accuracy to be up to 2 significant figures
+    
 if retrieval_model == "gte-large":
     model = "GTE"
 elif retrieval_model == "medcpt":
