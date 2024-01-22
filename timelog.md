@@ -344,7 +344,7 @@
 ### Thursday - 11 Jan 2023
 * *1 hour* Thirteenth meeting with supervisor
 
-## Week 18 - hours
+## Week 18 - 10.5 hours
 ### Monday - 15 Jan 2023
 * *1 hour* Further efforts fighting with new HF transformers training code of L2 7B
 
@@ -356,8 +356,13 @@
 * *0.5 hours* Fourteenth meeting with supervisor
 * *1.5 hours* Further finetuning accomplishments, saving finetuned checkpoint
 
-### Sunday - 18 Jan 2023
+### Sunday - 21 Jan 2023
 * *1 hour* Revisiting old retrieval and inference pipelines, fixing issues that were introduced in BioLlama
 * *1.5 hours* Re-running old Llama2 7B benchmarks with and without retrieval
 * *1 hour* Investigating low Llama2 70B MedQA performance
 * *2 hours* Fixing low Llama2 70B MedQA performance, debugging retrieval pipeline for minor improvements
+
+## Week 19 - hours
+### Monday - 22 Jan 2023
+* *1 hour* Revisiting some old benchmark scores
+* *1 hour* Investigation on how to translate Llama 2 7B finetuning into BioLlama finetuning

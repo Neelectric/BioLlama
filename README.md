@@ -19,7 +19,7 @@ The table below shows preliminary results, as reported by other papers or record
 | Med-PaLM              | 540B   | -                   | 79.0       | 67.6    | 57.6               |
 | Med-PaLM 2            | 540B   | -                   | 81.8       | 86.5    | 72.3               |
 | GTE-Llama             | 70B    |                     |            | 34.0    | 46.3               |
-| MedCPT-Llama          | 70B    |                     |            | 34.2    | 46.1               |
+| MedCPT-Llama          | 70B    |                     |            | 34.8    | 46.1               |
 | BioLlama              | 70B    |                     |            |         |                    |
 <!-- table -->
 
@@ -31,6 +31,8 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 10:36:24, 22.01.2024 | MedCPT-Llama | MedQA | 34.2 --> 34.8 (1*brc RCT200ktrain)
+
  * 09:15:40, 22.01.2024 | MedCPT-Llama | MedMCQA | 46.9 --> 46.1 (1*input_segmentation RCT200ktrain)
 
  * 00:57:59, 22.01.2024 | Llama-2-70B-chat-GPTQ | MedMCQA | 44.7 --> 46.300000000000004 (1*input_segmentation RCT200ktrain)
@@ -78,6 +80,7 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
 
 
 
