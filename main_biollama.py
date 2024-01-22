@@ -1,7 +1,9 @@
 from utilities.biollama import BioLlama
 import time
 
-questions = ["Which is the main calcium pump of the sarcoplasmic reticulum? Answer:"]
+# questions = ["Which is the main calcium pump of the sarcoplasmic reticulum? Answer:"]
+amended_questions = ["The main calcium pump of the sarcoplasmic reticulum is "]
+questions = amended_questions
 #answers = ["Sarcoplasmic reticulum Ca(2+)-ATPase"] # or "SERCA","serca2"
 
 db_name = "RCT200ktrain"
@@ -14,7 +16,7 @@ chunk_length = 32
 time_before_setup = time.time()
 BioLlama = BioLlama(model_id=model_id, chunk_length=chunk_length)
 time_before_generation = time.time()
-num_tokens, text = BioLlama.generate(prompt=prompt, max_length=33)
+num_tokens, text = BioLlama.generate(prompt=prompt, max_length=32)
 
 time_after = time.time()
 

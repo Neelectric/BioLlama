@@ -74,7 +74,7 @@ class CCA(torch.nn.Module):
     ):
         # we perform chunked cross attention at every decoding step, with sequences that are 16 tokens long?
         input_ids = [int(element) for element in input_ids[0]]
-        print(f"input_ids has len {len(input_ids)}")
+        # print(f"input_ids has len {len(input_ids)}")
 
         # here i should probably prune this to be the last "chunk_length" tokens right?
         # but i guess i need to re-encode these tokens with the MedCPT query tokenizer...
@@ -83,7 +83,9 @@ class CCA(torch.nn.Module):
         if len(input_ids) > chunk_length:
             print("we are exceeding chunk_length")
         input_ids = input_ids[-chunk_length:]
-        tokens = self.model.tokenizer.decode(input_ids)[4:]
+        tokens = self.model.tokenizer.decode(input_ids)[4:] # without the leading "<s> "
+        temp_tokens = self.model.tokenizer.decode(input_ids)
+        print(f"tokens is currently {tokens}")
 
         # with this unencoded sequence, we then do medCPT FAISS retrieval, returning a chunk
         # to save time, we pass the query tokenizer and model, as well as the pre-loaded db to the retrieval function
@@ -91,7 +93,7 @@ class CCA(torch.nn.Module):
             tokens,
             db_name="RCT200ktrain",
             retrieval_text_mode="input_segmentation",
-            chunk_length=32,
+            chunk_length=self.model.chunk_length,
             query_tokenizer=self.model.query_tokenizer,
             query_model=self.model.query_model,
             rerank_tokenizer=self.model.rerank_tokenizer,
@@ -105,27 +107,27 @@ class CCA(torch.nn.Module):
 
         if type(retrieved_chunk[0]) == list:
             retrieved_chunk = retrieved_chunk[0]
-
-        # we then use the llama2 tokenizer to encode this chunk
-        encoded_chunk = self.model.tokenizer(retrieved_chunk, return_tensors="pt")
-        chunk_input_ids = encoded_chunk.input_ids
+        print(f"retrieved_chunk is currently {retrieved_chunk}")
+        
+        encoded_chunk = self.model.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
+        chunk_input_ids = encoded_chunk.input_ids # get input_ids of tokens of the encoded chunk
 
         # the input sequence/context, which was originally given to model has size 22
         # our chunk has size 27. so we need to prune it to make the residual connection work
         # im pruning the last tokens off...
-        unnested_chunk_input_ids = torch.unbind(chunk_input_ids, dim=0)[0]
-        cutoff = len(input_ids)
-        sliced_chunk_input_ids = unnested_chunk_input_ids[0:cutoff]
+        unnested_chunk_input_ids = torch.unbind(chunk_input_ids, dim=0)[0] # unnest the chunk_input_ids
+        cutoff = len(input_ids) # this is the number of tokens in the sequence with which we performed retrieval, ie 32
+        sliced_chunk_input_ids = unnested_chunk_input_ids[0:cutoff] # this slices chunk_input_ids to length chunk_length
         chunk_input_ids = sliced_chunk_input_ids.reshape((1, cutoff))
 
-        # then embed them
+        # Next, they are embedded using the model's embed_tokens layer
         inputs_embeds = self.embed_tokens(chunk_input_ids)
         embeds_shape = inputs_embeds.shape
         hidden_states = inputs_embeds
 
-        # AM I SURE THIS CCA LAYERNORM WORKS? IT GETS INITIALISED TO NONE AT CREATION
+        
         # then do pre_CCA_layernorm
-        hidden_states = self.pre_CCA_layernorm(hidden_states)
+        hidden_states = self.pre_CCA_layernorm(hidden_states) # AM I SURE THIS CCA LAYERNORM WORKS? IT GETS INITIALISED TO NONE AT CREATION
 
         # it complains "expected scalar type Float but found Half"
         # i changed transformers qlinear_cuda_old implementation:
@@ -139,7 +141,17 @@ class CCA(torch.nn.Module):
         # so i added an if statement there
 
         # then self attention
-        hidden_states, self_attn_weights, present_key_value = self.layer.self_attn(
+
+        #at the moment, tensor a is the retrieved chunk, which is either its natural length (eg 52???), or chunk_length (eg 32)
+        #tensor b is the input sequence, which starts at the length of input prompt (eg 19) and then grows
+        # we need to make sure that position ids does not exceed our max length
+        # so we need to make sure that position_ids is of length chunk_length
+
+        position_ids = torch.arange(
+            embeds_shape[-2], dtype=torch.long, device=inputs_embeds.device
+        ).unsqueeze(0)
+       
+        hidden_states, self_attn_weights, present_key_value = self.layer.self_attn(  #when input_ids or hidden_states has shape [1,33] this line explodes
             hidden_states=hidden_states,
             attention_mask=attention_mask,
             position_ids=position_ids,
@@ -169,28 +181,23 @@ class RETROLayer(torch.nn.Module):
         self.CCA = CCA(model, layer)
         self.CCA.pre_CCA_layernorm = self.pre_CCA_layernorm
 
-    def forward(self, *args, **kwargs):
-        # intermediate decoding implementation
-        # outputs = self.layer(*args, **kwargs)
+    def forward(self, *args, **kwargs):#this combines insights from the intermediate decoding implementation, and the HF transformers implementation
 
-        # huggingface transformers implementation
-        hidden_states = args[
-            0
-        ]  # usually a tuple where the first element is what we want
-        attention_mask = kwargs[
-            "attention_mask"
-        ]  # should be torch.FloatTensor with  `(batch_size, 1,query_sequence_length, key_sequence_length)`
+        # Preparation
+        hidden_states = args[0]  # usually a tuple where the first element is what we want
+        attention_mask = kwargs["attention_mask"]  # should be torch.FloatTensor with  `(batch_size, 1,query_sequence_length, key_sequence_length)`
         position_ids = kwargs["position_ids"]
         past_key_value = kwargs["past_key_value"]
         output_attentions = kwargs["output_attentions"]
         use_cache = kwargs["use_cache"]
         input_ids = self.model.model.input_ids_biollama
 
+        # RMS Norm
         residual = hidden_states
         hidden_states = self.layer.input_layernorm(hidden_states)
 
-        # print(f"Before Self Attention, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}")
-        # Self Attention
+        # Self-Attention 
+        
         hidden_states, self_attn_weights, present_key_value = self.layer.self_attn(
             hidden_states=hidden_states,
             attention_mask=attention_mask,
@@ -200,21 +207,12 @@ class RETROLayer(torch.nn.Module):
             use_cache=use_cache,
             # **kwargs,
         )
+
+        # Residual Connection
         hidden_states = residual + hidden_states
 
-        print(
-            f"Before CCA, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}"
-        )
-
         # Chunked Cross Attention
-        # lets think this through step by step: this comes in at this point with shape [1, 1, 4096]
-        # ill let residual be the normal hidden_states, and then
-        # hidden_states is just self.attention on chunks
-        # and then i add again
-
-        # preparing the retrieved chunks for attention:
-        # I need to call self.tokenizer(prompt, return_tensors="pt")
-
+        print(f"Before CCA, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}")
         residual = hidden_states
         hidden_states = self.CCA.forward(
             input_ids=input_ids,
@@ -231,14 +229,12 @@ class RETROLayer(torch.nn.Module):
         hidden_states = self.layer.post_attention_layernorm(hidden_states)
         hidden_states = self.layer.mlp(hidden_states)
         hidden_states = residual + hidden_states
-        # print(f"After FFW, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}")
         outputs = (hidden_states,)
 
         if output_attentions:
             outputs += (self_attn_weights,)
         if use_cache:
             outputs += (present_key_value,)
-        # potential issue: returned as dtype: torch.float16?
         return outputs
 
 
@@ -268,8 +264,8 @@ class BioLlama:
             "ncbi/MedCPT-Cross-Encoder"
         )
 
-        self.model.config.use_cache = False  # testing this in hopes of less cca isszes
-        # self.model.generation_config.temperature = 0.1
+        self.model.config.use_cache = False  # testing this in hopes of less cca issues
+        self.model.generation_config.temperature = 1.0
         db_faiss, db_json = load_db(
             "medcpt", "RCT200ktrain", "input_segmentation", chunk_length=chunk_length
         )

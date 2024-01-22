@@ -602,10 +602,8 @@ def medcpt_FAISS_retrieval(
     time_after_retrieval = time.time()
     retrieval_quality = np.array(retrieval_quality)
     avg_retrieval_quality = np.mean(retrieval_quality)
-    print(f"Avg retrieval quality: {str(avg_retrieval_quality)}")
-    print(
-        f"Time to load db: {str(time_after_loading_db - time_start)}, then to load models: {str(time_after_loading_models - time_after_loading_db)}, to then retrieve chunks: {str(time_after_retrieval - time_after_loading_models)} seconds."
-    )
+    # print(f"Avg retrieval quality: {str(avg_retrieval_quality)}")
+    # print(f"Time to load db: {str(time_after_loading_db - time_start)}, then to load models: {str(time_after_loading_models - time_after_loading_db)}, to then retrieve chunks: {str(time_after_retrieval - time_after_loading_models)} seconds.")
     return chunk_list
 
 
