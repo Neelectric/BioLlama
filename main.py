@@ -42,4 +42,4 @@ elif retrieval_model == "medcpt":
     model = "MedCPT"
 elif retrieval_model == "retro":
     model = "BioLlama"
-write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode, top_k=top_k)
+# write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode, top_k=top_k)
