@@ -90,6 +90,7 @@ def finetuned_llm(model_directory, prompts, max_new_tokens):
     generations = []
     for prompt in prompts:
         input_ids = new_tokenizer.encode(prompt, return_tensors="pt")
+        input_ids = input_ids.to('cuda') # otherwise we get userwarning for input ids on CPU while model on GPU
         generated = new_model.generate(input_ids, max_new_tokens=35, do_sample=True, top_p=0.95, top_k=60)
         decoded_generated = new_tokenizer.decode(generated[0], skip_special_tokens=True)
         generations.append(decoded_generated)
