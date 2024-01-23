@@ -374,3 +374,4 @@
 
 ### Tuesday - 23 Jan 2023
 * *1 hour* Adding parse_output.py to handle LLM output writing
+* *1 hour* First workable output by finetuned LLM
