@@ -56,14 +56,9 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     for question in benchmark_questions[b_start:min(b_end, len(benchmark_questions))]:
         prompts.append(promptify(benchmark=benchmark, question=question, retrieval_mode=retrieval_model, retrieved_chunks=retrieved_chunks[chunk_index])) #promptify questions
         chunk_index += 1
-    #uncomment to print question, retrieved chunks and created prompt as sanity check
-    #print("Question: " + str(benchmark_questions[b_start]))
-    # print("Retrieved chunks: ")
-    # chunks = retrieved_chunks[0]
-    # for chunk in chunks:
-    #     print(chunk)
-    #     print("\n")
-    # print("Prompts: " + str(prompts[0]))
+    
+    if model == "Llama-2-7B-chat-finetune":
+        model_directory = "/home/service/BioLlama/utilities/finetuning/finetuned_models/"
     
     
     print(f"--------------Start of inference of {model} on questions {b_start} to {b_end}------------------")

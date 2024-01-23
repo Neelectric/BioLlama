@@ -369,3 +369,4 @@
 * *0.5 hours* Adding DB pre-loading to BioLlama, gaining 12x speedup from 0.02t/s -->0.3t/s
 * *1.5 hours* Efforts to fix BioLlama decoding when max_tokens>32
 * *1.5 hours* Further efforts finetuning Llama2 7B when quantized, using MedQA
+* *1 hour* Loading MedQA as a benchmark works together with its prompting, working on finetuning too

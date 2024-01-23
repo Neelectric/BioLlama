@@ -13,6 +13,9 @@ import src.model_init as model_init
 
 #function that creates a callable "llm" object
 def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
+    if model_directory == "/home/service/BioLlama/utilities/finetuning/finetuned_models/":
+        output = finetuned_llm(model_directory, prompts, max_new_tokens)
+    
     # Locate files we need within that directory
     tokenizer_path = os.path.join(model_directory, "tokenizer.model")
     model_config_path = os.path.join(model_directory, "config.json")
@@ -77,3 +80,15 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
         stop_conditions = ["</ANSWER>"]
         output = generator.generate(prompts, max_new_tokens=max_new_tokens, gen_settings=generator.settings, stop_conditions=stop_conditions, encode_special_characters=False)
     return output
+
+def finetuned_llm(model_directory, prompts, max_new_tokens):
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+    new_tokenizer = AutoTokenizer.from_pretrained(model_directory)
+    new_model = AutoModelForCausalLM.from_pretrained(model_directory, device_map="auto")
+    generations = []
+    for prompt in prompts:
+        input_ids = new_tokenizer.encode(prompt, return_tensors="pt")
+        generated = new_model.generate(input_ids, max_new_tokens=10, do_sample=True, top_p=0.95, top_k=60)
+        decoded_generated = new_tokenizer.decode(generated[0], skip_special_tokens=True)
+        generations.append(decoded_generated)
+    return generations
