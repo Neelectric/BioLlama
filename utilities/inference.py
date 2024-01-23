@@ -163,16 +163,16 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     #     print("Written output to " + targetfile)
 
     # elif benchmark == "PubMedQA":
-        output = []
-        for i in range(len(responses)):
-            instance = []
-            instance.append(benchmark_questions[i+b_start][1])
-            instance.append(benchmark_answers[i+b_start])
-            instance.append(responses[i])
-            output.append(instance)
-        with open(targetfile, "w") as outfile: 
-            json.dump(output, outfile)
-        print("Written output to " + targetfile)
+        # output = []
+        # for i in range(len(responses)):
+        #     instance = []
+        #     instance.append(benchmark_questions[i+b_start][1])
+        #     instance.append(benchmark_answers[i+b_start])
+        #     instance.append(responses[i])
+        #     output.append(instance)
+        # with open(targetfile, "w") as outfile: 
+        #     json.dump(output, outfile)
+        # print("Written output to " + targetfile)
 
     print("Time for batch inference: " + str(time.time() - start_time))
 
