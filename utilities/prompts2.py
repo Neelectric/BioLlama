@@ -28,7 +28,7 @@ def promptify(benchmark, question, retrieval_mode = None, retrieved_chunks = Non
         promptified = system_prompt()
         promptified += question
         promptified += "</QUESTION>\n<ANSWER> "
-        print(promptified)
+        # print(promptified)
     else:
         promptified = system_prompt()
         if retrieval_mode != None:

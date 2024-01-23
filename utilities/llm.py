@@ -85,6 +85,8 @@ def finetuned_llm(model_directory, prompts, max_new_tokens):
     from transformers import AutoModelForCausalLM, AutoTokenizer
     new_tokenizer = AutoTokenizer.from_pretrained(model_directory)
     new_model = AutoModelForCausalLM.from_pretrained(model_directory, device_map="auto")
+    #set model temperature to 0.01
+    new_model.config.temperature = 0.01
     generations = []
     for prompt in prompts:
         input_ids = new_tokenizer.encode(prompt, return_tensors="pt")
