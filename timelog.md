@@ -370,3 +370,7 @@
 * *1.5 hours* Efforts to fix BioLlama decoding when max_tokens>32
 * *1.5 hours* Further efforts finetuning Llama2 7B when quantized, using MedQA
 * *1 hour* Loading MedQA as a benchmark works together with its prompting, working on finetuning too
+* *1 hour* Playing around with finetuning parameters and attempts to quantized finetuning (LoRA?)
+
+### Tuesday - 23 Jan 2023
+* *1 hour* Adding parse_output.py to handle LLM output writing

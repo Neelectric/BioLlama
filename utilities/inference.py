@@ -14,7 +14,7 @@ from src.count_tokens import count_tokens
 from utilities.parse_benchmark import parse_benchmark, parse_bioASQ_no_snippet, parse_BioASQ_with_snippet, parse_MedQA, parse_PubMedQA, parse_MedMCQA
 from utilities.prompts2 import promptify, promptify_for_judging
 from utilities.db_retrieval import gte_FAISS_retrieval, medcpt_FAISS_retrieval
-
+from utilities.parse_output import parse_output_GPTQ, parse_output_finetuned
 #method summary:
 # 1. Load specified benchmark
 # 2. Prepare specified model
@@ -54,7 +54,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     #promptifying questions
     chunk_index = 0
     for question in benchmark_questions[b_start:min(b_end, len(benchmark_questions))]:
-        prompts.append(promptify(benchmark=benchmark, question=question, retrieval_mode=retrieval_model, retrieved_chunks=retrieved_chunks[chunk_index])) #promptify questions
+        prompts.append(promptify(benchmark=benchmark, question=question, retrieval_mode=retrieval_model, retrieved_chunks=retrieved_chunks[chunk_index], model=model)) #promptify questions
         chunk_index += 1
     
     if model == "Llama-2-7B-chat-finetune":

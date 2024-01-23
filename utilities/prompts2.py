@@ -23,14 +23,20 @@ def few_shot(benchmark):
         example = "<QUESTION> Which of the following is not true for myelinated nerve fibers: \n(1) Impulse through myelinated fibers is slower than non-myelinated fibers \n(2) Membrane currents are generated at nodes of Ranvier \n(3) Saltatory conduction of impulses is seen \n(4) Local anesthesia is effective only when the nerve is not covered by myelin sheath</QUESTION>\n<ANSWER> 3</ANSWER>\nSelect the correct choice for the following question. State nothing other than the index of the correct choice, without brackets."
     return format_string + "\n" + example + "\n<QUESTION>"
 
-def promptify(benchmark, question, retrieval_mode = None, retrieved_chunks = None):
-    promptified = system_prompt()
-    if retrieval_mode != None:
-        promptified += retrieval_augmentation(retrieved_chunks)
-    promptified += few_shot(benchmark)
-    promptified += question
-    promptified += "</QUESTION>\n<ANSWER> "
-    # print(promptified)
+def promptify(benchmark, question, retrieval_mode = None, retrieved_chunks = None, model = None):
+    if model == "Llama-2-7B-chat-finetune":
+        promptified = system_prompt()
+        promptified += question
+        promptified += "</QUESTION>\n<ANSWER> "
+        print(promptified)
+    else:
+        promptified = system_prompt()
+        if retrieval_mode != None:
+            promptified += retrieval_augmentation(retrieved_chunks)
+        promptified += few_shot(benchmark)
+        promptified += question
+        promptified += "</QUESTION>\n<ANSWER> "
+        # print(promptified)
     return promptified
 
 def promptify_for_judging(question, true_answer, model_response):
