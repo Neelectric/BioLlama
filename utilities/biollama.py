@@ -81,11 +81,12 @@ class CCA(torch.nn.Module):
         # because otherwise its using llama token lengths, not MedCPT token lengths
         chunk_length = self.model.chunk_length
         if len(input_ids) > chunk_length:
-            print("we are exceeding chunk_length")
+            # print("we are exceeding chunk_length")
+            pass
         input_ids = input_ids[-chunk_length:]
         tokens = self.model.tokenizer.decode(input_ids)[4:] # without the leading "<s> "
         temp_tokens = self.model.tokenizer.decode(input_ids)
-        print(f"tokens is currently {tokens}")
+        # print(f"tokens is currently {tokens}")
 
         # with this unencoded sequence, we then do medCPT FAISS retrieval, returning a chunk
         # to save time, we pass the query tokenizer and model, as well as the pre-loaded db to the retrieval function
@@ -107,7 +108,7 @@ class CCA(torch.nn.Module):
 
         if type(retrieved_chunk[0]) == list:
             retrieved_chunk = retrieved_chunk[0]
-        print(f"retrieved_chunk is currently {retrieved_chunk}")
+        # print(f"retrieved_chunk is currently {retrieved_chunk}")
         
         encoded_chunk = self.model.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
         chunk_input_ids = encoded_chunk.input_ids # get input_ids of tokens of the encoded chunk
@@ -212,7 +213,7 @@ class RETROLayer(torch.nn.Module):
         hidden_states = residual + hidden_states
 
         # Chunked Cross Attention
-        print(f"Before CCA, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}")
+        # print(f"Before CCA, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}")
         residual = hidden_states
         hidden_states = self.CCA.forward(
             input_ids=input_ids,
@@ -222,11 +223,11 @@ class RETROLayer(torch.nn.Module):
             output_attentions=output_attentions,
             use_cache=use_cache,
         )
-        #at this point, hidden_states always has size [1,32,4096]
+        #at this point, hidden_states max out at size [1,32,4096]
         #but eventually, residual grows to sizes like [1,33,4096] and larger
         #so we take the [1,1,4096]th item of residual, and prepend it to hidden_states
         
-        #calculate difference in shape 
+        #very hacky solution, but it works!
         hs_shape = hidden_states.shape
         rs_shape = residual.shape
         size_difference = rs_shape[1] - hs_shape[1]
@@ -285,7 +286,7 @@ class BioLlama:
         self.db_faiss = db_faiss
         self.db_json = db_json
 
-    def generate(self, prompt, max_length=100):
+    def generate(self, prompt, max_new_tokens=100):
         inputs = self.tokenizer(prompt, return_tensors="pt")
         self.model.input_ids_biollama = inputs["input_ids"]
 
@@ -296,7 +297,7 @@ class BioLlama:
         tokens = self.tokenizer.convert_ids_to_tokens(input_ids)
 
         generate_ids = self.model.generate(
-            inputs.input_ids.to(self.device), max_length=max_length, use_cache=False
+            inputs.input_ids.to(self.device), max_new_tokens=max_new_tokens, use_cache=False
         )
         num_tokens = len(generate_ids)
         return (

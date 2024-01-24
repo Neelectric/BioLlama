@@ -17,7 +17,7 @@ chunk_length = 32
 time_before_setup = time.time()
 BioLlama = BioLlama(model_id=model_id, chunk_length=chunk_length)
 time_before_generation = time.time()
-num_tokens, text = BioLlama.generate(prompt=prompt, max_length=35)
+num_tokens, text = BioLlama.generate(prompt=prompt, max_new_tokens=35)
 
 time_after = time.time()
 
