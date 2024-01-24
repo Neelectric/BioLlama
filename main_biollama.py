@@ -10,7 +10,8 @@ db_name = "RCT200ktrain"
 retrieval_text_mode = "input_segmentation"
 
 prompt = questions[0]
-model_id = "TheBloke/Llama-2-7b-chat-GPTQ"
+# model_id = "TheBloke/Llama-2-7b-chat-GPTQ"
+model_id = 'meta-llama/Llama-2-7b-chat-hf'
 chunk_length = 32
 
 time_before_setup = time.time()

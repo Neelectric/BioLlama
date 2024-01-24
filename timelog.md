@@ -381,3 +381,5 @@
 ### Wednesday - 24 Jan 2023
 * *1 hour* Fifteenth meeting with supervisor
 * *1 hour* Investigation into feasibility of PEFT and LoRA for BioLlama
+* *0.5 hours* Changing BioLlama to use Llama 2 7B unquantized as a base
+* *2.5 hours* Fixing errors associated with this change

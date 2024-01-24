@@ -283,7 +283,7 @@ class BioLlama:
         tokens = self.tokenizer.convert_ids_to_tokens(input_ids)
 
         generate_ids = self.model.generate(
-            inputs.input_ids.to(self.device), max_length=max_length
+            inputs.input_ids.to(self.device), max_length=max_length, use_cache=False
         )
         num_tokens = len(generate_ids)
         return (
