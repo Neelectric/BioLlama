@@ -383,3 +383,4 @@
 * *1 hour* Investigation into feasibility of PEFT and LoRA for BioLlama
 * *0.5 hours* Changing BioLlama to use Llama 2 7B unquantized as a base
 * *2.5 hours* Fixing errors associated with this change
+* *1.5 hours* Further changes to BioLlama in effort to increase max_new_tokens

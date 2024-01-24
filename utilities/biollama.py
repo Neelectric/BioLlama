@@ -222,6 +222,19 @@ class RETROLayer(torch.nn.Module):
             output_attentions=output_attentions,
             use_cache=use_cache,
         )
+        #at this point, hidden_states always has size [1,32,4096]
+        #but eventually, residual grows to sizes like [1,33,4096] and larger
+        #so we take the [1,1,4096]th item of residual, and prepend it to hidden_states
+        
+        #calculate difference in shape 
+        hs_shape = hidden_states.shape
+        rs_shape = residual.shape
+        size_difference = rs_shape[1] - hs_shape[1]
+        if size_difference > 0:
+            prefix = residual[:,0:size_difference,:]
+            hidden_states = torch.cat((prefix, hidden_states), dim=1)
+
+
         hidden_states = residual + hidden_states
 
         # Fully Connected
