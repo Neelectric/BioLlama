@@ -6,7 +6,7 @@
 import torch
 import time
 
-local_transformers = True
+local_transformers = False
 if local_transformers:
     from .finetuning.cti.transformers.transformers.src.transformers.models.auto import (
         AutoTokenizer,
@@ -183,14 +183,21 @@ class RETROLayer(torch.nn.Module):
         self.CCA.pre_CCA_layernorm = self.pre_CCA_layernorm
 
     def forward(self, *args, **kwargs):#this combines insights from the intermediate decoding implementation, and the HF transformers implementation
-
         # Preparation
         hidden_states = args[0]  # usually a tuple where the first element is what we want
-        attention_mask = kwargs["attention_mask"]  # should be torch.FloatTensor with  `(batch_size, 1,query_sequence_length, key_sequence_length)`
-        position_ids = kwargs["position_ids"]
-        past_key_value = kwargs["past_key_value"]
-        output_attentions = kwargs["output_attentions"]
-        use_cache = kwargs["use_cache"]
+        if len(kwargs) == 0:
+            attention_mask = None
+            position_ids = None # this becomes an ascending tensor from 0 up to length of args[0].shape[1]
+            position_ids = torch.arange(args[0].shape[1], dtype=torch.long).unsqueeze(0)
+            past_key_value = None
+            output_attentions = False
+            use_cache = False
+        else:
+            attention_mask = kwargs["attention_mask"]  # should be torch.FloatTensor with  `(batch_size, 1,query_sequence_length, key_sequence_length)`
+            position_ids = kwargs["position_ids"]
+            past_key_value = kwargs["past_key_value"]
+            output_attentions = kwargs["output_attentions"]
+            use_cache = kwargs["use_cache"]
         input_ids = self.model.model.input_ids_biollama
 
         # RMS Norm
