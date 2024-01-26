@@ -52,12 +52,12 @@ if local_transformers == False:
 
 # InstructRetro Paper suggests random initialisation of RETRO CCA layer weights
 class CCA(torch.nn.Module):
-    def __init__(self, model, layer):
+    def __init__(self, biollama, layer):
         super().__init__()
         self.training = True  # apparently by default it thinks we're training, but does it even have an effect??
         self.pre_CCA_layernorm = None
-        self.model = model
-        self.config = model.model.config
+        self.model = biollama
+        self.config = biollama.model.config
         self.embed_tokens = torch.nn.Embedding(
             self.config.vocab_size, self.config.hidden_size, self.config.pad_token_id
         )
@@ -167,38 +167,44 @@ class CCA(torch.nn.Module):
 
 # We wrap layers, who's ids are designated as RETRO blocks, with this RETROLayer class
 class RETROLayer(torch.nn.Module):
-    def __init__(self, id, layer, config, model):
+    def __init__(self, id, layer, config, biollama):
         super().__init__()
         print(f"Wrapping layer {id} with retro")
         self.layer = layer
         self.training = True  # apparently by default it thinks we're training, but does it even have an effect?
         self.RETRO_id = id  # tagging the RETRO layer with its id to identify it later
-        self.model = model
+        self.biollama = biollama
 
         # adding the two new components that differentiate BioLlama from vanilla Llama2
         self.pre_CCA_layernorm = LlamaRMSNorm(
             config.hidden_size, eps=config.rms_norm_eps
         )  # this gets initiated with hidden_size
-        self.CCA = CCA(model, layer)
+        self.CCA = CCA(biollama, layer)
         self.CCA.pre_CCA_layernorm = self.pre_CCA_layernorm
 
     def forward(self, *args, **kwargs):#this combines insights from the intermediate decoding implementation, and the HF transformers implementation
         # Preparation
         hidden_states = args[0]  # usually a tuple where the first element is what we want
-        if len(kwargs) == 0:
+        if (len(kwargs) == 0 and len(args) == 1):
             attention_mask = None
-            position_ids = None # this becomes an ascending tensor from 0 up to length of args[0].shape[1]
+            
             position_ids = torch.arange(args[0].shape[1], dtype=torch.long).unsqueeze(0)
             past_key_value = None
             output_attentions = False
             use_cache = False
+        elif (len(kwargs) == 0 and len(args) == 6):
+            attention_mask = args[1]
+            position_ids = args[2]
+            past_key_value = args[3]
+            output_attentions = args[4]
+            use_cache = args[5]
         else:
             attention_mask = kwargs["attention_mask"]  # should be torch.FloatTensor with  `(batch_size, 1,query_sequence_length, key_sequence_length)`
             position_ids = kwargs["position_ids"]
             past_key_value = kwargs["past_key_value"]
             output_attentions = kwargs["output_attentions"]
             use_cache = kwargs["use_cache"]
-        input_ids = self.model.model.input_ids_biollama
+        input_ids = self.biollama.model.input_ids_biollama
 
         # RMS Norm
         residual = hidden_states
@@ -258,12 +264,19 @@ class RETROLayer(torch.nn.Module):
             outputs += (present_key_value,)
         return outputs
 
+# New method that allows us to replace the forward pass on the LlamaForCausalLm object
+def new_forward(self, *args, **kwargs):
+    print("in new forward")
+    self.input_ids_biollama = kwargs["input_ids"]
+    output = self.old_forward(*args, **kwargs)
+    return output
 
 class BioLlama:
     def __init__(self, model_id, chunk_length):
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
         self.model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto")
+        
         self.model.input_ids_biollama = None
         self.chunk_length = chunk_length
         RETRO_layer_ids = [15]
@@ -271,8 +284,11 @@ class BioLlama:
             # switch pre-specified decoder layers to be a RETRO layers
             if i in RETRO_layer_ids:
                 self.model.model.layers[i] = RETROLayer(
-                    id=i, layer=layer, config=self.model.config, model=self
+                    id=i, layer=layer, config=self.model.config, biollama=self
                 )
+        self.model.old_forward = self.model.forward
+        self.model.forward = new_forward.__get__(self.model)
+        # self.model.forward()
 
         self.query_tokenizer = AutoTokenizer.from_pretrained(
             "ncbi/MedCPT-Query-Encoder"

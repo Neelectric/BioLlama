@@ -385,3 +385,7 @@
 * *2.5 hours* Fixing errors associated with this change
 * *1.5 hours* Further changes to BioLlama in effort to increase max_new_tokens
 * *1.5 hours* Max_new_tokens can now be infinite, further efforts to finally train biollama
+
+### Thursday - 25 Jan 2023
+* *1 hour* Bugfixes in trying to get TRL Trainer to accept BioLlama
+* *1 hour* Further attempts trying to get TRL Trainer to work with BioLlama
