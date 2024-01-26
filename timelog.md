@@ -389,3 +389,4 @@
 ### Thursday - 25 Jan 2023
 * *1 hour* Bugfixes in trying to get TRL Trainer to accept BioLlama
 * *1 hour* Further attempts trying to get TRL Trainer to work with BioLlama
+* *1 hour* Modifying a custom .forward() class
