@@ -267,8 +267,16 @@ class RETROLayer(torch.nn.Module):
 # New method that allows us to replace the forward pass on the LlamaForCausalLm object
 def new_forward(self, *args, **kwargs):
     print("in new forward")
-    self.input_ids_biollama = kwargs["input_ids"]
-    output = self.old_forward(*args, **kwargs)
+    if "input_ids" in kwargs:
+        self.input_ids_biollama = kwargs["input_ids"]
+        output = self.old_forward(*args, **kwargs)
+    elif "labels" in kwargs:
+        self.input_ids_biollama = kwargs["labels"]
+        kwargs["input_ids"] = kwargs["labels"]
+        output = self.old_forward(*args, **kwargs)
+    else:
+        raise Exception("input_ids or labels not found in kwargs")
+    
     return output
 
 class BioLlama:

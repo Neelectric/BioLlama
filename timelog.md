@@ -390,3 +390,8 @@
 * *1 hour* Bugfixes in trying to get TRL Trainer to accept BioLlama
 * *1 hour* Further attempts trying to get TRL Trainer to work with BioLlama
 * *1 hour* Modifying a custom .forward() class
+
+### Saturday - 27 Jan 2023
+* *1.5 hours* Downloading same SciFive PubMed pretraining files BioReader trains on with gsutil
+* *1.5 hours* Debugging of SFT-Trainer Data_collator
+* *1 hour* Fighting with lack of padding token in llama tokenizer, dataset issues and training

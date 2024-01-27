@@ -22,6 +22,8 @@ wandb/
 alpaca_gpt4_data.json
 alpaca_gpt4_eval.jsonl
 alpaca_gpt4_train.jsonl
+abs_1_16.tsv
+abs_1_30.tsv
 
 #add to gitignore all files in the vectorestore directory:
 vectorstores/
