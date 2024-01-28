@@ -12,6 +12,7 @@ vectorstore/db_JSON/train.txt.json
 # finetuning/cti
 utilities/finetuning/cti
 utilities/finetuning/finetuned_models
+utilities/finetuning/biollama_training_output
 
 benchmarks/BioASQ/
 benchmarks/MedMCQA/train.json
