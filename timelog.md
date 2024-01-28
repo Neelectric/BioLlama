@@ -395,3 +395,4 @@
 * *1.5 hours* Downloading same SciFive PubMed pretraining files BioReader trains on with gsutil
 * *1.5 hours* Debugging of SFT-Trainer Data_collator
 * *1 hour* Fighting with lack of padding token in llama tokenizer, dataset issues and training
+* *2 hours* Fighting batch sizes, different dimension sizes and biollama .forward() passes not being prepared for multiple sequences

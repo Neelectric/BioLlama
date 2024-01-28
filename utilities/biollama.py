@@ -73,7 +73,12 @@ class CCA(torch.nn.Module):
         use_cache,
     ):
         # we perform chunked cross attention at every decoding step, with sequences that are 16 tokens long?
-        input_ids = [int(element) for element in input_ids[0]]
+        if input_ids.shape == torch.Size([32, 1024]):
+            print("input_ids has shape [32,1024]")
+        elif input_ids.shape == torch.Size([1024]):
+            pass
+        else:
+            input_ids = [int(element) for element in input_ids[0]]
         # print(f"input_ids has len {len(input_ids)}")
 
         # here i should probably prune this to be the last "chunk_length" tokens right?
@@ -84,7 +89,10 @@ class CCA(torch.nn.Module):
             # print("we are exceeding chunk_length")
             pass
         input_ids = input_ids[-chunk_length:]
-        tokens = self.model.tokenizer.decode(input_ids)[4:] # without the leading "<s> "
+        tokens = self.model.tokenizer.decode(input_ids)[4:]
+        if tokens[4:] == "<s> ":
+             # without the leading "<s> "
+            tokens = tokens[4:]
         temp_tokens = self.model.tokenizer.decode(input_ids)
         # print(f"tokens is currently {tokens}")
 
@@ -226,16 +234,35 @@ class RETROLayer(torch.nn.Module):
         hidden_states = residual + hidden_states
 
         # Chunked Cross Attention
-        # print(f"Before CCA, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}")
+        print(f"Before CCA, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}")
         residual = hidden_states
-        hidden_states = self.CCA.forward(
-            input_ids=input_ids,
-            attention_mask=attention_mask,
-            position_ids=position_ids,
-            past_key_value=past_key_value,
-            output_attentions=output_attentions,
-            use_cache=use_cache,
-        )
+        if hidden_states.shape == torch.Size([2, 1024, 4096]):
+            hidden_states_0 = self.CCA.forward( # during training, hidden_states can have shape [32,1024,4096]
+                input_ids=input_ids[0],
+                attention_mask=attention_mask,
+                position_ids=position_ids,
+                past_key_value=past_key_value,
+                output_attentions=output_attentions,
+                use_cache=use_cache,
+            )
+            hidden_states_1 = self.CCA.forward( # during training, hidden_states can have shape [32,1024,4096]
+                input_ids=input_ids[1],
+                attention_mask=attention_mask,
+                position_ids=position_ids,
+                past_key_value=past_key_value,
+                output_attentions=output_attentions,
+                use_cache=use_cache,
+            )
+            hidden_states = torch.cat((hidden_states_0, hidden_states_1), dim=0)
+        else:
+            hidden_states = self.CCA.forward( # during training, hidden_states can have shape [32,1024,4096]
+                input_ids=input_ids,
+                attention_mask=attention_mask,
+                position_ids=position_ids,
+                past_key_value=past_key_value,
+                output_attentions=output_attentions,
+                use_cache=use_cache,
+            )
         #at this point, hidden_states max out at size [1,32,4096]
         #but eventually, residual grows to sizes like [1,33,4096] and larger
         #so we take the [1,1,4096]th item of residual, and prepend it to hidden_states
