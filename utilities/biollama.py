@@ -74,7 +74,8 @@ class CCA(torch.nn.Module):
     ):
         # we perform chunked cross attention at every decoding step, with sequences that are 16 tokens long?
         if input_ids.shape == torch.Size([32, 1024]):
-            print("input_ids has shape [32,1024]")
+            # print("input_ids has shape [32,1024]")
+            pass
         elif input_ids.shape == torch.Size([1024]):
             pass
         else:
@@ -234,7 +235,7 @@ class RETROLayer(torch.nn.Module):
         hidden_states = residual + hidden_states
 
         # Chunked Cross Attention
-        print(f"Before CCA, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}")
+        # print(f"Before CCA, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}")
         residual = hidden_states
         if hidden_states.shape == torch.Size([2, 1024, 4096]):
             hidden_states_0 = self.CCA.forward( # during training, hidden_states can have shape [32,1024,4096]
@@ -293,7 +294,7 @@ class RETROLayer(torch.nn.Module):
 
 # New method that allows us to replace the forward pass on the LlamaForCausalLm object
 def new_forward(self, *args, **kwargs):
-    print("in new forward")
+    # print("in new forward")
     if "input_ids" in kwargs:
         self.input_ids_biollama = kwargs["input_ids"]
         output = self.old_forward(*args, **kwargs)

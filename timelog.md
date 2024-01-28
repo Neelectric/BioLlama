@@ -396,3 +396,7 @@
 * *1.5 hours* Debugging of SFT-Trainer Data_collator
 * *1 hour* Fighting with lack of padding token in llama tokenizer, dataset issues and training
 * *2 hours* Fighting batch sizes, different dimension sizes and biollama .forward() passes not being prepared for multiple sequences
+* *1.5 hours* First BioLlama training run??
+
+### Sunday - 28 Jan 2023
+* *0.5 hours* Revisiting first biollama training run
