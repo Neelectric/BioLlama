@@ -400,3 +400,4 @@
 
 ### Sunday - 28 Jan 2023
 * *0.5 hours* Revisiting first biollama training run
+* *1 hour* Trying to get first trained biollama to talk, with limited success

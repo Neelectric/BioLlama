@@ -90,7 +90,7 @@ class CCA(torch.nn.Module):
             # print("we are exceeding chunk_length")
             pass
         input_ids = input_ids[-chunk_length:]
-        tokens = self.model.tokenizer.decode(input_ids)[4:]
+        tokens = self.model.tokenizer.decode(input_ids)
         if tokens[4:] == "<s> ":
              # without the leading "<s> "
             tokens = tokens[4:]
