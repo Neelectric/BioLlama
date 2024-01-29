@@ -134,7 +134,8 @@ class CCA(torch.nn.Module):
         # we need to make sure that position ids does not exceed our max length
         # so we need to make sure that position_ids is of length chunk_length
         position_ids = torch.arange(embeds_shape[-2], dtype=torch.long, device=inputs_embeds.device).unsqueeze(0)
-       
+
+        #old implementation, where we used the layer's self_attn function again       
         hidden_states, self_attn_weights, present_key_value = self.layer.self_attn(  #when input_ids or hidden_states has shape [1,33] this line explodes
             hidden_states=hidden_states,
             attention_mask=attention_mask,
@@ -145,6 +146,8 @@ class CCA(torch.nn.Module):
             # **kwargs,
         )
 
+        # i think instead we will need to create a LlamaSdpaAttention object, which will inherit from LlamaAttention (both in modeling_llama.py)
+        # at init, we will need to randomly initialise the weights, and then at .forward, we call their .forward methods
         return hidden_states
 
 

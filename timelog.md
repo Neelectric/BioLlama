@@ -362,7 +362,7 @@
 * *1 hour* Investigating low Llama2 70B MedQA performance
 * *2 hours* Fixing low Llama2 70B MedQA performance, debugging retrieval pipeline for minor improvements
 
-## Week 19 - hours
+## Week 19 - 32 hours
 ### Monday - 22 Jan 2023
 * *1 hour* Revisiting some old benchmark scores
 * *1 hour* Investigation on how to translate Llama 2 7B finetuning into BioLlama finetuning
@@ -402,7 +402,9 @@
 * *0.5 hours* Revisiting first biollama training run
 * *1 hour* Trying to get first trained biollama to talk, with limited success
 
+## Week 20 - ?? hours
 ### Monday - 29 Jan 2023
 * *1 hour* Further investigation into post-training biollama inference
 * *2 hours* Changing BioLlama parameters, adding new params to differentiate from normal layer 15 params
 * *2 hours* Hand-debugging constructor for vanilla llama2, to understand when and where weights are initialized, to understand how to add new params with random initilisation
+* *1.5 hours* About to add new CCA weights, toying with SDPA attention modules
