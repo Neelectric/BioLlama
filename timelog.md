@@ -405,3 +405,4 @@
 ### Monday - 29 Jan 2023
 * *1 hour* Further investigation into post-training biollama inference
 * *2 hours* Changing BioLlama parameters, adding new params to differentiate from normal layer 15 params
+* *2 hours* Hand-debugging constructor for vanilla llama2, to understand when and where weights are initialized, to understand how to add new params with random initilisation

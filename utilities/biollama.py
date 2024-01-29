@@ -43,7 +43,6 @@ if local_transformers == False:
             hidden_states = hidden_states * torch.rsqrt(variance + self.variance_epsilon)
             return self.weight * hidden_states.to(input_dtype)
 
-
 # InstructRetro Paper suggests random initialisation of RETRO CCA layer weights
 class CCA(torch.nn.Module):
     def __init__(self, biollama, layer):
@@ -271,18 +270,17 @@ def new_forward(self, *args, **kwargs):
     return output
 
 class BioLlama:
-    def __init__(self, model_id, chunk_length, RETRO_layer_ids=[15]):
+    def __init__(self, model_id, chunk_length, RETRO_layer_ids=[15], training=False):
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
         self.model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto")
         self.RETRO_layer_ids = RETRO_layer_ids
         self.model.input_ids_biollama = None
         self.chunk_length = chunk_length
-        for i, layer in enumerate(self.model.model.layers): # switch pre-specified decoder layers to be a RETRO layers
+        for i, layer in enumerate(self.model.model.layers): # switch pre-specified decoder layers to be a RETRO layer
             if i in RETRO_layer_ids:
-                self.model.model.layers[i] = RETROLayer(
-                    id=i, layer=layer, config=self.model.config, biollama=self
-                )
+                self.model.model.layers[i] = RETROLayer(id=i, layer=layer, config=self.model.config, biollama=self)
+        
         self.model.old_forward = self.model.forward
         self.model.forward = new_forward.__get__(self.model)
 
@@ -300,13 +298,11 @@ class BioLlama:
         inputs = self.tokenizer(prompt, return_tensors="pt")
         self.model.input_ids_biollama = inputs["input_ids"]
         self.model.prompt_biollama = prompt
-
         encoded = self.tokenizer.encode(prompt)
         decoded = self.tokenizer.decode(encoded)
         tokenized = self.tokenizer.tokenize(prompt)
         input_ids = inputs["input_ids"][0]
         tokens = self.tokenizer.convert_ids_to_tokens(input_ids)
-
         generate_ids = self.model.generate(
             inputs.input_ids.to(self.device), max_new_tokens=max_new_tokens, use_cache=False
         )
