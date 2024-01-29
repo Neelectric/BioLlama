@@ -24,6 +24,7 @@ else:
         AutoModelForCausalLM,
         AutoModelForSequenceClassification,
     )
+    from transformers.models.llama.modeling_llama import LlamaSdpaAttention
 
     # from transformers import LlamaRMSNorm
 from .db_retrieval import medcpt_FAISS_retrieval, load_db
@@ -45,15 +46,27 @@ if local_transformers == False:
 
 # InstructRetro Paper suggests random initialisation of RETRO CCA layer weights
 class CCA(torch.nn.Module):
-    def __init__(self, biollama, layer):
+    def __init__(self, biollama, layer, training):
         super().__init__()
-        self.training = True  # apparently by default it thinks we're training, but does it even have an effect??
+        self.training = training  # apparently by default it thinks we're training, but does it even have an effect??
         self.pre_CCA_layernorm = None
         self.biollama = biollama
         self.config = biollama.model.config
         # self.embed_tokens = torch.nn.Embedding(self.config.vocab_size, self.config.hidden_size, self.config.pad_token_id)
         # self.embed_tokens = biollama.model.base_model.embed_tokens
         self.layer = layer
+        self.layer.CCA_attn = LlamaSdpaAttention(config=self.config, layer_idx=self.biollama.RETRO_layer_ids[0])
+        if training:
+            for module in self.layer.CCA_attn.modules():
+                if isinstance(module, torch.nn.Linear):
+                    #module.weight.data.normal_(mean=0.0, std=model.config.initializer_range)
+                    #module.bias.data.zero_()
+                    # module.weight.data = torch.randn(module.weight.data.shape)
+                    # may not need this random initialisation, because it already gets initialised randomly?
+                    pass
+                    # module.bias.data = torch.randn(module.bias.data.shape)
+        # move to gpu
+        self.layer.CCA_attn.to(biollama.device)
 
     def forward(
         self,
@@ -136,7 +149,16 @@ class CCA(torch.nn.Module):
         position_ids = torch.arange(embeds_shape[-2], dtype=torch.long, device=inputs_embeds.device).unsqueeze(0)
 
         #old implementation, where we used the layer's self_attn function again       
-        hidden_states, self_attn_weights, present_key_value = self.layer.self_attn(  #when input_ids or hidden_states has shape [1,33] this line explodes
+        # hidden_states, self_attn_weights, present_key_value = self.layer.self_attn(  #when input_ids or hidden_states has shape [1,33] this line explodes
+        #     hidden_states=hidden_states,
+        #     attention_mask=attention_mask,
+        #     position_ids=position_ids,
+        #     past_key_value=past_key_value,
+        #     output_attentions=output_attentions,
+        #     use_cache=False,
+        #     # **kwargs,
+        # )
+        hidden_states, self_attn_weights, present_key_value = self.layer.CCA_attn(  #when input_ids or hidden_states has shape [1,33] this line explodes
             hidden_states=hidden_states,
             attention_mask=attention_mask,
             position_ids=position_ids,
@@ -153,14 +175,14 @@ class CCA(torch.nn.Module):
 
 # We wrap layers, who's ids are designated as RETRO blocks, with this RETROLayer class
 class RETROLayer(torch.nn.Module):
-    def __init__(self, id, layer, config, biollama):
+    def __init__(self, id, layer, config, biollama, training):
         super().__init__()
         print(f"Wrapping layer {id} with retro")
         self.layer = layer
-        self.training = True  # apparently by default it thinks we're training, but does it even have an effect?
+        self.training = training  # apparently by default it thinks we're training, but does it even have an effect?
         self.RETRO_id = id  # tagging the RETRO layer with its id to identify it later
         self.biollama = biollama
-        self.CCA = CCA(biollama, layer)
+        self.CCA = CCA(biollama=biollama, layer=layer, training=training)
         self.pre_CCA_layernorm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps)  # this gets initiated with hidden_size
         #move it to the gpu
         self.pre_CCA_layernorm.to(biollama.device)
@@ -284,7 +306,7 @@ class BioLlama:
         self.chunk_length = chunk_length
         for i, layer in enumerate(self.model.model.layers): # switch pre-specified decoder layers to be a RETRO layer
             if i in RETRO_layer_ids:
-                self.model.model.layers[i] = RETROLayer(id=i, layer=layer, config=self.model.config, biollama=self)
+                self.model.model.layers[i] = RETROLayer(id=i, layer=layer, config=self.model.config, biollama=self, training=training)
         
         self.model.old_forward = self.model.forward
         self.model.forward = new_forward.__get__(self.model)

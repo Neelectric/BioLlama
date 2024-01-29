@@ -408,3 +408,4 @@
 * *2 hours* Changing BioLlama parameters, adding new params to differentiate from normal layer 15 params
 * *2 hours* Hand-debugging constructor for vanilla llama2, to understand when and where weights are initialized, to understand how to add new params with random initilisation
 * *1.5 hours* About to add new CCA weights, toying with SDPA attention modules
+* *2 hours* Importing LlamaSdpaAttention from transformers to try and initialise it differently
