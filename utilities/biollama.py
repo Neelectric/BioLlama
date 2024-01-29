@@ -159,6 +159,8 @@ class RETROLayer(torch.nn.Module):
         self.biollama = biollama
         self.CCA = CCA(biollama, layer)
         self.pre_CCA_layernorm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps)  # this gets initiated with hidden_size
+        #move it to the gpu
+        self.pre_CCA_layernorm.to(biollama.device)
         self.CCA.pre_CCA_layernorm = self.pre_CCA_layernorm
 
     def forward(self, *args, **kwargs):#this combines insights from the intermediate decoding implementation, and the HF transformers implementation
@@ -289,7 +291,7 @@ class BioLlama:
         self.rerank_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Cross-Encoder")
         self.rerank_model = AutoModelForSequenceClassification.from_pretrained("ncbi/MedCPT-Cross-Encoder")
         self.model.config.use_cache = False  # testing this in hopes of less cca issues
-        self.model.generation_config.temperature = 0.1
+        self.model.generation_config.temperature = 0.01
         db_faiss, db_json = load_db("medcpt", "RCT200ktrain", "input_segmentation", chunk_length=chunk_length)
         self.db_faiss = db_faiss
         self.db_json = db_json
