@@ -308,14 +308,13 @@ def new_forward(self, *args, **kwargs):
     return output
 
 class BioLlama:
-    def __init__(self, model_id, chunk_length):
+    def __init__(self, model_id, chunk_length, RETRO_layer_ids=[15]):
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
         self.model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto")
         
         self.model.input_ids_biollama = None
         self.chunk_length = chunk_length
-        RETRO_layer_ids = [15]
         for i, layer in enumerate(self.model.model.layers):
             # switch pre-specified decoder layers to be a RETRO layers
             if i in RETRO_layer_ids:
@@ -348,6 +347,7 @@ class BioLlama:
     def generate(self, prompt, max_new_tokens=100):
         inputs = self.tokenizer(prompt, return_tensors="pt")
         self.model.input_ids_biollama = inputs["input_ids"]
+        self.model.prompt_biollama = prompt
 
         encoded = self.tokenizer.encode(prompt)
         decoded = self.tokenizer.decode(encoded)
