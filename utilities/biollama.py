@@ -56,11 +56,12 @@ class CCA(torch.nn.Module):
         super().__init__()
         self.training = True  # apparently by default it thinks we're training, but does it even have an effect??
         self.pre_CCA_layernorm = None
-        self.model = biollama
+        self.biollama = biollama
         self.config = biollama.model.config
-        self.embed_tokens = torch.nn.Embedding(
-            self.config.vocab_size, self.config.hidden_size, self.config.pad_token_id
-        )
+        # self.embed_tokens = torch.nn.Embedding(
+        #     self.config.vocab_size, self.config.hidden_size, self.config.pad_token_id
+        # )
+        # self.embed_tokens = biollama.model.base_model.embed_tokens
         self.layer = layer
 
     def forward(
@@ -72,6 +73,7 @@ class CCA(torch.nn.Module):
         output_attentions,
         use_cache,
     ):
+        embed_tokens = self.biollama.model.base_model.embed_tokens
         # we perform chunked cross attention at every decoding step, with sequences that are 16 tokens long?
         if input_ids.shape == torch.Size([32, 1024]):
             # print("input_ids has shape [32,1024]")
@@ -85,16 +87,16 @@ class CCA(torch.nn.Module):
         # here i should probably prune this to be the last "chunk_length" tokens right?
         # but i guess i need to re-encode these tokens with the MedCPT query tokenizer...
         # because otherwise its using llama token lengths, not MedCPT token lengths
-        chunk_length = self.model.chunk_length
+        chunk_length = self.biollama.chunk_length
         if len(input_ids) > chunk_length:
             # print("we are exceeding chunk_length")
             pass
         input_ids = input_ids[-chunk_length:]
-        tokens = self.model.tokenizer.decode(input_ids)
+        tokens = self.biollama.tokenizer.decode(input_ids)
         if tokens[4:] == "<s> ":
              # without the leading "<s> "
             tokens = tokens[4:]
-        temp_tokens = self.model.tokenizer.decode(input_ids)
+        temp_tokens = self.biollama.tokenizer.decode(input_ids)
         # print(f"tokens is currently {tokens}")
 
         # with this unencoded sequence, we then do medCPT FAISS retrieval, returning a chunk
@@ -103,14 +105,14 @@ class CCA(torch.nn.Module):
             tokens,
             db_name="RCT200ktrain",
             retrieval_text_mode="input_segmentation",
-            chunk_length=self.model.chunk_length,
-            query_tokenizer=self.model.query_tokenizer,
-            query_model=self.model.query_model,
-            rerank_tokenizer=self.model.rerank_tokenizer,
-            rerank_model=self.model.rerank_model,
+            chunk_length=self.biollama.chunk_length,
+            query_tokenizer=self.biollama.query_tokenizer,
+            query_model=self.biollama.query_model,
+            rerank_tokenizer=self.biollama.rerank_tokenizer,
+            rerank_model=self.biollama.rerank_model,
             top_k=1,
-            db_faiss=self.model.db_faiss,
-            db_json=self.model.db_json,
+            db_faiss=self.biollama.db_faiss,
+            db_json=self.biollama.db_json,
         )
         # retrieved_chunk = '[CLS] sarcoplasmic reticulum ( sr ) ca ( 2 + ) - handling proteins play' #hardcoded while transformers bugs me
         # retrieved_chunk = "and stimulation of sarcoplasmic reticulum calcium atpase. we examined the hemodynamic, echocardiographic, and neurohormonal effects of intravenous istaroxime in patients hospitalized with"
@@ -119,7 +121,7 @@ class CCA(torch.nn.Module):
             retrieved_chunk = retrieved_chunk[0]
         # print(f"retrieved_chunk is currently {retrieved_chunk}")
         
-        encoded_chunk = self.model.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
+        encoded_chunk = self.biollama.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
         chunk_input_ids = encoded_chunk.input_ids # get input_ids of tokens of the encoded chunk
 
         # the input sequence/context, which was originally given to model has size 22
@@ -131,7 +133,7 @@ class CCA(torch.nn.Module):
         chunk_input_ids = sliced_chunk_input_ids.reshape((1, cutoff))
 
         # Next, they are embedded using the model's embed_tokens layer
-        inputs_embeds = self.embed_tokens(chunk_input_ids)
+        inputs_embeds = embed_tokens(chunk_input_ids)
         embeds_shape = inputs_embeds.shape
         hidden_states = inputs_embeds
 
@@ -312,7 +314,7 @@ class BioLlama:
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
         self.model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto")
-        
+        self.RETRO_layer_ids = RETRO_layer_ids
         self.model.input_ids_biollama = None
         self.chunk_length = chunk_length
         for i, layer in enumerate(self.model.model.layers):
@@ -337,7 +339,7 @@ class BioLlama:
         )
 
         self.model.config.use_cache = False  # testing this in hopes of less cca issues
-        self.model.generation_config.temperature = 1.0
+        self.model.generation_config.temperature = 0.1
         db_faiss, db_json = load_db(
             "medcpt", "RCT200ktrain", "input_segmentation", chunk_length=chunk_length
         )

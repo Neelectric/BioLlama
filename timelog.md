@@ -404,3 +404,4 @@
 
 ### Monday - 29 Jan 2023
 * *1 hour* Further investigation into post-training biollama inference
+* *2 hours* Changing BioLlama parameters, adding new params to differentiate from normal layer 15 params
