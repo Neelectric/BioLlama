@@ -415,3 +415,5 @@
 * *1 hour* Starting some new training run attempts
 * *2 hours* Trying to identify point of failure, ie why NaNs are outputted by self-attention in Layer 15
 * *2.5 hours* Further troubleshooting, state_dict analysis
+* *0.5 hours* Some crying
+* *1 hour* Problem seems to be the layernorm modules
