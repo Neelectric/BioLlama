@@ -410,3 +410,8 @@
 * *1.5 hours* About to add new CCA weights, toying with SDPA attention modules
 * *2 hours* Importing LlamaSdpaAttention from transformers to try and initialise it differently
 * *1 hour* New SdpaAttention module now trains
+
+### Tuesday - 30 Jan 2023
+* *1 hour* Starting some new training run attempts
+* *2 hours* Trying to identify point of failure, ie why NaNs are outputted by self-attention in Layer 15
+* *2.5 hours* Further troubleshooting, state_dict analysis

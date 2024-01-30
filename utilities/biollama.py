@@ -33,9 +33,11 @@ from .db_retrieval import medcpt_FAISS_retrieval, load_db
 if local_transformers == False:
     # the following class is copied directly from huggingface
     class LlamaRMSNorm(torch.nn.Module):
-        def __init__(self, hidden_size, eps=1e-6):
+        def __init__(self, hidden_size, biollama, eps=1e-6):
             super().__init__()
             self.weight = torch.nn.Parameter(torch.ones(hidden_size))
+            state_dict = biollama.model.state_dict()
+            # temp = state_dict["'model.layers.15.CCA_attn.q_proj.weight'"] 
             self.variance_epsilon = eps
         def forward(self, hidden_states):
             input_dtype = hidden_states.dtype
@@ -71,19 +73,19 @@ class CCA(torch.nn.Module):
         else: 
             #load LlamaSdpaAttention weights
             state_dict = biollama.model.state_dict()
-            for key,val in state_dict.items():
-                if key == 'model.layers.15.CCA_attn.q_proj.weight':
-                    print(val.device)
-                if key == 'model.layers.15.CCA_attn.k_proj.weight':
-                    print(val.device)
-                if key == 'model.layers.15.CCA_attn.v_proj.weight':
-                    print(val.device)
-                if key == 'model.layers.15.CCA_attn.o_proj.weight':
-                    print(val.device)
+            # for key,val in state_dict.items():
+            #     if key == 'model.layers.15.CCA_attn.q_proj.weight':
+            #         print(val.device)
+            #     if key == 'model.layers.15.CCA_attn.k_proj.weight':
+            #         print(val.device)
+            #     if key == 'model.layers.15.CCA_attn.v_proj.weight':
+            #         print(val.device)
+            #     if key == 'model.layers.15.CCA_attn.o_proj.weight':
+            #         print(val.device)
             # self.layer.CCA_attn.load_state_dict("utilities/finetuning/biollama_training_output/model-00003-of-00006.safetensors")
 
 
-        self.layer.CCA_attn.to(biollama.device)
+        # self.layer.CCA_attn.to(biollama.device)
 
     def forward(
         self,
@@ -129,6 +131,10 @@ class CCA(torch.nn.Module):
 
         if type(retrieved_chunk[0]) == list:
             retrieved_chunk = retrieved_chunk[0]
+        print("tokens is:")
+        print(tokens)
+        print("retrieved chunk is:")
+        print(retrieved_chunk)
         
         encoded_chunk = self.biollama.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
         chunk_input_ids = encoded_chunk.input_ids # get input_ids of tokens of the encoded chunk
@@ -200,7 +206,7 @@ class RETROLayer(torch.nn.Module):
         self.RETRO_id = id  # tagging the RETRO layer with its id to identify it later
         self.biollama = biollama
         self.CCA = CCA(biollama=biollama, layer=layer, training=training)
-        self.pre_CCA_layernorm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps)  # this gets initiated with hidden_size
+        self.pre_CCA_layernorm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps, biollama=biollama)  # this gets initiated with hidden_size
         #move it to the gpu
         self.pre_CCA_layernorm.to(biollama.device)
         self.CCA.pre_CCA_layernorm = self.pre_CCA_layernorm
@@ -276,6 +282,7 @@ class RETROLayer(torch.nn.Module):
                 output_attentions=output_attentions,
                 use_cache=use_cache,
             )
+            # pass
         #at this point, hidden_states maxes out at size [1,32,4096]. but eventually, residual grows to sizes like [1,33,4096] and larger
         #so we take the [1,1,4096]th item of residual, and prepend it to hidden_states. very hacky solution, but it works!
         hs_shape = hidden_states.shape
@@ -283,6 +290,8 @@ class RETROLayer(torch.nn.Module):
         size_difference = rs_shape[1] - hs_shape[1]
         if size_difference > 0:
             prefix = residual[:,0:size_difference,:]
+            if prefix.device != hidden_states.device:  #before we concatenate, check if they are on the same device. if not, move prefix to the same device as hidden_states
+                prefix = prefix.to(hidden_states.device) #without this, there have been issues in the past
             hidden_states = torch.cat((prefix, hidden_states), dim=1)
         hidden_states = residual + hidden_states
 
@@ -337,6 +346,7 @@ class BioLlama:
         db_faiss, db_json = load_db("medcpt", "RCT200ktrain", "input_segmentation", chunk_length=chunk_length)
         self.db_faiss = db_faiss
         self.db_json = db_json
+        self.state_dict = self.model.state_dict()
 
     def generate(self, prompt, max_new_tokens=100):
         inputs = self.tokenizer(prompt, return_tensors="pt")
