@@ -66,6 +66,12 @@ class CCA(torch.nn.Module):
                     pass
                     # module.bias.data = torch.randn(module.bias.data.shape)
         # move to gpu
+        else: 
+            #load LlamaSdpaAttention weights
+            state_dict = biollama.model.state_dict()
+            self.layer.CCA_attn.load_state_dict("utilities/finetuning/biollama_training_output/model-00003-of-00006.safetensors")
+
+
         self.layer.CCA_attn.to(biollama.device)
 
     def forward(
