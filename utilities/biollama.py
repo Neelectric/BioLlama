@@ -56,6 +56,8 @@ class CCA(torch.nn.Module):
         # self.embed_tokens = biollama.model.base_model.embed_tokens
         self.layer = layer
         self.layer.CCA_attn = LlamaSdpaAttention(config=self.config, layer_idx=self.biollama.RETRO_layer_ids[0])
+        #move it to gpu
+        self.layer.CCA_attn.to(biollama.device)
         if training:
             for module in self.layer.CCA_attn.modules():
                 if isinstance(module, torch.nn.Linear):
@@ -69,7 +71,16 @@ class CCA(torch.nn.Module):
         else: 
             #load LlamaSdpaAttention weights
             state_dict = biollama.model.state_dict()
-            self.layer.CCA_attn.load_state_dict("utilities/finetuning/biollama_training_output/model-00003-of-00006.safetensors")
+            for key,val in state_dict.items():
+                if key == 'model.layers.15.CCA_attn.q_proj.weight':
+                    print(val.device)
+                if key == 'model.layers.15.CCA_attn.k_proj.weight':
+                    print(val.device)
+                if key == 'model.layers.15.CCA_attn.v_proj.weight':
+                    print(val.device)
+                if key == 'model.layers.15.CCA_attn.o_proj.weight':
+                    print(val.device)
+            # self.layer.CCA_attn.load_state_dict("utilities/finetuning/biollama_training_output/model-00003-of-00006.safetensors")
 
 
         self.layer.CCA_attn.to(biollama.device)
