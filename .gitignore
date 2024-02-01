@@ -13,6 +13,7 @@ vectorstore/db_JSON/train.txt.json
 utilities/finetuning/cti
 utilities/finetuning/finetuned_models
 utilities/finetuning/biollama_training_output
+utilities/finetuning/llama2_training_output
 
 benchmarks/BioASQ/
 benchmarks/MedMCQA/train.json

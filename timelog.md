@@ -417,3 +417,9 @@
 * *2.5 hours* Further troubleshooting, state_dict analysis
 * *0.5 hours* Some crying
 * *1 hour* Problem seems to be the layernorm modules
+
+### Wednesday - 31 Jan 2023
+* *1 hour* New finetuning run of llama2 on new parameters
+
+### Thursday - 01 Feb 2023
+* *0.5 hours* Looking at results of new llama2 finetune, comparison to biollama training loss
