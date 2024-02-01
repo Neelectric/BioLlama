@@ -131,9 +131,9 @@ class CCA(torch.nn.Module):
 
         if type(retrieved_chunk[0]) == list:
             retrieved_chunk = retrieved_chunk[0]
-        print("tokens is:")
-        print(tokens)
-        print("retrieved chunk is:")
+        # print("tokens is:")
+        # print(tokens)
+        # print("retrieved chunk is:")
         # print(retrieved_chunk)
         
         encoded_chunk = self.biollama.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
@@ -152,7 +152,7 @@ class CCA(torch.nn.Module):
 
         
         # then do pre_CCA_layernorm
-        hidden_states = self.pre_CCA_layernorm(hidden_states) # AM I SURE THIS CCA LAYERNORM WORKS? IT GETS INITIALISED TO NONE AT CREATION
+        # hidden_states = self.pre_CCA_layernorm(hidden_states) # AM I SURE THIS CCA LAYERNORM WORKS? IT GETS INITIALISED TO NONE AT CREATION
 
         # it complains "expected scalar type Float but found Half"
         # i changed transformers qlinear_cuda_old implementation:
