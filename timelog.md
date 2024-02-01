@@ -423,3 +423,4 @@
 
 ### Thursday - 01 Feb 2023
 * *0.5 hours* Looking at results of new llama2 finetune, comparison to biollama training loss
+* *1 hour* Debugging BioLlama decoding to understand layernorm issues

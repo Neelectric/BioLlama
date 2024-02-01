@@ -134,7 +134,7 @@ class CCA(torch.nn.Module):
         print("tokens is:")
         print(tokens)
         print("retrieved chunk is:")
-        print(retrieved_chunk)
+        # print(retrieved_chunk)
         
         encoded_chunk = self.biollama.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
         chunk_input_ids = encoded_chunk.input_ids # get input_ids of tokens of the encoded chunk
@@ -235,10 +235,11 @@ class RETROLayer(torch.nn.Module):
         input_ids = self.biollama.model.input_ids_biollama
 
         #loading layernorms from layer 14 in hopes it fixes it
-        # layer_14_input_layernorm_weight = self.biollama.state_dict["model.layers.14.input_layernorm.weight"]
-        # layer_14_post_attention_layernorm_weight = self.biollama.state_dict["model.layers.14.post_attention_layernorm.weight"]
-        # self.layer.input_layernorm.weight = layer_14_input_layernorm_weight
-        # self.layer.post_attention_layernorm.weight = layer_14_post_attention_layernorm_weight
+        
+        layer_14_input_layernorm_weight = torch.nn.Parameter(self.biollama.state_dict["model.layers.14.input_layernorm.weight"])
+        layer_14_post_attention_layernorm_weight = torch.nn.Parameter(self.biollama.state_dict["model.layers.14.post_attention_layernorm.weight"])
+        self.layer.input_layernorm.weight = layer_14_input_layernorm_weight
+        self.layer.post_attention_layernorm.weight = layer_14_post_attention_layernorm_weight
 
 
         # RMS Norm
