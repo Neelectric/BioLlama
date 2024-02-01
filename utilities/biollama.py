@@ -234,10 +234,17 @@ class RETROLayer(torch.nn.Module):
             use_cache = kwargs["use_cache"]
         input_ids = self.biollama.model.input_ids_biollama
 
+        #loading layernorms from layer 14 in hopes it fixes it
+        # layer_14_input_layernorm_weight = self.biollama.state_dict["model.layers.14.input_layernorm.weight"]
+        # layer_14_post_attention_layernorm_weight = self.biollama.state_dict["model.layers.14.post_attention_layernorm.weight"]
+        # self.layer.input_layernorm.weight = layer_14_input_layernorm_weight
+        # self.layer.post_attention_layernorm.weight = layer_14_post_attention_layernorm_weight
+
+
         # RMS Norm
         residual = hidden_states
         hidden_states = self.layer.input_layernorm(hidden_states)
-
+        
         # Self-Attention 
         hidden_states, self_attn_weights, present_key_value = self.layer.self_attn(
             hidden_states=hidden_states,
