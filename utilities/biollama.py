@@ -131,10 +131,10 @@ class CCA(torch.nn.Module):
 
         if type(retrieved_chunk[0]) == list:
             retrieved_chunk = retrieved_chunk[0]
-        # print("tokens is:")
-        # print(tokens)
-        # print("retrieved chunk is:")
-        # print(retrieved_chunk)
+        print("tokens is:")
+        print(tokens)
+        print("retrieved chunk is:")
+        print(retrieved_chunk)
         
         encoded_chunk = self.biollama.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
         chunk_input_ids = encoded_chunk.input_ids # get input_ids of tokens of the encoded chunk
@@ -143,6 +143,7 @@ class CCA(torch.nn.Module):
         unnested_chunk_input_ids = torch.unbind(chunk_input_ids, dim=0)[0] # unnest the chunk_input_ids
         cutoff = len(input_ids) # this is the number of tokens in the sequence with which we performed retrieval, ie 32
         sliced_chunk_input_ids = unnested_chunk_input_ids[0:cutoff] # this slices chunk_input_ids to length chunk_length
+        print(f"sliced_chunk_input_ids is of shape: {sliced_chunk_input_ids.shape}")
         chunk_input_ids = sliced_chunk_input_ids.reshape((1, cutoff))
 
         # Next, they are embedded using the model's embed_tokens layer
