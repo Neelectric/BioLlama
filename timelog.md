@@ -431,3 +431,4 @@
 ## Week 21 - ?? hours
 ### Tuesday - 06 Feb 2023
 * *1 hour* Call with Dr Qiao Jin, lead author of PubMedQA/MedCPT for advice on using his systems
+* *1 hour* Comparing L2 finetune vs BioLlama finetune
