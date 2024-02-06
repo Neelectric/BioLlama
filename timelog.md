@@ -424,3 +424,10 @@
 ### Thursday - 01 Feb 2023
 * *0.5 hours* Looking at results of new llama2 finetune, comparison to biollama training loss
 * *1 hour* Debugging BioLlama decoding to understand layernorm issues
+
+### Friday - 02 Feb 2023
+* *1 hour* Looking at an issue in training runs where a retrieved chunk seems to have length 31??
+
+## Week 21 - ?? hours
+### Tuesday - 06 Feb 2023
+* *1 hour* Call with Dr Qiao Jin, lead author of PubMedQA/MedCPT for advice on using his systems
