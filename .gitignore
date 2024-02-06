@@ -14,6 +14,7 @@ utilities/finetuning/cti
 utilities/finetuning/finetuned_models
 utilities/finetuning/biollama_training_output
 utilities/finetuning/llama2_training_output
+PubMed/
 
 benchmarks/BioASQ/
 benchmarks/MedMCQA/train.json
