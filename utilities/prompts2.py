@@ -24,11 +24,18 @@ def few_shot(benchmark):
     return format_string + "\n" + example + "\n<QUESTION>"
 
 def promptify(benchmark, question, retrieval_mode = None, retrieved_chunks = None, model = None):
-    if model == "Llama-2-7B-chat-finetune" or model == "BioLlama":
+    if model == "Llama-2-7B-chat-finetune":
+        pass
+        # promptified = system_prompt()
+        # promptified += question
+        # promptified += "</QUESTION>\n<ANSWER> "
+        # print(promptified)
         promptified = system_prompt()
+        if retrieval_mode != None:
+            promptified += retrieval_augmentation(retrieved_chunks)
+        promptified += few_shot(benchmark)
         promptified += question
         promptified += "</QUESTION>\n<ANSWER> "
-        # print(promptified)
     else:
         promptified = system_prompt()
         if retrieval_mode != None:

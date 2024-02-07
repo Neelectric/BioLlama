@@ -70,11 +70,11 @@ def parse_MedQA(version="US"):
     # print(txt_files)
     # dir_path = os.path.dirname(os.path.realpath(__file__))
     # print(dir_path)
-    with open('benchmarks/MedQA-USMLE/US/train.jsonl', 'r') as file:
+    with open('benchmarks/MedQA-USMLE/US/test.jsonl', 'r') as file:
         for line in file:
             record = json.loads(line)
             data.append(record)
-    print("Loading Benchmark from MedQA-USMLE/US/train.jsonl")
+    print("Loading Benchmark from MedQA-USMLE/US/test.jsonl")
     benchmark_questions = []
     benchmark_answers = []
     num_questions_with_5_options = 0

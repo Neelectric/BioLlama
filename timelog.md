@@ -439,3 +439,4 @@
 * *2 hours* Playing with BioLlama inference, further L2 finetuning
 * *1 hour* Sixteenth meeting with supervisor
 * *1.5 hours* Cleaning up BioLlama.py, further benchmarking
+* *1 hour* Small changes to prompting, parse benchmark, parse output, further inference trials
