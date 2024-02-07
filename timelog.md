@@ -438,3 +438,4 @@
 * *1 hour* 1k question inference on MedQA with L2 finetune
 * *2 hours* Playing with BioLlama inference, further L2 finetuning
 * *1 hour* Sixteenth meeting with supervisor
+* *1.5 hours* Cleaning up BioLlama.py, further benchmarking
