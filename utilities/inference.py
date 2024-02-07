@@ -59,23 +59,24 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     
     #if model string ends in "finetune", print this
     if model[-8:] == "finetune":
-        model_directory = "/home/service/BioLlama/utilities/finetuning/finetuned_models/"
+        model_directory = "/home/service/BioLlama/utilities/finetuning/llama2_training_output/"
     
     
     print(f"--------------Start of inference of {model} on questions {b_start} to {b_end}------------------")
 
     #helper function for batch inference
-    def batch_llm_inference(prompts, max_new_tokens):
+    def batch_llm_inference(prompts, max_new_tokens, model_object):
         llm_output = []
-        llm_generator = llm(model_directory, prompts, max_new_tokens)
+        llm_generator, model_object = llm(model_directory, prompts, max_new_tokens, "std", model_object)
         for line in llm_generator:
             llm_output.append(line)
-        return llm_output
+        return llm_output, model_object
 
     #perform batch inference
     #TODO: IF NUM OF PROMPTS IS NOT A MULTIPLE OF 10, AM I MISSING THE LAST FEW PROMPTS?
     if inference_mode == "std":
         if len(prompts) > 10:
+            model_object = None
             for i in tqdm(range(len(prompts)//10), desc="Batch Inference"):
                 temp_prompts = list(prompts[i*10:(i+1)*10])
                 #print the largest prompt length by string length
@@ -85,7 +86,8 @@ def inference(model="Llama-2-70B-chat-GPTQ",
                 #     print(temp_prompt)                
                 # print([len(prompt) for prompt in temp_prompts])
                 
-                raw_responses += batch_llm_inference(temp_prompts, max_new_tokens)  
+                temp_responses, model_object = batch_llm_inference(temp_prompts, max_new_tokens, model_object)  
+                raw_responses += temp_responses
             with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
                 json.dump(raw_responses, outfile)
         else:

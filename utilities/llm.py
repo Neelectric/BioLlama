@@ -2,6 +2,8 @@
 # Written by Neel Rajani
 # Primary method for creation of callable "llm" object, adapted from exllama's "test_benchmark_inference.py"
 
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
 from src.model import ExLlama, ExLlamaCache, ExLlamaConfig
 from src.tokenizer import ExLlamaTokenizer
 from src.generator import ExLlamaGenerator
@@ -12,10 +14,10 @@ import argparse
 import src.model_init as model_init
 
 #function that creates a callable "llm" object
-def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
-    if model_directory == "/home/service/BioLlama/utilities/finetuning/finetuned_models/":
-        output = finetuned_llm(model_directory, prompts, max_new_tokens)
-        return output
+def llm(model_directory, prompts, max_new_tokens, generator_mode, model_object):
+    if model_directory == "/home/service/BioLlama/utilities/finetuning/llama2_training_output/":
+        output, model_object = finetuned_llm(model_directory, prompts, max_new_tokens, model_object)
+        return output, model_object
     # Locate files we need within that directory
     tokenizer_path = os.path.join(model_directory, "tokenizer.model")
     model_config_path = os.path.join(model_directory, "config.json")
@@ -79,19 +81,22 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode="std"):
         #generator.settings.stop_strings = ["</ANSWER>"]
         stop_conditions = ["</ANSWER>"]
         output = generator.generate(prompts, max_new_tokens=max_new_tokens, gen_settings=generator.settings, stop_conditions=stop_conditions, encode_special_characters=False)
-    return output
+    return output, model_object
 
-def finetuned_llm(model_directory, prompts, max_new_tokens):
-    from transformers import AutoModelForCausalLM, AutoTokenizer
-    new_tokenizer = AutoTokenizer.from_pretrained(model_directory)
-    new_model = AutoModelForCausalLM.from_pretrained(model_directory, device_map="auto")
+def finetuned_llm(model_directory, prompts, max_new_tokens, model_object = None):
+    if model_object is None:
+        new_model = AutoModelForCausalLM.from_pretrained(model_directory, device_map="auto")
+        new_model.new_tokenizer = AutoTokenizer.from_pretrained(model_directory)
+    else:
+        new_tokenizer = model_object.new_tokenizer
+        new_model = model_object
     #set model temperature to 0.01
     new_model.config.temperature = 0.01
     generations = []
     for prompt in prompts:
-        input_ids = new_tokenizer.encode(prompt, return_tensors="pt")
+        input_ids = new_model.new_tokenizer.encode(prompt, return_tensors="pt")
         input_ids = input_ids.to('cuda') # otherwise we get userwarning for input ids on CPU while model on GPU
         generated = new_model.generate(input_ids, max_new_tokens=35, do_sample=True, top_p=0.95, top_k=60)
-        decoded_generated = new_tokenizer.decode(generated[0], skip_special_tokens=True)
+        decoded_generated = new_model.new_tokenizer.decode(generated[0], skip_special_tokens=True)
         generations.append(decoded_generated)
-    return generations
+    return generations, new_model

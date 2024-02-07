@@ -432,3 +432,4 @@
 ### Tuesday - 06 Feb 2023
 * *1 hour* Call with Dr Qiao Jin, lead author of PubMedQA/MedCPT for advice on using his systems
 * *1 hour* Comparing L2 finetune vs BioLlama finetune
+* *1 hour* Fixing some L2 finetune inference errors
