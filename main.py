@@ -20,17 +20,17 @@ chunk_length = None
 top_k = 1
 
 
-inference(model=model,
-        benchmark=benchmark,
-        b_start=10,
-        b_end=1010,
-        max_new_tokens=35,
-        inference_mode="std",
-        retrieval_model=retrieval_model,
-        retrieval_text_mode=retrieval_text_mode,
-        chunk_length=chunk_length,
-        top_k=top_k,
-        db_name=db_name)
+# inference(model=model,
+#         benchmark=benchmark,
+#         b_start=10,
+#         b_end=110,
+#         max_new_tokens=35,
+#         inference_mode="std",
+#         retrieval_model=retrieval_model,
+#         retrieval_text_mode=retrieval_text_mode,
+#         chunk_length=chunk_length,
+#         top_k=top_k,
+#         db_name=db_name)
 
 if benchmark == "MedQA" or benchmark == "PubMedQA" or benchmark == "MedMCQA":
     accuracy = 100*exact_match(model=model, benchmark=benchmark)

@@ -10,12 +10,24 @@ def standardize_string_PubMedQA(string):
     return re.sub(r'[. ]+', '', string.strip()).lower()
 
 def mark_MedQA(model, benchmark, input):
+    #if model ends in "finetune", save this as a bool
+    finetune = False
+    if model[-8:] == "finetune":
+        finetune = True
     num_correct = 0
     num_total = 0
-    for i in range(len(input)):
-        num_total += 1
-        if input[i][1] == input[i][2]:
-            num_correct += 1
+    if finetune:
+        for i in range(len(input)):
+            marking_scheme = input[i][1]
+            student_response = input[i][2]
+            num_total += 1
+            if marking_scheme[0:3] == student_response[0:3]:
+                num_correct += 1
+    else:
+        for i in range(len(input)):
+            num_total += 1
+            if input[i][1] == input[i][2]:
+                num_correct += 1
 
     accuracy = num_correct/num_total
 
