@@ -47,8 +47,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
         retrieved_chunks = gte_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name, retrieval_text_mode, top_k=top_k)
     elif retrieval_model == "medcpt":
         retrieved_chunks = medcpt_FAISS_retrieval(benchmark_questions[b_start:min(b_end, len(benchmark_questions))], db_name, retrieval_text_mode, chunk_length=chunk_length, top_k=top_k)  
-    #this seems dubious, just doing this so promptify does not complain...
-    else:
+    else: #this seems dubious, just doing this so promptify does not complain...
         retrieved_chunks = np.zeros((min(b_end, len(benchmark_questions)) - b_start, 1))
     
     #promptifying questions
@@ -57,7 +56,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
         prompts.append(promptify(benchmark=benchmark, question=question, retrieval_mode=retrieval_model, retrieved_chunks=retrieved_chunks[chunk_index], model=model)) #promptify questions
         chunk_index += 1
     
-    #if model string ends in "finetune", print this
+    #change model directory if dealing with a finetuned model
     if model[-8:] == "finetune":
         model_directory = "/home/service/BioLlama/utilities/finetuning/llama2_training_output/"
     if model[-8:] == "BioLlama":
@@ -80,21 +79,12 @@ def inference(model="Llama-2-70B-chat-GPTQ",
             model_object = None
             for i in tqdm(range(len(prompts)//10), desc="Batch Inference"):
                 temp_prompts = list(prompts[i*10:(i+1)*10])
-                #print the largest prompt length by string length
-                #print("Largest prompt length: " + str(max([len(prompt) for prompt in temp_prompts])))
-                #print list of string length per prompt
-                # for temp_prompt in temp_prompts:
-                #     print(temp_prompt)                
-                # print([len(prompt) for prompt in temp_prompts])
-                
                 temp_responses, model_object = batch_llm_inference(temp_prompts, max_new_tokens, model_object)  
                 raw_responses += temp_responses
             with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
                 json.dump(raw_responses, outfile)
         else:
             raw_responses += batch_llm_inference(prompts, max_new_tokens)
-            #if there is only one prompt, ensure that raw_responses is a list containing this prompt string:
-            #print("Raw responses: " + str(raw_responses))
             if type(raw_responses) != type([]):
                 raw_responses = [raw_responses]
             with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
@@ -121,46 +111,6 @@ def inference(model="Llama-2-70B-chat-GPTQ",
                           b_start,
                           raw_responses,
                           targetfile)
-    # if benchmark == "bioASQ_no_snippet":
-    #     output = []
-    #     for i in range(len(responses)):
-    #         instance = []
-    #         instance.append(benchmark_questions[i+b_start])
-    #         if type(benchmark_answers[i+b_start][0]) != type("String lol"):
-    #             instance.append(benchmark_answers[i+b_start][0][0])
-    #         else:
-    #             instance.append(benchmark_answers[i+b_start][0])
-            
-    #         instance.append(responses[i])
-    #         output.append(instance)
-    #     with open(targetfile, "w") as outfile: 
-    #         json.dump(output, outfile)
-    #     print("Written output to " + targetfile)
-
-    # elif benchmark == "MedQA" or benchmark == "MedMCQA":
-    #     output = []
-    #     for i in range(len(responses)):
-    #         instance = []
-    #         instance.append(benchmark_questions[i+b_start])
-    #         instance.append(benchmark_answers[i+b_start])
-    #         instance.append(responses[i])
-    #         output.append(instance)
-    #     with open(targetfile, "w") as outfile: 
-    #         json.dump(output, outfile)
-    #     print("Written output to " + targetfile)
-
-    # elif benchmark == "PubMedQA":
-        # output = []
-        # for i in range(len(responses)):
-        #     instance = []
-        #     instance.append(benchmark_questions[i+b_start][1])
-        #     instance.append(benchmark_answers[i+b_start])
-        #     instance.append(responses[i])
-        #     output.append(instance)
-        # with open(targetfile, "w") as outfile: 
-        #     json.dump(output, outfile)
-        # print("Written output to " + targetfile)
-
     print("Time for batch inference: " + str(time.time() - start_time))
 
 if __name__ == "__main__":
