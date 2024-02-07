@@ -12,11 +12,15 @@ import os, glob
 import json
 import argparse
 import src.model_init as model_init
+from utilities.biollama import BioLlama
 
 #function that creates a callable "llm" object
 def llm(model_directory, prompts, max_new_tokens, generator_mode, model_object):
     if model_directory == "/home/service/BioLlama/utilities/finetuning/llama2_training_output/":
-        output, model_object = finetuned_llm(model_directory, prompts, max_new_tokens, model_object)
+        output, model_object = finetuned_llama2(model_directory, prompts, max_new_tokens, model_object)
+        return output, model_object
+    elif model_directory == "/home/service/BioLlama/utilities/finetuning/biollama_training_output/":
+        output, model_object = finetuned_biollama(model_directory, prompts, max_new_tokens, model_object)
         return output, model_object
     # Locate files we need within that directory
     tokenizer_path = os.path.join(model_directory, "tokenizer.model")
@@ -83,7 +87,7 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode, model_object):
         output = generator.generate(prompts, max_new_tokens=max_new_tokens, gen_settings=generator.settings, stop_conditions=stop_conditions, encode_special_characters=False)
     return output, model_object
 
-def finetuned_llm(model_directory, prompts, max_new_tokens, model_object = None):
+def finetuned_llama2(model_directory, prompts, max_new_tokens, model_object = None):
     if model_object is None:
         new_model = AutoModelForCausalLM.from_pretrained(model_directory, device_map="auto")
         new_model.new_tokenizer = AutoTokenizer.from_pretrained(model_directory)
@@ -99,4 +103,17 @@ def finetuned_llm(model_directory, prompts, max_new_tokens, model_object = None)
         generated = new_model.generate(input_ids, max_new_tokens=35, do_sample=True, top_p=0.95, top_k=60)
         decoded_generated = new_model.new_tokenizer.decode(generated[0], skip_special_tokens=True)
         generations.append(decoded_generated)
+    return generations, new_model
+
+def finetuned_biollama(model_directory, prompts, max_new_tokens, model_object = None):
+    if model_object is None:
+        chunk_length = 32
+        new_model = BioLlama(model_id=model_directory, chunk_length=chunk_length, RETRO_layer_ids = [15], training=False)
+    else:
+        new_model = model_object
+    #set model temperature to 0.01
+    generations = []
+    for prompt in prompts:
+        num_tokens, text = new_model.generate(prompt=prompt, max_new_tokens=8)
+        generations.append(text)
     return generations, new_model

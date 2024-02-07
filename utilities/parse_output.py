@@ -73,6 +73,7 @@ def parse_output_finetuned(benchmark,
     responses = []
 
     for raw_response in raw_responses:
+        raw_response += "</ANSWER>"
         # print("Raw response: " + raw_response  + "\n")
         response = re.findall(pattern, raw_response, re.DOTALL)
         # print("Response: " + str(response) + "\n")

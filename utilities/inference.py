@@ -60,7 +60,8 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     #if model string ends in "finetune", print this
     if model[-8:] == "finetune":
         model_directory = "/home/service/BioLlama/utilities/finetuning/llama2_training_output/"
-    
+    if model[-8:] == "BioLlama":
+        model_directory = "/home/service/BioLlama/utilities/finetuning/biollama_training_output/"
     
     print(f"--------------Start of inference of {model} on questions {b_start} to {b_end}------------------")
 
@@ -106,23 +107,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
             json.dump(raw_responses, outfile)
         print("We have generated " + str(len(raw_responses)) + " responses.")
 
-    # #detect answers to benchmark questions in response from the LLM
-    # pattern = r'<ANSWER>(.*?)</[aA][nN][sS][wW][eE][rR]>'
-    # responses = []
-
-    # for raw_response in raw_responses:
-    #     # print("Raw response: " + raw_response  + "\n")
-    #     response = re.findall(pattern, raw_response, re.DOTALL)
-    #     # print("Response: " + str(response) + "\n")
-    #     if len(response) > 2 and benchmark=="MedQA":
-    #         responses.append(response[2][2:])
-    #     elif len(response) > 2:
-    #         responses.append(response[2])
-    #     else:
-    #         responses.append("LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: " + raw_response)
-
-    #parse the output and write it to file
-    if model[-8:] == "finetune":
+    if model[-8:] == "finetune" or model[-8:] == "BioLlama":
         parse_output_finetuned(benchmark,
                                 benchmark_questions,
                                 benchmark_answers,

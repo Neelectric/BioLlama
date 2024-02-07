@@ -12,14 +12,17 @@ def standardize_string_PubMedQA(string):
 def mark_MedQA(model, benchmark, input):
     #if model ends in "finetune", save this as a bool
     finetune = False
-    if model[-8:] == "finetune":
+    if model[-8:] == "finetune" or model[-8:] == "BioLlama":
         finetune = True
+
     num_correct = 0
     num_total = 0
     if finetune:
         for i in range(len(input)):
             marking_scheme = input[i][1]
             student_response = input[i][2]
+            bracket_index = student_response.find("(")
+            student_response = student_response[bracket_index:]
             num_total += 1
             if marking_scheme[0:3] == student_response[0:3]:
                 num_correct += 1

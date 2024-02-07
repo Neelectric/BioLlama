@@ -436,3 +436,4 @@
 
 ### Wednesday - 07 Feb 2023
 * *1 hour* 1k question inference on MedQA with L2 finetune
+* *2 hours* Playing with BioLlama inference, further L2 finetuning
