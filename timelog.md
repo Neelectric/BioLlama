@@ -402,7 +402,7 @@
 * *0.5 hours* Revisiting first biollama training run
 * *1 hour* Trying to get first trained biollama to talk, with limited success
 
-## Week 20 - ?? hours
+## Week 20 - 20 hours
 ### Monday - 29 Jan 2023
 * *1 hour* Further investigation into post-training biollama inference
 * *2 hours* Changing BioLlama parameters, adding new params to differentiate from normal layer 15 params
@@ -433,3 +433,6 @@
 * *1 hour* Call with Dr Qiao Jin, lead author of PubMedQA/MedCPT for advice on using his systems
 * *1 hour* Comparing L2 finetune vs BioLlama finetune
 * *1 hour* Fixing some L2 finetune inference errors
+
+### Wednesday - 07 Feb 2023
+* *1 hour* 1k question inference on MedQA with L2 finetune
