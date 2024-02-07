@@ -27,25 +27,7 @@ else:
     from transformers.models.llama.modeling_llama import LlamaSdpaAttention
     from transformers.models.llama.modeling_llama import LlamaRMSNorm
 
-    # from transformers import LlamaRMSNorm
 from .db_retrieval import medcpt_FAISS_retrieval, load_db
-
-
-# if local_transformers == False:
-#     # the following class is copied directly from huggingface
-#     class LlamaRMSNorm(torch.nn.Module):
-#         def __init__(self, hidden_size, biollama, eps=1e-6):
-#             super().__init__()
-#             self.weight = torch.nn.Parameter(torch.ones(hidden_size))
-#             state_dict = biollama.model.state_dict()
-#             # temp = state_dict["'model.layers.15.CCA_attn.q_proj.weight'"] 
-#             self.variance_epsilon = eps
-#         def forward(self, hidden_states):
-#             input_dtype = hidden_states.dtype
-#             hidden_states = hidden_states.to(torch.float32)
-#             variance = hidden_states.pow(2).mean(-1, keepdim=True)
-#             hidden_states = hidden_states * torch.rsqrt(variance + self.variance_epsilon)
-#             return self.weight * hidden_states.to(input_dtype)
 
 # InstructRetro Paper suggests random initialisation of RETRO CCA layer weights
 class CCA(torch.nn.Module):
@@ -55,8 +37,6 @@ class CCA(torch.nn.Module):
         self.pre_CCA_layernorm = None
         self.biollama = biollama
         self.config = biollama.model.config
-        # self.embed_tokens = torch.nn.Embedding(self.config.vocab_size, self.config.hidden_size, self.config.pad_token_id)
-        # self.embed_tokens = biollama.model.base_model.embed_tokens
         self.layer = layer
         self.layer.CCA_attn = LlamaSdpaAttention(config=self.config, layer_idx=self.biollama.RETRO_layer_ids[0])
         #move it to gpu
@@ -84,8 +64,6 @@ class CCA(torch.nn.Module):
             #     if key == 'model.layers.15.CCA_attn.o_proj.weight':
             #         print(val.device)
             # self.layer.CCA_attn.load_state_dict("utilities/finetuning/biollama_training_output/model-00003-of-00006.safetensors")
-
-
         # self.layer.CCA_attn.to(biollama.device)
 
     def forward(
@@ -105,15 +83,10 @@ class CCA(torch.nn.Module):
         else:
             input_ids = [int(element) for element in input_ids[0]]
         chunk_length = self.biollama.chunk_length # pruning input_ids to be the last chunk_length tokens
-        if len(input_ids) > chunk_length: #  issue with this: difference in num tokens given by MedCPT query tokenizer vs llama2 tokenizer
-            # print("we are exceeding chunk_length")
-            pass
+        if len(input_ids) > chunk_length: pass #  issue with this: difference in num tokens given by MedCPT query tokenizer vs llama2 tokenizer
         input_ids = input_ids[-chunk_length:]
         tokens = self.biollama.tokenizer.decode(input_ids)
-        if tokens[4:] == "<s> ":
-             # without the leading "<s> "
-            tokens = tokens[4:]
-        temp_tokens = self.biollama.tokenizer.decode(input_ids)
+        if tokens[4:] == "<s> ": tokens = tokens[4:] # without the leading "<s> "
         retrieved_chunk = medcpt_FAISS_retrieval(
             tokens,
             db_name="RCT200ktrain",
@@ -151,38 +124,8 @@ class CCA(torch.nn.Module):
         inputs_embeds = embed_tokens(chunk_input_ids)
         embeds_shape = inputs_embeds.shape
         hidden_states = inputs_embeds
-
-        
-        # then do pre_CCA_layernorm
-        # hidden_states = self.pre_CCA_layernorm(hidden_states) # AM I SURE THIS CCA LAYERNORM WORKS? IT GETS INITIALISED TO NONE AT CREATION
-
-        # it complains "expected scalar type Float but found Half"
-        # i changed transformers qlinear_cuda_old implementation:
-        # before matmul iterations, if weights is torch.float16 and x is torch.float32, then weights gets put to torch.float32
-        # if use_cache is true, this causes "Attention mask should be of size (1, 1, 22, 44), but is torch.Size([1, 1, 22, 22])"
-        # i think that (1,1,22,22) is actually correct: (1,1,22,44) comes from
-        # (bsz, 1, q_len, kv_seq_len) --> kv_seq_len is too large, because self_attn on retrieved chunks messes up kv cache
-        # so we set use_cache to false for this attention. but on the whole it stays true
-        # note: even when use_cache gets passed as false, the forward pass on the qlinear still processes kv_seq_length
-        # so i added an if statement there
-
-        # then self attention
-        #at the moment, tensor a is the retrieved chunk, which is either its natural length (eg 52???), or chunk_length (eg 32)
-        #tensor b is the input sequence, which starts at the length of input prompt (eg 19) and then grows
-        # we need to make sure that position ids does not exceed our max length
-        # so we need to make sure that position_ids is of length chunk_length
         position_ids = torch.arange(embeds_shape[-2], dtype=torch.long, device=inputs_embeds.device).unsqueeze(0)
 
-        #old implementation, where we used the layer's self_attn function again       
-        # hidden_states, self_attn_weights, present_key_value = self.layer.self_attn(  #when input_ids or hidden_states has shape [1,33] this line explodes
-        #     hidden_states=hidden_states,
-        #     attention_mask=attention_mask,
-        #     position_ids=position_ids,
-        #     past_key_value=past_key_value,
-        #     output_attentions=output_attentions,
-        #     use_cache=False,
-        #     # **kwargs,
-        # )
         hidden_states, self_attn_weights, present_key_value = self.layer.CCA_attn(  #when input_ids or hidden_states has shape [1,33] this line explodes
             hidden_states=hidden_states,
             attention_mask=attention_mask,
@@ -192,9 +135,6 @@ class CCA(torch.nn.Module):
             use_cache=False,
             # **kwargs,
         )
-
-        # i think instead we will need to create a LlamaSdpaAttention object, which will inherit from LlamaAttention (both in modeling_llama.py)
-        # at init, we will need to randomly initialise the weights, and then at .forward, we call their .forward methods
         return hidden_states
 
 
@@ -237,12 +177,10 @@ class RETROLayer(torch.nn.Module):
         input_ids = self.biollama.model.input_ids_biollama
 
         #loading layernorms from layer 14 in hopes it fixes it
-        
         layer_14_input_layernorm_weight = torch.nn.Parameter(self.biollama.state_dict["model.layers.14.input_layernorm.weight"])
         layer_14_post_attention_layernorm_weight = torch.nn.Parameter(self.biollama.state_dict["model.layers.14.post_attention_layernorm.weight"])
         self.layer.input_layernorm.weight = layer_14_input_layernorm_weight
         self.layer.post_attention_layernorm.weight = layer_14_post_attention_layernorm_weight
-
 
         # RMS Norm
         residual = hidden_states
@@ -311,11 +249,6 @@ class RETROLayer(torch.nn.Module):
         hidden_states = self.layer.mlp(hidden_states)
         hidden_states = residual + hidden_states
         outputs = (hidden_states,)
-
-        if output_attentions:
-            outputs += (self_attn_weights,)
-        if use_cache:
-            outputs += (present_key_value,)
         return outputs
 
 # New method that allows us to replace the forward pass on the LlamaForCausalLm object
@@ -329,7 +262,6 @@ def new_forward(self, *args, **kwargs):
         output = self.old_forward(*args, **kwargs)
     else:
         raise Exception("input_ids or labels not found in kwargs")
-    
     return output
 
 class BioLlama:
@@ -367,15 +299,6 @@ class BioLlama:
         tokenized = self.tokenizer.tokenize(prompt)
         input_ids = inputs["input_ids"][0]
         tokens = self.tokenizer.convert_ids_to_tokens(input_ids)
-        generate_ids = self.model.generate(
-            inputs.input_ids.to(self.device), max_new_tokens=max_new_tokens, use_cache=False
-        )
+        generate_ids = self.model.generate(inputs.input_ids.to(self.device), max_new_tokens=max_new_tokens, use_cache=False)
         num_tokens = len(generate_ids)
-        return (
-            num_tokens,
-            self.tokenizer.batch_decode(
-                generate_ids,
-                skip_special_tokens=True,
-                clean_up_tokenization_spaces=False,
-            )[0],
-        )
+        return (num_tokens, self.tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False,)[0],)
