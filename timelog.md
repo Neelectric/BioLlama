@@ -440,3 +440,6 @@
 * *1 hour* Sixteenth meeting with supervisor
 * *1.5 hours* Cleaning up BioLlama.py, further benchmarking
 * *1 hour* Small changes to prompting, parse benchmark, parse output, further inference trials
+
+### Thursday - 08 Feb 2023
+* *0.5 hours* Inspecting Llama2 20 epoch run, Starting new 10 epoch BioLlama run
