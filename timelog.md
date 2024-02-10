@@ -443,3 +443,7 @@
 
 ### Thursday - 08 Feb 2023
 * *0.5 hours* Inspecting Llama2 20 epoch run, Starting new 10 epoch BioLlama run
+* *0.5 hours* Inspecting results of 10 epoch BioLlama run, freeing up 500Gb disk space
+
+### Saturday - 10 Feb 2023
+* *1 hour* Changing RETRO-fit approach

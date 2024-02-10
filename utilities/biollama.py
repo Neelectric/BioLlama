@@ -66,15 +66,7 @@ class CCA(torch.nn.Module):
             # self.layer.CCA_attn.load_state_dict("utilities/finetuning/biollama_training_output/model-00003-of-00006.safetensors")
         # self.layer.CCA_attn.to(biollama.device)
 
-    def forward(
-        self,
-        input_ids,
-        attention_mask,
-        position_ids,
-        past_key_value,
-        output_attentions,
-        use_cache,
-    ):
+    def forward(self, input_ids, attention_mask, position_ids, past_key_value, output_attentions, use_cache,):
         embed_tokens = self.biollama.model.base_model.embed_tokens
         if input_ids.shape == torch.Size([32, 1024]):
             pass
@@ -105,10 +97,10 @@ class CCA(torch.nn.Module):
 
         if type(retrieved_chunk[0]) == list:
             retrieved_chunk = retrieved_chunk[0]
-        # print("tokens is:")
-        # print(tokens)
-        # print("retrieved chunk is:")
-        # print(retrieved_chunk)
+        print("tokens is:")
+        print(tokens)
+        print("retrieved chunk is:")
+        print(retrieved_chunk)
         
         encoded_chunk = self.biollama.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
         chunk_input_ids = encoded_chunk.input_ids # get input_ids of tokens of the encoded chunk
