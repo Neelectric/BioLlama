@@ -114,6 +114,6 @@ def finetuned_biollama(model_directory, prompts, max_new_tokens, model_object = 
     #set model temperature to 0.01
     generations = []
     for prompt in prompts:
-        num_tokens, text = new_model.generate(prompt=prompt, max_new_tokens=8)
+        num_tokens, text = new_model.generate(prompt=prompt, max_new_tokens=15)
         generations.append(text)
     return generations, new_model
