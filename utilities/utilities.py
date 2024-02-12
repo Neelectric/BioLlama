@@ -7,22 +7,10 @@ import yaml
 import glob
 import faiss
 import json
-
 import pandas as pd
 from io import StringIO
 import datetime
 import pytz
-
-# with open('config/config.yml', 'r', encoding='utf8') as ymlfile:
-#     cfg = box.Box(yaml.safe_load(ymlfile))
-
-#retired method
-def load_knowledge_db(knowledge_db_name):
-    print("THIS METHOD SEEMS TO BE PROBLEMATIC. FOR NOW ITS FUNCTIONALITY IS COMMENTED OUT")
-    print("Attempting to load FAISS index for " + cfg.DATABASE_AS_FAISS_PATH + knowledge_db_name + '.index')
-    #this is what usually goes instea of the None 
-    # faiss.read_index(cfg.DATABASE_AS_FAISS_PATH + knowledge_db_name + '.index')
-    return None
 
 #retired method
 def load_benchmark(benchmark_filepath, type):
@@ -40,7 +28,7 @@ def load_benchmark(benchmark_filepath, type):
     print("Returning " + str(num) + " questions.")
     return questions, exact_answers
 
-def write_to_readme(model, benchmark, result, db_name, retrieval_text_mode, top_k):
+def write_to_readme(model, benchmark, result, db_name, retrieval_text_mode, top_k, num_questions):
     if model == "GTE" or model == "MedCPT":
         model += "-Llama"
     with open('README.md', 'r') as file:
@@ -64,21 +52,14 @@ def write_to_readme(model, benchmark, result, db_name, retrieval_text_mode, top_
 
     #reconvert dataframe to markdown
     new_table = df.to_markdown(index=False)
-
-    #prepare combinations & new changelog, then write result
     before_changelog_after_table, changelog, after_changelog_after_table = after_table.split("<!-- changelog -->")
-    #print all three components
-    # print("before changelog: " + before_changelog_after_table)
-    # print("changelog: " + changelog)
-    # print("after changelog: " + after_changelog_after_table)
-
     machine_timezone = pytz.timezone(pytz.country_timezones['DE'][0])
-
     now = datetime.datetime.now(machine_timezone)
-    # new_change = " * " + now.strftime("%H:%M:%S, %d.%m.%Y") + " | " + model + " | " + benchmark + " | " + str(old_result) + " --> " + str(result) + " (1*" + retrieval_text_mode + " " + db_name + ")\n"
-    #instead write this as an f-string
     strftime = now.strftime("%H:%M:%S, %d.%m.%Y")
-    new_change = f" * {strftime} | {model} | {benchmark} | {old_result} --> {result} ({top_k}*{retrieval_text_mode} {db_name})\n"
+    if model == "GTE-Llama" or model == "MedCPT-Llama":
+        new_change = f" * {strftime} | {model} | {benchmark} | {old_result} --> {result} ({top_k}*{retrieval_text_mode} {db_name}), {num_questions} questions\n"
+    else: 
+        new_change = f" * {strftime} | {model} | {benchmark} | {old_result} --> {result}, {num_questions} questions\n"
     changelog = new_change + changelog
     after_table = before_changelog_after_table + '<!-- changelog -->\n' + changelog + "\n<!-- changelog -->"+ after_changelog_after_table
     new_readme = before_table + '<!-- table -->\n' + new_table + "\n<!-- table -->"+ after_table

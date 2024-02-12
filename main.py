@@ -10,7 +10,7 @@ from utilities.inference import inference
 from utilities.exact_match import exact_match
 from utilities.utilities import write_to_readme
 
-model =  "Llama-2-13B-chat-GPTQ" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ", "Llama-2-7B-chat-finetune"
+model =  "Llama-2-7B-chat-GPTQ" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ", "Llama-2-7B-chat-finetune"
 # model = "Llama-2-7B-chat-GPTQ"
 benchmark = "MedQA" # eg. "MedQA", "PubMedQA", "MedMCQA"
 db_name = "RCT200ktrain"
@@ -18,12 +18,15 @@ retrieval_model = None # eg. "gte-large", "medcpt"
 retrieval_text_mode = "brc" # eg. "full", "input_segmentation
 chunk_length = None
 top_k = 1
+b_start = 10
+num_questions = 1000
+b_end = b_start + num_questions
 
 
 inference(model=model,
         benchmark=benchmark,
-        b_start=10,
-        b_end=1010,
+        b_start=b_start,
+        b_end=b_end,
         max_new_tokens=35,
         inference_mode="std",
         retrieval_model=retrieval_model,
@@ -42,4 +45,4 @@ elif retrieval_model == "medcpt":
     model = "MedCPT"
 elif retrieval_model == "retro":
     model = "BioLlama"
-write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode, top_k=top_k)
+write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode, top_k=top_k, num_questions=num_questions)
