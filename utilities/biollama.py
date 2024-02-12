@@ -5,6 +5,7 @@
 
 import torch
 import time
+import math
 from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM, AutoModelForSequenceClassification
 from transformers.models.llama.modeling_llama import LlamaSdpaAttention, LlamaRMSNorm
 from .db_retrieval import medcpt_FAISS_retrieval, load_db
@@ -22,8 +23,8 @@ def model_new_forward(self, *args, **kwargs):
         raise Exception("input_ids or labels not found in kwargs")
     return output
 
-# Cross Chunked Attention
-def cca_forward(self, input_ids, position_ids):
+# Cross Chunked Attention (temporary, altered version)
+def cca_forward(self, input_ids):
     embed_tokens = self.biollama.model.base_model.embed_tokens
     input_ids = [int(element) for element in input_ids[0]]
     chunk_length = self.biollama.chunk_length # pruning input_ids to be the last chunk_length tokens
@@ -75,6 +76,59 @@ def cca_forward(self, input_ids, position_ids):
         use_cache=False,
     )
     return hidden_states
+
+def ca(e, h):
+    something = e+h
+    return something
+
+# Cross Chunked Attention (true version, following DeepMind's suggestion as closely as possible)
+def cca_forward_true(self, input_ids):
+    input_ids = [int(element) for element in input_ids[0]]
+    n = len(input_ids)
+    m = self.biollama.chunk_length
+    l = math.ceil(n/m)
+    H_list = []
+    H_list_decoded = []
+    for i in range(l):
+        if (i+1)*m < n:
+            H_temp = input_ids[i*m:(i+1)*m]
+            H_temp_decoded = self.biollama.tokenizer.decode(H_temp)
+            H_list.append(H_temp)
+            H_list_decoded.append(H_temp_decoded)
+        else:
+            H_temp = input_ids[i*m:]
+            H_temp_decoded = self.biollama.tokenizer.decode(H_temp)
+            H_list.append(H_temp)
+            H_list_decoded.append(H_temp_decoded)
+    
+    E_no_continuations = medcpt_FAISS_retrieval(
+        H_list_decoded[0:l-1],
+        db_name="RCT200ktrain",
+        retrieval_text_mode="input_segmentation",
+        chunk_length=self.biollama.chunk_length,
+        query_tokenizer=self.biollama.query_tokenizer, # passed as a pre-loaded object to save time
+        query_model=self.biollama.query_model, # passed as a pre-loaded object to save time
+        rerank_tokenizer=self.biollama.rerank_tokenizer, # passed as a pre-loaded object to save time
+        rerank_model=self.biollama.rerank_model, # passed as a pre-loaded object to save time
+        top_k=2,
+        k=5,
+        db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
+        db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
+    )    
+
+    Hplus_list = []
+    num_spliced_chunks = (n-(m-1)) // l
+    for i in range(m-1, num_spliced_chunks * m, m):
+        Hplus_temp = input_ids[i:i*m]
+        Hplus_list.append(Hplus_temp)
+
+    ca_list = []
+    for i in range(len(Hplus_list)):
+        Hplus_ca = ca(Hplus_list[i], E_no_continuations[i])
+        ca_list += Hplus_ca
+    
+    output = H_list[0][0:-2] + ca_list + H_list[-1][1:]
+    return output
 
 # Altered forward pass to replace the LlamaForwardPass of RETRO layers
 def RETRO_layer_forward(self, *args, **kwargs):
@@ -128,7 +182,7 @@ def RETRO_layer_forward(self, *args, **kwargs):
             first_prompts_states = torch.cat((first_prompts_states, next_prompt_states), dim=0)
         hidden_states = first_prompts_states
     else:
-        hidden_states = cca_forward(self, input_ids, position_ids)
+        hidden_states = cca_forward_true(self, input_ids)
     hs_shape = hidden_states.shape
     rs_shape = residual.shape
     size_difference = rs_shape[1] - hs_shape[1]
