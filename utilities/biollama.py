@@ -52,8 +52,8 @@ def cca_forward(self, input_ids, position_ids):
     )
 
     if type(retrieved_chunk[0]) == list: retrieved_chunk = retrieved_chunk[0]
-    print(f"tokens is:\n{tokens}")
-    print(f"retrieved chunk is:\n{retrieved_chunk}")
+    # print(f"tokens is:\n{tokens}")
+    # print(f"retrieved chunk is:\n{retrieved_chunk}")
     
     encoded_chunk = self.biollama.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
     chunk_input_ids = encoded_chunk.input_ids # get input_ids of tokens of the encoded chunk
@@ -150,7 +150,7 @@ def RETRO_layer_forward(self, *args, **kwargs):
         #     use_cache=use_cache,
         # )
         # hidden_states = torch.cat((hidden_states_0, hidden_states_1), dim=0)
-        print(f"THIS NEEDS TO BE REVISITED!! YOU HAVEN'T SUFFICIENTLY IMPLEMENTED THIS")
+        # print(f"THIS NEEDS TO BE REVISITED!! YOU HAVEN'T SUFFICIENTLY IMPLEMENTED THIS")
         first_prompts_states = cca_forward(self, torch.unsqueeze(input_ids[0], dim=0), position_ids)
         for i in range(1,hidden_states.shape[0]):
             next_prompt_states = cca_forward(self, torch.unsqueeze(input_ids[i], dim=0), position_ids)
