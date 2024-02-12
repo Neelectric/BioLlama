@@ -446,4 +446,9 @@
 * *0.5 hours* Inspecting results of 10 epoch BioLlama run, freeing up 500Gb disk space
 
 ### Saturday - 10 Feb 2023
-* *1 hour* Changing RETRO-fit approach
+* *1 hour* Starting to edit RETRO-fit approach
+
+### Monday - 12 Feb 2023
+* *1 hour* Further changes to RETRO-fitting
+* *1 hour* Major refactor of RETRO-fit, replaying RETROLayer/CCA classes with attributes and methods
+* *0.5 hours* Adding support for MedCPT retrieval with no reranker

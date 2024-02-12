@@ -499,6 +499,7 @@ def medcpt_FAISS_retrieval(
     rerank_tokenizer=None,
     rerank_model=None,
     top_k=1,
+    k=5,
     db_faiss=None,
     db_json=None,
 ):
@@ -525,7 +526,6 @@ def medcpt_FAISS_retrieval(
 
     # i will first try embedding of question and retrieval on a question by question basis, and time it
     # this is with arbitrary choices: k=1, max_length (how many tokens are in input i think?) = 512
-    k = 5
     chunk_list = []
     retrieval_quality = []
     disable = False
@@ -539,7 +539,7 @@ def medcpt_FAISS_retrieval(
 
     for question in tqdm(questions, desc="Retrieving chunks", disable=disable):
         chunks = []
-        with torch.no_grad():
+        with torch.no_grad(): # This code is taken directly from the MedCPT GitHub/HF tutorial
             # tokenize the queries
             encoded = query_tokenizer(
                 question,
@@ -594,6 +594,10 @@ def medcpt_FAISS_retrieval(
             retrieval_quality.append(
                 sorted_indices[0]
             )  # note that this is the score of the top chunk, not the average of the top k we return
+
+        else:
+            chunks = [db_json[str(indices[i])] for i in range(len(distances))]
+            top_chunk = chunks[0]
 
         if with_indices:
             chunk_list.append([top_chunk, top_index])
