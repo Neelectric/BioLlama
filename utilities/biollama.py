@@ -58,7 +58,7 @@ def cca_forward(self, input_ids, position_ids):
     encoded_chunk = self.biollama.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
     chunk_input_ids = encoded_chunk.input_ids # get input_ids of tokens of the encoded chunk
 
-    # here i prune the last tokens off, otherwise matmul fails
+    # Here i prune the last tokens off, otherwise matmul fails
     unnested_chunk_input_ids = torch.unbind(chunk_input_ids, dim=0)[0] # unnest the chunk_input_ids
     cutoff = len(input_ids) # this is the number of tokens in the sequence with which we performed retrieval, ie 32
     sliced_chunk_input_ids = unnested_chunk_input_ids[0:cutoff] # this slices chunk_input_ids to length chunk_length
@@ -70,6 +70,10 @@ def cca_forward(self, input_ids, position_ids):
     hidden_states = inputs_embeds
     position_ids = torch.arange(embeds_shape[-2], dtype=torch.long, device=inputs_embeds.device).unsqueeze(0)
 
+    # Before passing to cca_attn, we perform pre_cca_layernorm
+    hidden_states = self.pre_cca_layernorm(hidden_states)
+
+    # Finally, we perform cca_attn, which is currently just self-attetnion on the retrieved chunk
     hidden_states, self_attn_weights, present_key_value = self.cca_attn(  #when input_ids or hidden_states has shape [1,33] this line explodes
         hidden_states=hidden_states,
         position_ids=position_ids,
@@ -128,7 +132,7 @@ def RETRO_layer_forward(self, *args, **kwargs):
 
     # Chunked Cross Attention
     residual = hidden_states
-    if hidden_states.shape == torch.Size([2, 1024, 4096]):
+    if hidden_states.shape[0] > 1: # if we are processing prompts in a batch (for eg during training), adapt CCA
         # hidden_states_0 = self.CCA.forward( # during training, hidden_states can have shape [32,1024,4096]
         #     input_ids=input_ids[0],
         #     attention_mask=attention_mask,
@@ -147,6 +151,11 @@ def RETRO_layer_forward(self, *args, **kwargs):
         # )
         # hidden_states = torch.cat((hidden_states_0, hidden_states_1), dim=0)
         print(f"THIS NEEDS TO BE REVISITED!! YOU HAVEN'T SUFFICIENTLY IMPLEMENTED THIS")
+        first_prompts_states = cca_forward(self, torch.unsqueeze(input_ids[0], dim=0), position_ids)
+        for i in range(1,hidden_states.shape[0]):
+            next_prompt_states = cca_forward(self, torch.unsqueeze(input_ids[i], dim=0), position_ids)
+            first_prompts_states = torch.cat((first_prompts_states, next_prompt_states), dim=0)
+        hidden_states = first_prompts_states
     else:
         # hidden_states = self.CCA.forward( # during training, hidden_states can have shape [32,1024,4096]
         #     input_ids=input_ids,
@@ -217,7 +226,13 @@ class BioLlama:
         self.db_json = db_json
 
     def generate(self, prompt, max_new_tokens=100):
-        inputs = self.tokenizer(prompt, return_tensors="pt")
+        if (type(prompt) == list) and (len(prompt)>1):
+            padding = True
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+            self.tokenizer.padding_side = 'left'
+        else: 
+            padding = False
+        inputs = self.tokenizer(prompt, return_tensors="pt", padding=padding)
         self.model.input_ids_biollama = inputs["input_ids"]
         self.model.prompt_biollama = prompt
         generate_ids = self.model.generate(inputs.input_ids.to(self.device), max_new_tokens=max_new_tokens, use_cache=False)

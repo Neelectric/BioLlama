@@ -452,3 +452,4 @@
 * *1 hour* Further changes to RETRO-fitting
 * *1 hour* Major refactor of RETRO-fit, replaying RETROLayer/CCA classes with attributes and methods
 * *0.5 hours* Adding support for MedCPT retrieval with no reranker
+* *1 hours* Finishing cleaner RETRO-fit, adapting for variable batch sizes
