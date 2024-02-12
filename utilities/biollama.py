@@ -25,12 +25,7 @@ def model_new_forward(self, *args, **kwargs):
 # Cross Chunked Attention
 def cca_forward(self, input_ids, position_ids):
     embed_tokens = self.biollama.model.base_model.embed_tokens
-    if input_ids.shape == torch.Size([32, 1024]):
-        pass
-    elif input_ids.shape == torch.Size([1024]):
-        pass
-    else:
-        input_ids = [int(element) for element in input_ids[0]]
+    input_ids = [int(element) for element in input_ids[0]]
     chunk_length = self.biollama.chunk_length # pruning input_ids to be the last chunk_length tokens
     if len(input_ids) > chunk_length: pass #  issue with this: difference in num tokens given by MedCPT query tokenizer vs llama2 tokenizer
     input_ids = input_ids[-chunk_length:]
@@ -106,12 +101,6 @@ def RETRO_layer_forward(self, *args, **kwargs):
         use_cache = kwargs["use_cache"]
     input_ids = self.biollama.model.input_ids_biollama
 
-    #loading layernorms from layer 14 in hopes it fixes it
-    # layer_14_input_layernorm_weight = torch.nn.Parameter(self.biollama.state_dict["model.layers.14.input_layernorm.weight"])
-    # layer_14_post_attention_layernorm_weight = torch.nn.Parameter(self.biollama.state_dict["model.layers.14.post_attention_layernorm.weight"])
-    # self.input_layernorm.weight = layer_14_input_layernorm_weight
-    # self.post_attention_layernorm.weight = layer_14_post_attention_layernorm_weight
-
     # RMS Norm
     residual = hidden_states
     hidden_states = self.input_layernorm(hidden_states)
@@ -133,42 +122,13 @@ def RETRO_layer_forward(self, *args, **kwargs):
     # Chunked Cross Attention
     residual = hidden_states
     if hidden_states.shape[0] > 1: # if we are processing prompts in a batch (for eg during training), adapt CCA
-        # hidden_states_0 = self.CCA.forward( # during training, hidden_states can have shape [32,1024,4096]
-        #     input_ids=input_ids[0],
-        #     attention_mask=attention_mask,
-        #     position_ids=position_ids,
-        #     past_key_value=past_key_value,
-        #     output_attentions=output_attentions,
-        #     use_cache=use_cache,
-        # )
-        # hidden_states_1 = self.CCA.forward( # during training, hidden_states can have shape [32,1024,4096]
-        #     input_ids=input_ids[1],
-        #     attention_mask=attention_mask,
-        #     position_ids=position_ids,
-        #     past_key_value=past_key_value,
-        #     output_attentions=output_attentions,
-        #     use_cache=use_cache,
-        # )
-        # hidden_states = torch.cat((hidden_states_0, hidden_states_1), dim=0)
-        # print(f"THIS NEEDS TO BE REVISITED!! YOU HAVEN'T SUFFICIENTLY IMPLEMENTED THIS")
         first_prompts_states = cca_forward(self, torch.unsqueeze(input_ids[0], dim=0), position_ids)
         for i in range(1,hidden_states.shape[0]):
             next_prompt_states = cca_forward(self, torch.unsqueeze(input_ids[i], dim=0), position_ids)
             first_prompts_states = torch.cat((first_prompts_states, next_prompt_states), dim=0)
         hidden_states = first_prompts_states
     else:
-        # hidden_states = self.CCA.forward( # during training, hidden_states can have shape [32,1024,4096]
-        #     input_ids=input_ids,
-        #     attention_mask=attention_mask,
-        #     position_ids=position_ids,
-        #     past_key_value=past_key_value,
-        #     output_attentions=output_attentions,
-        #     use_cache=use_cache,
-        # )
         hidden_states = cca_forward(self, input_ids, position_ids)
-        # pass
-    #at this point, hidden_states maxes out at size [1,32,4096]. but eventually, residual grows to sizes like [1,33,4096] and larger
-    #so we take the [1,1,4096]th item of residual, and prepend it to hidden_states. very hacky solution, but it works!
     hs_shape = hidden_states.shape
     rs_shape = residual.shape
     size_difference = rs_shape[1] - hs_shape[1]
