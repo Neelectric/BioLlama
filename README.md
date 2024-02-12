@@ -9,18 +9,19 @@ In the past, "RAGLlama" implied that retrieval was done with GTE-Large as an emb
 The table below shows preliminary results, as reported by other papers or recorded by me
 
  <!-- table -->
-| Model                 | Size   | BioASQ5b snippets   | PubMedQA   | MedQA   | MedMCQA            |
-|:----------------------|:-------|:--------------------|:-----------|:--------|:-------------------|
-| BIOREADER             | 229.5M | 81.88               | -          | 42.96   | -                  |
-| Llama-2-7B-chat-GPTQ  | 7B     | 73.75               | 54.5       | 24.7    | 32.4               |
-| Llama-2-13B-chat-GPTQ | 13B    | 78.33               | 46.4       | 27.7    | 38.6               |
-| Llama-2-70B-chat-GPTQ | 70B    | 85.41               | 69.8       | 28.59   | 46.300000000000004 |
-| M42                   | 70B    | -                   | -          | 61.5    | 60.9               |
-| Med-PaLM              | 540B   | -                   | 79.0       | 67.6    | 57.6               |
-| Med-PaLM 2            | 540B   | -                   | 81.8       | 86.5    | 72.3               |
-| GTE-Llama             | 70B    |                     |            | 34.0    | 46.3               |
-| MedCPT-Llama          | 70B    |                     |            | 34.8    | 46.1               |
-| BioLlama              | 70B    |                     |            |         |                    |
+| Model                    | Size   | BioASQ5b snippets   | PubMedQA   |   MedQA | MedMCQA            |
+|:-------------------------|:-------|:--------------------|:-----------|--------:|:-------------------|
+| BIOREADER                | 229.5M | 81.88               | -          |   42.96 | -                  |
+| Llama-2-7B-chat-GPTQ     | 7B     | 73.75               | 54.5       |   28    | 32.4               |
+| Llama-2-13B-chat-GPTQ    | 13B    | 78.33               | 46.4       |   27.7  | 38.6               |
+| Llama-2-70B-chat-GPTQ    | 70B    | 85.41               | 69.8       |   28.59 | 46.300000000000004 |
+| M42                      | 70B    | -                   | -          |   61.5  | 60.9               |
+| Med-PaLM                 | 540B   | -                   | 79.0       |   67.6  | 57.6               |
+| Med-PaLM 2               | 540B   | -                   | 81.8       |   86.5  | 72.3               |
+| GTE-Llama                | 70B    |                     |            |   34    | 46.3               |
+| MedCPT-Llama             | 70B    |                     |            |   34.8  | 46.1               |
+| Llama-2-7B-chat-finetune | 7B     |                     |            |   17    |                    |
+| BioLlama                 | 7B     |                     |            |   31    |                    |
 <!-- table -->
 
 ## 🔎 Dissertation
@@ -31,6 +32,12 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 18:33:52, 12.02.2024 | BioLlama | MedQA | 30 --> 31.0 (1*brc RCT200ktrain)
+
+ * 18:19:49, 12.02.2024 | Llama-2-7B-chat-GPTQ | MedQA | 24.7 --> 28.000000000000004 (1*brc RCT200ktrain) only 100 questions!
+
+ * 18:18:55, 12.02.2024 | Llama-2-7B-chat-finetune | MedQA | 25.0 --> 17.0 (1*brc RCT200ktrain) only 100 questions!
+
  * 10:36:24, 22.01.2024 | MedCPT-Llama | MedQA | 34.2 --> 34.8 (1*brc RCT200ktrain)
 
  * 09:15:40, 22.01.2024 | MedCPT-Llama | MedMCQA | 46.9 --> 46.1 (1*input_segmentation RCT200ktrain)
@@ -80,6 +87,9 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
+
+
 
 
 
