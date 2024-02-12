@@ -5,13 +5,9 @@
 
 import torch
 import time
-
-
 from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM, AutoModelForSequenceClassification
 from transformers.models.llama.modeling_llama import LlamaSdpaAttention, LlamaRMSNorm
-
 from .db_retrieval import medcpt_FAISS_retrieval, load_db
-
 
 # New method that allows us to replace the forward pass on the LlamaForCausalLm object
 def model_new_forward(self, *args, **kwargs):
@@ -26,6 +22,7 @@ def model_new_forward(self, *args, **kwargs):
         raise Exception("input_ids or labels not found in kwargs")
     return output
 
+# Cross Chunked Attention
 def cca_forward(self, input_ids, position_ids):
     embed_tokens = self.biollama.model.base_model.embed_tokens
     if input_ids.shape == torch.Size([32, 1024]):
@@ -39,8 +36,8 @@ def cca_forward(self, input_ids, position_ids):
     input_ids = input_ids[-chunk_length:]
     tokens = self.biollama.tokenizer.decode(input_ids)
     if tokens[:4] == "<s> ": tokens = tokens[4:] # without the leading "<s> "
-    retrieved_chunk = medcpt_FAISS_retrieval(
-        tokens,
+    retrieved_chunk = medcpt_FAISS_retrieval( # example 16: '[CLS] sarcoplasmic reticulum ( sr ) ca ( 2 + ) - handling proteins play'
+        tokens, # example 32: "and stimulation of sarcoplasmic reticulum calcium atpase. we examined the hemodynamic, echocardiographic, and neurohormonal effects of intravenous istaroxime in patients hospitalized with"
         db_name="RCT200ktrain",
         retrieval_text_mode="input_segmentation",
         chunk_length=self.biollama.chunk_length,
@@ -53,15 +50,10 @@ def cca_forward(self, input_ids, position_ids):
         db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
         db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
     )
-    # retrieved_chunk = '[CLS] sarcoplasmic reticulum ( sr ) ca ( 2 + ) - handling proteins play' #hardcoded while transformers bugs me
-    # retrieved_chunk = "and stimulation of sarcoplasmic reticulum calcium atpase. we examined the hemodynamic, echocardiographic, and neurohormonal effects of intravenous istaroxime in patients hospitalized with"
 
-    if type(retrieved_chunk[0]) == list:
-        retrieved_chunk = retrieved_chunk[0]
-    print("tokens is:")
-    print(tokens)
-    print("retrieved chunk is:")
-    print(retrieved_chunk)
+    if type(retrieved_chunk[0]) == list: retrieved_chunk = retrieved_chunk[0]
+    print(f"tokens is:\n{tokens}")
+    print(f"retrieved chunk is:\n{retrieved_chunk}")
     
     encoded_chunk = self.biollama.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
     chunk_input_ids = encoded_chunk.input_ids # get input_ids of tokens of the encoded chunk
@@ -70,7 +62,6 @@ def cca_forward(self, input_ids, position_ids):
     unnested_chunk_input_ids = torch.unbind(chunk_input_ids, dim=0)[0] # unnest the chunk_input_ids
     cutoff = len(input_ids) # this is the number of tokens in the sequence with which we performed retrieval, ie 32
     sliced_chunk_input_ids = unnested_chunk_input_ids[0:cutoff] # this slices chunk_input_ids to length chunk_length
-    # print(f"sliced_chunk_input_ids is of shape: {sliced_chunk_input_ids.shape}")
     chunk_input_ids = sliced_chunk_input_ids.reshape((1, cutoff))
 
     # Next, they are embedded using the model's embed_tokens layer
@@ -79,20 +70,12 @@ def cca_forward(self, input_ids, position_ids):
     hidden_states = inputs_embeds
     position_ids = torch.arange(embeds_shape[-2], dtype=torch.long, device=inputs_embeds.device).unsqueeze(0)
 
-    hidden_states = self.cca_attn(  #when input_ids or hidden_states has shape [1,33] this line explodes
+    hidden_states, self_attn_weights, present_key_value = self.cca_attn(  #when input_ids or hidden_states has shape [1,33] this line explodes
         hidden_states=hidden_states,
-        # attention_mask=attention_mask,
         position_ids=position_ids,
-        # past_key_value=past_key_value,
-        # output_attentions=output_attentions,
         use_cache=False,
-        # **kwargs,
     )
-    # the output of any attn forward pass is a tuple of (hidden_states, self_attn_weights, present_key_value), we only want the first one
-    hidden_states = hidden_states[0]
     return hidden_states
-
-
 
 # Altered forward pass to replace the LlamaForwardPass of RETRO layers
 def RETRO_layer_forward(self, *args, **kwargs):
@@ -144,7 +127,6 @@ def RETRO_layer_forward(self, *args, **kwargs):
     hidden_states = residual + hidden_states
 
     # Chunked Cross Attention
-    # print(f"Before CCA, hidden_states has shape {hidden_states.shape} and len {len(hidden_states)}")
     residual = hidden_states
     if hidden_states.shape == torch.Size([2, 1024, 4096]):
         # hidden_states_0 = self.CCA.forward( # during training, hidden_states can have shape [32,1024,4096]
@@ -202,7 +184,6 @@ def RETROfit_layer(layer, layer_id, biollama, training):
     layer.biollama = biollama
     layer.cca_attn = LlamaSdpaAttention(config=config, layer_idx=layer_id)
     layer.pre_cca_layernorm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps)  # this gets initiated with hidden_size
-    # layer.CCA = CCA(biollama=biollama, layer=layer, training=training)
     layer.cca_attn.to(biollama.device)
     layer.pre_cca_layernorm.to(biollama.device)
     layer.forward = RETRO_layer_forward.__get__(layer)
@@ -210,49 +191,35 @@ def RETROfit_layer(layer, layer_id, biollama, training):
 
 class BioLlama:
     def __init__(self, model_id, chunk_length, RETRO_layer_ids=[15], training=False):
+        # Model setup
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
         self.model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto")
+        self.model.config.use_cache = False  # testing this in hopes of less cca issues
+        self.model.generation_config.temperature = 0.01
+        self.state_dict = self.model.state_dict()
+
+        #RETRO-fit and retrieval preparation
         self.RETRO_layer_ids = RETRO_layer_ids
         self.model.input_ids_biollama = None
         self.chunk_length = chunk_length
         for i, layer in enumerate(self.model.model.layers): # switch pre-specified decoder layers to be a RETRO layer
-            # essentially what does a RETRO layer really need...
-            # it needs CCA
-            # it needs pre_CCA_layernorm
             if i in RETRO_layer_ids:
-                # self.model.model.layers[i] = RETROLayer(id=i, layer=layer, config=self.model.config, biollama=self, training=training)
-                
-                RETROfit_layer(layer, i, self, training)
-
-                # self.model.model.layers[i].CCA = CCA(biollama=self, layer=layer, training=training)
-                # self.model.model.layers[i].pre_CCA_layernorm = LlamaRMSNorm(self.model.config.hidden_size, eps=self.model.config.rms_norm_eps)  # this gets initiated with hidden_size
-                # self.model.model.layers[i].pre_CCA_layernorm.to(self.device)
-                # self.model.model.layers[i].forward = RETRO_layer_forward.__get__(self.model.model.layers[i])
-        
+                RETROfit_layer(layer, i, self, training)        
         self.model.old_forward = self.model.forward
         self.model.forward = model_new_forward.__get__(self.model)
-
         self.query_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")
         self.query_model = AutoModel.from_pretrained("ncbi/MedCPT-Query-Encoder")
         self.rerank_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Cross-Encoder")
         self.rerank_model = AutoModelForSequenceClassification.from_pretrained("ncbi/MedCPT-Cross-Encoder")
-        self.model.config.use_cache = False  # testing this in hopes of less cca issues
-        self.model.generation_config.temperature = 0.01
         db_faiss, db_json = load_db("medcpt", "RCT200ktrain", "input_segmentation", chunk_length=chunk_length)
         self.db_faiss = db_faiss
         self.db_json = db_json
-        self.state_dict = self.model.state_dict()
 
     def generate(self, prompt, max_new_tokens=100):
         inputs = self.tokenizer(prompt, return_tensors="pt")
         self.model.input_ids_biollama = inputs["input_ids"]
         self.model.prompt_biollama = prompt
-        encoded = self.tokenizer.encode(prompt)
-        decoded = self.tokenizer.decode(encoded)
-        tokenized = self.tokenizer.tokenize(prompt)
-        input_ids = inputs["input_ids"][0]
-        tokens = self.tokenizer.convert_ids_to_tokens(input_ids)
         generate_ids = self.model.generate(inputs.input_ids.to(self.device), max_new_tokens=max_new_tokens, use_cache=False)
         num_tokens = len(generate_ids)
         return (num_tokens, self.tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False,)[0],)
