@@ -461,3 +461,4 @@
 
 ### Tuesday - 13 Feb 2023
 * *1 hour* Benchmarking of BioLlama with true CCA
+* *1 hour* 100 question BioLlama with true CCA gets 0.35???
