@@ -1,5 +1,6 @@
 from utilities.biollama import BioLlama
 import time
+import torch
 
 # questions = ["Which is the main calcium pump of the sarcoplasmic reticulum? Answer:"]
 amended_questions = ["The main calcium pump of the sarcoplasmic reticulum is "]
@@ -19,9 +20,9 @@ model_id = 'meta-llama/Llama-2-7b-chat-hf'
 chunk_length = 32
 
 time_before_setup = time.time()
-BioLlama = BioLlama(model_id=model_id, RETRO_layer_ids=[15], chunk_length=chunk_length, training=True)
+BioLlama = BioLlama(model_id=model_id, RETRO_layer_ids=[15], chunk_length=chunk_length, training=True, torch_dtype=torch.float16)
 time_before_generation = time.time()
-num_tokens, text = BioLlama.generate(prompt=prompt, max_new_tokens=150)
+num_tokens, text = BioLlama.generate(prompt=prompt, max_new_tokens=15)
 
 time_after = time.time()
 

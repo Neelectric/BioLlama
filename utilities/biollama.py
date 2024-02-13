@@ -262,22 +262,25 @@ def RETRO_layer_forward(self, *args, **kwargs):
     return outputs
 
 # Helper method that RETRO-fits the passed layer
-def RETROfit_layer(layer, layer_id, biollama, training):
+def RETROfit_layer(layer, layer_id, biollama, training, torch_dtype):
     config = biollama.model.config
     layer.biollama = biollama
     layer.cca_attn = LlamaSdpaAttention(config=config, layer_idx=layer_id)
     layer.pre_cca_layernorm = LlamaRMSNorm(config.hidden_size, eps=config.rms_norm_eps)  # this gets initiated with hidden_size
+    if torch_dtype != torch.float32:
+        layer.cca_attn.to(torch_dtype)
+        layer.pre_cca_layernorm.to(torch_dtype)        
     layer.cca_attn.to(biollama.device)
     layer.pre_cca_layernorm.to(biollama.device)
     layer.forward = RETRO_layer_forward.__get__(layer)
     return
 
 class BioLlama:
-    def __init__(self, model_id, chunk_length, RETRO_layer_ids=[15], training=False):
+    def __init__(self, model_id, chunk_length, RETRO_layer_ids=[15], training=False, torch_dtype=torch.float32):
         # Model setup
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
-        self.model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto")
+        self.model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto", torch_dtype=torch_dtype)
         self.model.config.use_cache = False  # testing this in hopes of less cca issues
         self.model.generation_config.temperature = 0.01
         self.state_dict = self.model.state_dict()
@@ -288,7 +291,7 @@ class BioLlama:
         self.chunk_length = chunk_length
         for i, layer in enumerate(self.model.model.layers): # switch pre-specified decoder layers to be a RETRO layer
             if i in RETRO_layer_ids:
-                RETROfit_layer(layer, i, self, training)        
+                RETROfit_layer(layer, i, self, training, torch_dtype)        
         self.model.old_forward = self.model.forward
         self.model.forward = model_new_forward.__get__(self.model)
         self.query_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")

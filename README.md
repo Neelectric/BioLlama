@@ -23,7 +23,7 @@ The table below shows preliminary results, as reported by other papers or record
 | GTE-Llama                | 70B    |                     |            |   34    | 46.3      |
 | MedCPT-Llama             | 70B    |                     |            |   34.8  | 46.1      |
 | Llama-2-7B-chat-finetune | 7B     |                     |            |   17    |           |
-| BioLlama                 | 7B     |                     |            |   35    |           |
+| BioLlama                 | 7B     |                     |            |   35    | 30        |
 <!-- table -->
 
 ## 🔎 Dissertation
