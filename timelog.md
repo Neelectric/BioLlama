@@ -448,6 +448,7 @@
 ### Saturday - 10 Feb 2023
 * *1 hour* Starting to edit RETRO-fit approach
 
+## Week 22
 ### Monday - 12 Feb 2023
 * *1 hour* Further changes to RETRO-fitting
 * *1 hour* Major refactor of RETRO-fit, replaying RETROLayer/CCA classes with attributes and methods
@@ -463,3 +464,4 @@
 * *1 hour* Benchmarking of BioLlama with true CCA
 * *1 hour* 100 question BioLlama with true CCA gets 0.35???
 * *1.5 hours* Further work on quantization support for float16/bfloat16
+* *1.5 hours* Further work on true CCA, pretty graphs

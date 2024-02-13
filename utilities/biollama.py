@@ -23,59 +23,59 @@ def model_new_forward(self, *args, **kwargs):
         raise Exception("input_ids or labels not found in kwargs")
     return output
 
-# Cross Chunked Attention (temporary, altered version)
-def cca_forward(self, input_ids):
-    embed_tokens = self.biollama.model.base_model.embed_tokens
-    input_ids = [int(element) for element in input_ids[0]]
-    chunk_length = self.biollama.chunk_length # pruning input_ids to be the last chunk_length tokens
-    if len(input_ids) > chunk_length: pass #  issue with this: difference in num tokens given by MedCPT query tokenizer vs llama2 tokenizer
-    input_ids = input_ids[-chunk_length:]
-    tokens = self.biollama.tokenizer.decode(input_ids)
-    if tokens[:4] == "<s> ": tokens = tokens[4:] # without the leading "<s> "
-    retrieved_chunk = medcpt_FAISS_retrieval( # example 16: '[CLS] sarcoplasmic reticulum ( sr ) ca ( 2 + ) - handling proteins play'
-        tokens, # example 32: "and stimulation of sarcoplasmic reticulum calcium atpase. we examined the hemodynamic, echocardiographic, and neurohormonal effects of intravenous istaroxime in patients hospitalized with"
-        db_name="RCT200ktrain",
-        retrieval_text_mode="input_segmentation",
-        chunk_length=self.biollama.chunk_length,
-        query_tokenizer=self.biollama.query_tokenizer, # passed as a pre-loaded object to save time
-        query_model=self.biollama.query_model, # passed as a pre-loaded object to save time
-        rerank_tokenizer=self.biollama.rerank_tokenizer, # passed as a pre-loaded object to save time
-        rerank_model=self.biollama.rerank_model, # passed as a pre-loaded object to save time
-        top_k=1,
-        k=5,
-        db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
-        db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
-    )
+# Cross Chunked Attention (temporary, altered version), currently retired
+# def cca_forward(self, input_ids):
+#     embed_tokens = self.biollama.model.base_model.embed_tokens
+#     input_ids = [int(element) for element in input_ids[0]]
+#     chunk_length = self.biollama.chunk_length # pruning input_ids to be the last chunk_length tokens
+#     if len(input_ids) > chunk_length: pass #  issue with this: difference in num tokens given by MedCPT query tokenizer vs llama2 tokenizer
+#     input_ids = input_ids[-chunk_length:]
+#     tokens = self.biollama.tokenizer.decode(input_ids)
+#     if tokens[:4] == "<s> ": tokens = tokens[4:] # without the leading "<s> "
+#     retrieved_chunk = medcpt_FAISS_retrieval( # example 16: '[CLS] sarcoplasmic reticulum ( sr ) ca ( 2 + ) - handling proteins play'
+#         tokens, # example 32: "and stimulation of sarcoplasmic reticulum calcium atpase. we examined the hemodynamic, echocardiographic, and neurohormonal effects of intravenous istaroxime in patients hospitalized with"
+#         db_name="RCT200ktrain",
+#         retrieval_text_mode="input_segmentation",
+#         chunk_length=self.biollama.chunk_length,
+#         query_tokenizer=self.biollama.query_tokenizer, # passed as a pre-loaded object to save time
+#         query_model=self.biollama.query_model, # passed as a pre-loaded object to save time
+#         rerank_tokenizer=self.biollama.rerank_tokenizer, # passed as a pre-loaded object to save time
+#         rerank_model=self.biollama.rerank_model, # passed as a pre-loaded object to save time
+#         top_k=1,
+#         k=5,
+#         db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
+#         db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
+#     )
 
-    if type(retrieved_chunk[0]) == list: retrieved_chunk = retrieved_chunk[0]
-    # print(f"tokens is:\n{tokens}")
-    # print(f"retrieved chunk is:\n{retrieved_chunk}")
+#     if type(retrieved_chunk[0]) == list: retrieved_chunk = retrieved_chunk[0]
+#     # print(f"tokens is:\n{tokens}")
+#     # print(f"retrieved chunk is:\n{retrieved_chunk}")
     
-    encoded_chunk = self.biollama.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
-    chunk_input_ids = encoded_chunk.input_ids # get input_ids of tokens of the encoded chunk
+#     encoded_chunk = self.biollama.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
+#     chunk_input_ids = encoded_chunk.input_ids # get input_ids of tokens of the encoded chunk
 
-    # Here i prune the last tokens off, otherwise matmul fails
-    unnested_chunk_input_ids = torch.unbind(chunk_input_ids, dim=0)[0] # unnest the chunk_input_ids
-    cutoff = len(input_ids) # this is the number of tokens in the sequence with which we performed retrieval, ie 32
-    sliced_chunk_input_ids = unnested_chunk_input_ids[0:cutoff] # this slices chunk_input_ids to length chunk_length
-    chunk_input_ids = sliced_chunk_input_ids.reshape((1, cutoff))
+#     # Here i prune the last tokens off, otherwise matmul fails
+#     unnested_chunk_input_ids = torch.unbind(chunk_input_ids, dim=0)[0] # unnest the chunk_input_ids
+#     cutoff = len(input_ids) # this is the number of tokens in the sequence with which we performed retrieval, ie 32
+#     sliced_chunk_input_ids = unnested_chunk_input_ids[0:cutoff] # this slices chunk_input_ids to length chunk_length
+#     chunk_input_ids = sliced_chunk_input_ids.reshape((1, cutoff))
 
-    # Next, they are embedded using the model's embed_tokens layer
-    inputs_embeds = embed_tokens(chunk_input_ids)
-    embeds_shape = inputs_embeds.shape
-    hidden_states = inputs_embeds
-    position_ids = torch.arange(embeds_shape[-2], dtype=torch.long, device=inputs_embeds.device).unsqueeze(0)
+#     # Next, they are embedded using the model's embed_tokens layer
+#     inputs_embeds = embed_tokens(chunk_input_ids)
+#     embeds_shape = inputs_embeds.shape
+#     hidden_states = inputs_embeds
+#     position_ids = torch.arange(embeds_shape[-2], dtype=torch.long, device=inputs_embeds.device).unsqueeze(0)
 
-    # Before passing to cca_attn, we perform pre_cca_layernorm
-    hidden_states = self.pre_cca_layernorm(hidden_states)
+#     # Before passing to cca_attn, we perform pre_cca_layernorm
+#     hidden_states = self.pre_cca_layernorm(hidden_states)
 
-    # Finally, we perform cca_attn, which is currently just self-attetnion on the retrieved chunk
-    hidden_states, self_attn_weights, present_key_value = self.cca_attn(  #when input_ids or hidden_states has shape [1,33] this line explodes
-        hidden_states=hidden_states,
-        position_ids=position_ids,
-        use_cache=False,
-    )
-    return hidden_states
+#     # Finally, we perform cca_attn, which is currently just self-attetnion on the retrieved chunk
+#     hidden_states, self_attn_weights, present_key_value = self.cca_attn(  #when input_ids or hidden_states has shape [1,33] this line explodes
+#         hidden_states=hidden_states,
+#         position_ids=position_ids,
+#         use_cache=False,
+#     )
+#     return hidden_states
 
 def ca(self, hidden_states, e): # The following combines the HF Transformers LlamaSdpaAttention and RETRO code
     embed_tokens = self.biollama.model.base_model.embed_tokens
@@ -161,7 +161,10 @@ def cca_forward_true(self, input_ids, hidden_states):
         db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
         db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
     )    
-    # print(E_no_continuations[-1])
+    print(f"Current sequence length: {n}, num retrieved chunks: {len(E_no_continuations)}")
+    print("Retrieved chunks:")
+    for chunk in E_no_continuations:
+        print(f"   {chunk}")
     
 
     Hplus_list = [] # every chunk here consists of last token of preceding chunk + chunk itself (minus last token)

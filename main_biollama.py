@@ -1,6 +1,28 @@
 from utilities.biollama import BioLlama
 import time
 import torch
+from utilities.db_retrieval import medcpt_FAISS_retrieval
+
+# chunk1 = "<s> Which is the main calcium p"
+# chunk2 = "ump of the sarcoplasmic"
+# chunk3 = "reticulum? Answer:"
+# chunks = [chunk1, chunk2, chunk3]
+# retrieved_chunks = medcpt_FAISS_retrieval( # example 16: '[CLS] sarcoplasmic reticulum ( sr ) ca ( 2 + ) - handling proteins play'
+#         chunks,
+#         db_name="RCT200ktrain",
+#         retrieval_text_mode="input_segmentation",
+#         chunk_length=32,
+#         # query_tokenizer=self.biollama.query_tokenizer, # passed as a pre-loaded object to save time
+#         # query_model=self.biollama.query_model, # passed as a pre-loaded object to save time
+#         # rerank_tokenizer=self.biollama.rerank_tokenizer, # passed as a pre-loaded object to save time
+#         # rerank_model=self.biollama.rerank_model, # passed as a pre-loaded object to save time
+#         top_k=1,
+#         k=5,
+#         # db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
+#         # db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
+#     )
+# print(chunks)
+# print(retrieved_chunks)
 
 # questions = ["Which is the main calcium pump of the sarcoplasmic reticulum? Answer:"]
 amended_questions = ["The main calcium pump of the sarcoplasmic reticulum is "]
@@ -15,14 +37,14 @@ questions = [prompt, prompt2, prompt3]
 db_name = "RCT200ktrain"
 retrieval_text_mode = "input_segmentation"
 
-prompt = questions[1]
-model_id = 'meta-llama/Llama-2-13b-chat-hf'
+prompt = questions[0]
+model_id = 'meta-llama/Llama-2-7b-chat-hf'
 chunk_length = 32
 
 time_before_setup = time.time()
 BioLlama = BioLlama(model_id=model_id, RETRO_layer_ids=[15], chunk_length=chunk_length, training=True, torch_dtype=torch.float16)
 time_before_generation = time.time()
-num_tokens, text = BioLlama.generate(prompt=prompt, max_new_tokens=15)
+num_tokens, text = BioLlama.generate(prompt=prompt, max_new_tokens=50)
 
 time_after = time.time()
 
