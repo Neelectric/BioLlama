@@ -14,7 +14,7 @@ The table below shows preliminary results, as reported by other papers or record
 | BIOREADER                | 229.5M | 81.88               | -          |   42.96 | -         |
 | Llama-2-7B-chat-GPTQ     | 7B     | 73.75               | 54.5       |   25.6  | 32.1      |
 | Llama-2-13B-chat-GPTQ    | 13B    | 78.33               | 46.4       |   31.3  | 37.8      |
-| Llama-2-70B-chat-GPTQ    | 70B    | 85.41               | 69.8       |   36.4  | 46.3      |
+| Llama-2-70B-chat-GPTQ    | 70B    | 85.41               | 69.8       |   36.4  | 46.6      |
 | M42                      | 70B    | -                   | -          |   61.5  | 60.9      |
 | Med-PaLM                 | 540B   | -                   | 79.0       |   67.6  | 57.6      |
 | Med-PaLM 2               | 540B   | -                   | 81.8       |   86.5  | 72.3      |
@@ -32,6 +32,8 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 10:34:46, 13.02.2024 | Llama-2-70B-chat-GPTQ | MedMCQA | 46.3 --> 46.6, 1000 questions
+
  * 00:02:58, 13.02.2024 | Llama-2-13B-chat-GPTQ | MedMCQA | 38.6 --> 37.8, 1000 questions
 
  * 23:56:04, 12.02.2024 | Llama-2-7B-chat-GPTQ | MedMCQA | 32.4 --> 32.1, 1000 questions
@@ -97,6 +99,9 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
+
+
 
 
 

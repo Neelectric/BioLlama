@@ -458,3 +458,6 @@
 * *1 hour* Further work implementing true CCA
 * *1 hour* True CCA coming along with custom SdpaAttention implementation
 * *1 hour* Starting first finetune of BioLlama with true CCA
+
+### Tuesday - 13 Feb 2023
+* *1 hour* Benchmarking of BioLlama with true CCA

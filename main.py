@@ -10,16 +10,16 @@ from utilities.inference import inference
 from utilities.exact_match import exact_match
 from utilities.utilities import write_to_readme
 
-model =  "Llama-2-70B-chat-GPTQ" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ", "Llama-2-7B-chat-finetune"
+model =  "BioLlama" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ", "Llama-2-7B-chat-finetune"
 # model = "Llama-2-7B-chat-GPTQ"
-benchmark = "MedMCQA" # eg. "MedQA", "PubMedQA", "MedMCQA"
+benchmark = "MedQA" # eg. "MedQA", "PubMedQA", "MedMCQA"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"
 retrieval_text_mode = "brc" # eg. "full", "input_segmentation
 chunk_length = None
 top_k = 1
 b_start = 10
-num_questions = 1000
+num_questions = 100
 b_end = b_start + num_questions
 
 
@@ -45,4 +45,4 @@ elif retrieval_model == "medcpt":
     model = "MedCPT"
 elif retrieval_model == "retro":
     model = "BioLlama"
-write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode, top_k=top_k, num_questions=num_questions)
+# write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode, top_k=top_k, num_questions=num_questions)
