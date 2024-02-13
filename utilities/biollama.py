@@ -125,6 +125,8 @@ def ca(self, hidden_states, e): # The following combines the HF Transformers Lla
 
 # Cross Chunked Attention (true version, following DeepMind's suggestion as closely as possible)
 def cca_forward_true(self, input_ids, hidden_states):
+    if (hidden_states.device != self.pre_cca_layernorm.weight.device):
+        hidden_states.to(self.pre_cca_layernorm.weight.device)
     hidden_states = self.pre_cca_layernorm(hidden_states)
     input_ids = [int(element) for element in input_ids[0]]
     n = len(input_ids)

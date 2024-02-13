@@ -462,3 +462,4 @@
 ### Tuesday - 13 Feb 2023
 * *1 hour* Benchmarking of BioLlama with true CCA
 * *1 hour* 100 question BioLlama with true CCA gets 0.35???
+* *1.5 hours* Further work on quantization support for float16/bfloat16
