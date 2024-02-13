@@ -79,7 +79,10 @@ def cca_forward(self, input_ids):
 
 def ca(self, hidden_states, e): # The following combines the HF Transformers LlamaSdpaAttention and RETRO code
     embed_tokens = self.biollama.model.base_model.embed_tokens
-    e_0 = e[0]
+    if type(e) == list: 
+        e_0 = e[0] 
+    else: 
+        e_0 = e
     e_encoded = self.biollama.tokenizer(e_0, return_tensors="pt")
     e_input_ids = e_encoded.input_ids
     e_input_ids = e_input_ids[:,0:32] # it aint pretty but retrieved chunks are usually not 32 long...
@@ -151,11 +154,13 @@ def cca_forward_true(self, input_ids, hidden_states):
         query_model=self.biollama.query_model, # passed as a pre-loaded object to save time
         rerank_tokenizer=self.biollama.rerank_tokenizer, # passed as a pre-loaded object to save time
         rerank_model=self.biollama.rerank_model, # passed as a pre-loaded object to save time
-        top_k=2, # retrieve top 2, following RETRO
-        k=5,
+        top_k=1, # retrieve top 2, following RETRO
+        k=1,
         db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
         db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
     )    
+    # print(E_no_continuations[-1])
+    
 
     Hplus_list = [] # every chunk here consists of last token of preceding chunk + chunk itself (minus last token)
     num_spliced_chunks = (n-(m-1)) // m 
@@ -231,7 +236,8 @@ def RETRO_layer_forward(self, *args, **kwargs):
             first_prompts_states = torch.cat((first_prompts_states, next_prompt_states), dim=0)
         hidden_states = first_prompts_states
     else:
-        hidden_states = cca_forward_true(self, input_ids, hidden_states)
+        # hidden_states = cca_forward_true(self, input_ids, hidden_states)
+        hidden_states = cca_forward(self, input_ids)
     hs_shape = hidden_states.shape
     rs_shape = residual.shape
     size_difference = rs_shape[1] - hs_shape[1]
