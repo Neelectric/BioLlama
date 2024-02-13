@@ -2,7 +2,7 @@
     [
         "Naglers reaction is shown by\n (1) Clostridium tetani\n (2) Clostridium botulinum\n (3) Clostridium perfringens\n (4) Clostridium septicum",
         "3",
-        " 2</ANSWON"
+        " 2"
     ],
     [
         "Which of the following statements are True/False? 1. Hirsutism, which is defined as androgen-dependent excessive male pattern hair growth, affects approximately 25% of women. 2. Virilization refers to a condition in which androgen levels are sufficiently high to cause additional signs and symptoms. 3. Frequently, patients with growth hormone excess (i.e., acromegaly) present with hirsutism. 4. A simple and commonly used method to grade hair growth is the modified scale of Ferriman and Gallwey. 5. Scores above 8 suggest excess androgen-mediated hair growth.\n (1) 1, 2, 3 True & 4, 5 false\n (2) 1, 3, 5 True & 2, 4 false\n (3) 2, 4, 5 True & 1, 3 false\n (4) 1, 2, 3, 4 True & 5 false",
@@ -27,7 +27,7 @@
     [
         "With which of the following receptors theophylline has an antagonistic interaction ?\n (1) Histamine receptors\n (2) Bradykinin receptors\n (3) Adenosine receptors\n (4) Imidazoline receptors",
         "3",
-        " 2</ANAnswer>"
+        " 2</ANSON>"
     ],
     [
         "Hyper viscosity is seen in\n (1) Cryoglobulinemia\n (2) Multiple myeloma\n (3) MGUS\n (4) Lymphoma",
@@ -47,12 +47,12 @@
     [
         "Superior vena cava is derived from:\n (1) Aortic arch\n (2) Pharyngeal arch\n (3) Cardinal vein\n (4) Vitelline vein",
         "3",
-        " 2"
+        " 2</ANSON>"
     ],
     [
         "Testicular artery usually arises from\n (1) Abdominal aorta below renal artery\n (2) Renal artery\n (3) Internal iliac artery\n (4) Ext iliac artery",
         "1",
-        " 2"
+        " 2</ANSON>"
     ],
     [
         "Position of vocal cord in cadaver is:\n (1) Median\n (2) Paramedian\n (3) Intermediate\n (4) Full Abduction",
@@ -62,17 +62,17 @@
     [
         "Organisms that has not been cultured successfully so far is-\n (1) Leptospira\n (2) Treponema pallidum\n (3) Bordetella\n (4) Staphylococcus",
         "2",
-        " 2"
+        " 2</ANDER>"
     ],
     [
         "Normal waist hip ratio of a female is below\n (1) 0.7\n (2) 0.8\n (3) 0.9\n (4) 1",
         "2",
-        " 0.7</ANAnswer>"
+        " 0.7</ANSON>"
     ],
     [
         "The most common cause of renal scaring in a 3 year old child is -\n (1) Trauma\n (2) Tuberculosis\n (3) Vesicoureteral reflux induced pyelonephritis\n (4) Interstitial nephritis",
         "3",
-        " 3</ANSWON"
+        " 3</ANAnswer>"
     ],
     [
         "A 6hours old snake bite patient comes to emergency with mild local edema at the injury site. On examination no abnormalities detected and lab repos are normal. Most appropriate management is\n (1) Incision and suction\n (2) Wait and watch\n (3) Local subcutaneous antisnake venom\n (4) Intravenous antisnake venom",
@@ -97,6 +97,406 @@
     [
         "Lymph vessel which drain the posterior 1/3 rd of the tongue:\n (1) Basal vessel.\n (2) Marginal vessel.\n (3) Central vessel.\n (4) Lateral vessel.",
         "1",
+        " 2</ANS"
+    ],
+    [
+        "Risk factors associated with post-operative nausea and vomiting following strabismus surgery are all except -\n (1) Age < 3years\n (2) Duration of anesthesia > 30 mins\n (3) Personal or family history of post - op nausea and vomiting\n (4) Personal or family history of motion sickness",
+        "1",
+        " 2"
+    ],
+    [
+        "All are True about Acute Osteomyelitis except\n (1) Common in children\n (2) Severe pain\n (3) Involves Epiphyseal plate\n (4) Treatment involves 6 weeks of Antibiotics",
+        "3",
+        " 2</ANAnswer>"
+    ],
+    [
+        "Anterolateral ahroscopy of knee is for:\n (1) To see patellofemoral aiculation\n (2) To see the posterior cruciate ligament\n (3) To see the anterior poion of lateral meniscus\n (4) To see the periphery of the posterior horn of medial meniscus",
+        "1",
+        " 2"
+    ],
+    [
+        "Regarding vaginal candidiasis which one of the following is false:\n (1) Cottage cheese like secretions are seen\n (2) Intense pruritus\n (3) Most common in non-pregnant women\n (4) Buds and hyphae seen in KOH preparation",
+        "3",
+        " 2</ANAnswer>"
+    ],
+    [
+        "25 year old patient Suspected to have a pneumoperitoneum. Patient is unable to stand. Best x-ray view is\n (1) Left lateral decubitus view\n (2) Right lateral decubitus view\n (3) Supine\n (4) Prone",
+        "1",
+        " 1</ANAnswer>"
+    ],
+    [
+        "What is the most probable poal of entry of Aspergillus?\n (1) Puncture wound\n (2) Blood\n (3) Lungs\n (4) Gastrointestinal tract",
+        "3",
+        " 1"
+    ],
+    [
+        "For TOF management in antenatal period includes ?\n (1) Balloon valvotomy\n (2) Open hea surgery\n (3) Karyotyping\n (4) Aspirin",
+        "3",
+        " 1</ANAnswer>"
+    ],
+    [
+        "What change will be seen in vertebral column in ochronosis-\n (1) Calcification of disc\n (2) Bamboo spine\n (3) Increased disc space\n (4) None",
+        "1",
+        " 1"
+    ],
+    [
+        "If solid line represent the rigid height, then the following diagram with excessive inter arch space is classified in?\n (1) Class - 1\n (2) Class - 2\n (3) Class - 3\n (4) Class - 4",
+        "2",
+        " 2</ANAnswer>"
+    ],
+    [
+        "Pearsonian measure of skewness -\n (1) Mode - Mean/ SD\n (2) Mean - Mode/ SD\n (3) SD/Mode - mean\n (4) Mean - Mode/ SD",
+        "2",
+        " 2</ANS"
+    ],
+    [
+        "Following are the causes of sudden loss of vision except ?\n (1) Angle closure glaucoma\n (2) Endophthalmitis\n (3) Central serous retinopathy\n (4) Corneal ulceration",
+        "4",
+        " 2</ANAnswer>"
+    ],
+    [
+        "All of the following are features of Lymph node histology except\n (1) Subcapsular sinus present\n (2) Both Efferent and Afferent are present\n (3) Coex and Medulla are present\n (4) Red pulp and White pulp are present",
+        "4",
+        " 2</ANAnswer>"
+    ],
+    [
+        "During Sx for meningioma, the left paracentral lobule was injured. It would lead to paresis of\n (1) Rt. Leg and perineus\n (2) Left face\n (3) Right face\n (4) Right shoulder & trunk",
+        "1",
+        " 1</ANAnswer>"
+    ],
+    [
+        "Which of the following bacterial meningitis is associated with sudural effusion?\n (1) H. influenza\n (2) Neisseria meningitits\n (3) Streptococcus pneumonia\n (4) Enterococcus",
+        "1",
         " 2</ANSWON"
+    ],
+    [
+        "All of the following statements are true regarding hyperophy, except:\n (1) Occurs due to synthesis and assembly of additional intracellular components.\n (2) There is an increase in the size of the cells.\n (3) Cells capable of division respond to stress by hyperophy and hyperplasia.\n (4) There is an increase in the number of cells.",
+        "4",
+        " 2"
+    ],
+    [
+        "Glucose sympo occurs with:\n (1) Na+\n (2) Ca++\n (3) K+\n (4) Cl-",
+        "1",
+        " 2"
+    ],
+    [
+        "All are true about temporal arteritis except -\n (1) Can leads to sudden bilateral blindness\n (2) More corrunon in females\n (3) Worsen on exposure to heat\n (4) Mostly affects elderly",
+        "3",
+        " 1"
+    ],
+    [
+        "Of the various modalities used in the treatment of re-threatening effects of hyperkalemia which one of the following as the most rapid onset of action ?\n (1) Hemodialysis\n (2) Sodium bicarbonate infusion\n (3) Insulin and glucose infusion\n (4) Intravenous calcium gluconate",
+        "1",
+        " 1"
+    ],
+    [
+        "In chronic alcoholism the rate limiting component for alcohol metabolism excluding enzymes is/are : (PGI Dec 2008)\n (1) NADP\n (2) NAD+\n (3) NADPH\n (4) FADH",
+        "2",
+        " 1"
+    ],
+    [
+        "Minimum level of iodine iodized salt reaching the consumer level according to iodine programme should be:-\n (1) 5 ppm\n (2) 30 ppm\n (3) 15 ppm\n (4) 20 ppm",
+        "3",
+        " 1</ANSON>"
+    ],
+    [
+        "True statement regarding specific death rates\n (1) Specific for age and sex\n (2) Identify particular group or groups \"at risk\" for preventive action\n (3) Find out cause or disease specific\n (4) All of the above",
+        "4",
+        " 3</ANSER>"
+    ],
+    [
+        "Pre-exposure prophylaxis for rabies is given on days\n (1) 0, 3, 7, 14, 28, 90\n (2) 0, 3, 7, 28, 90\n (3) 0, 3\n (4) 0, 7, 28",
+        "4",
+        " 2</ANAnswer>"
+    ],
+    [
+        "Regarding Sjogren's syndrome, all are true except: September 2010\n (1) Keratoconjuctivitis sicca\n (2) Rheumatoid ahritis\n (3) Epiphora\n (4) Autoimmune in nature",
+        "3",
+        " 1"
+    ],
+    [
+        "Best indicator of antemoum drowning is :\n (1) Froth in mouth and nostrils\n (2) Cutis anserina\n (3) Washerman's hand\n (4) Water in nose",
+        "1",
+        " 2</ANDER>"
+    ],
+    [
+        "Splenomegaly may be a feature of: March 2013\n (1) Megaloblastic anemia\n (2) Sickle cell anemia\n (3) Thalassemia\n (4) G6PD deficiency",
+        "2",
+        " 1</ANSON>"
+    ],
+    [
+        "Gp2b3A inhibitors are all except -\n (1) Abciximab\n (2) Eptifibatide\n (3) Tirofiban\n (4) Prasugrel",
+        "4",
+        " 2"
+    ],
+    [
+        "True of case control studies -\n (1) It proceeds from cause to effect\n (2) Odds ratio can be calculated\n (3) Incidence can be calculated\n (4) Needs many patients",
+        "2",
+        " 2</ANAnswer>"
+    ],
+    [
+        "All of the following could include the mechanism or function of oxigenases, EXCEPT:\n (1) Incorporate 2 atoms of oxygen\n (2) Incorporate 1 atom of oxygen\n (3) Required for hydroxylation of steroids\n (4) Required for carboxylation of drugs",
+        "4",
+        " 2"
+    ],
+    [
+        "According to recent SC judgment, doctor can be charged for medical negligence under 304-A, only if: AIIMS 12\n (1) He is from corporate hospital\n (2) Negligence is from inadveent error\n (3) Simple negligence\n (4) Gross negligence",
+        "4",
+        " 2</ANSWON>"
+    ],
+    [
+        "Which of the following is very difficult to induce antibody -\n (1) Polysaccharide\n (2) Protein\n (3) Antigen\n (4) Effector",
+        "1",
+        " 2</ANAnswer>"
+    ],
+    [
+        "Prevalence is a:\n (1) Rate\n (2) Ratio\n (3) Propoion\n (4) None of the above",
+        "3",
+        " 2</ANSWR>"
+    ],
+    [
+        "S2 is best appreciated in -\n (1) 3rd left intercostal space\n (2) 2nd right intercostal space\n (3) 4th left intercostal space\n (4) 5th left intercostal space",
+        "1",
+        " 2</ANDER>"
+    ],
+    [
+        "Position of limb in posterior dislocation of hip -\n (1) Flexion, abduction & external rotation\n (2) Flexion, adduction & internal rotation\n (3) Flexion, adduction & external rotation\n (4) Flexion, abduction & internal rotation",
+        "2",
+        " 2</ANDER>"
+    ],
+    [
+        "Drug causing malignant hyperthermia:(Asked twice in the exam)\n (1) Cisatracurium\n (2) Suxamethonium\n (3) Propofol\n (4) Thiopentone",
+        "2",
+        " 2</ANS"
+    ],
+    [
+        "Household insectiside used for malaria-\n (1) Malathion\n (2) Pyrethrum\n (3) Paris green\n (4) Permethrin",
+        "1",
+        " 4"
+    ],
+    [
+        "False about obstructive jaundice\n (1) Unconjugated bilirubin\n (2) Pruritus\n (3) Pale stools\n (4) Icterus",
+        "1",
+        " 1</ANAnswer>"
+    ],
+    [
+        "All of the following structure lies outside the cavernous sinus except\n (1) Sphenoidal air sinus\n (2) Internal carotid aery\n (3) Foramen lacerum\n (4) Maxillary nerve",
+        "4",
+        " 2"
+    ],
+    [
+        "Which of the following is the best procedure done for intrapaum fetal monitoring:\n (1) Fetal echocardiography\n (2) Fetal scalp pH\n (3) Continuous electrical fetal hea monitoring\n (4) Physical examination",
+        "3",
+        " 1</ANSWON>"
+    ],
+    [
+        "Which of the following is measured by the device, Bellow's spirometer?\n (1) TLC\n (2) RV\n (3) Closing volume\n (4) ERV",
+        "4",
+        " 1</ANAnswer>"
+    ],
+    [
+        "Which of the following is a newly emerging food poisoning organism\n (1) Salmonella typhimurium\n (2) Enterococcus\n (3) Diphtheria\n (4) Pseudomonas",
+        "1",
+        " 4"
+    ],
+    [
+        "Atherosclerosis initiation by fibroblast plaque is mediated by injury to ?\n (1) Smooth muscle\n (2) Media\n (3) Adventitia\n (4) Endothelium",
+        "4",
+        " 2</ANAnswer>"
+    ],
+    [
+        "The WBC that is considered \u201csecond line of defence\u201d is:\n (1) Neutrophil\n (2) Eosinophil\n (3) Basophil\n (4) Monocyte",
+        "4",
+        " 1</ANSWON"
+    ],
+    [
+        "Mark the true statement regarding use of Lithium in maniac-depressive psychosis?\n (1) Monotherapy for acute episodes\n (2) Monitoring of serum concentration is not useful for guiding dose adjustment\n (3) Can result in leucocytosis\n (4) Can result in hypehyroidism on long term use",
+        "3",
+        " 1"
+    ],
+    [
+        "Determination of Pulp vitality by pulse oximeter based on:\n (1) Beer's law.\n (2) Pascal's law.\n (3) Doppler law.\n (4) Poisslues law.",
+        "1",
+        " 1"
+    ],
+    [
+        "An Isograft indicates transfer of tissues between -\n (1) Unrelated donors\n (2) Related donors\n (3) Monozygotic twins\n (4) From the same individual",
+        "3",
+        " 2</ANAnswer>"
+    ],
+    [
+        "All of the following are causes of congenital blindness Except\n (1) Toxoplasmosis\n (2) Congenital rubella\n (3) Vitamin A deficiency\n (4) Cataract",
+        "3",
+        " 2</ANSWR>"
+    ],
+    [
+        "Hypersecretory glaucoma is seen in \u2013\n (1) Epidemic dropsy\n (2) Marfan's syndrome\n (3) Hypertension\n (4) Diabetes",
+        "1",
+        " 2"
+    ],
+    [
+        "A 14-year-old girl presents with quadriparesis, facial palsy, winging of scapula and ptosis. There is h/o similar illness in father and brother but less severe. Her CPK level is also raised (500IU/L). She is probably suffering from?\n (1) Emery-Dreifuss muscular dystrophy\n (2) Becker muscular dystrophy\n (3) Limb-girdle dystrophy\n (4) Scapulofaciohumeral dystrophy",
+        "4",
+        " 2</ANSON>"
+    ],
+    [
+        "Which of the following is true statement regarding human eye\n (1) Cornea cut off wavelength upto 400 nm\n (2) Normal eye medium will permit wavelength of 400- 700 nm\n (3) Even after cataract surgery UV rays are not penetrated\n (4) Lens will not reflect light",
+        "2",
+        " 2"
+    ],
+    [
+        "Which of the following muscle is not a hybrid muscle\n (1) Pectoralis major\n (2) Extensor digitorum\n (3) Flexor digitorum profundus\n (4) Brachialis",
+        "2",
+        " 2</ANSWON"
+    ],
+    [
+        "Delayed union of fracture of a bone follo-wing a surgical treatment may be due to\n (1) Infection\n (2) Inadequate circulation\n (3) Inadequate mobilization\n (4) All of the above",
+        "4",
+        " 4</ANAnswer>"
+    ],
+    [
+        "What is the pressure of inspiration?\n (1) Intrapleuarl\n (2) Transpulmonary\n (3) Trans chest wall\n (4) Alveolar pressure",
+        "1",
+        " 4"
+    ],
+    [
+        "One standard detion in normal standard curev includes value-\n (1) 50%\n (2) 68%\n (3) 95%\n (4) 100%",
+        "2",
+        " 3"
+    ],
+    [
+        "Foam cells are seen in infection with which virus ?\n (1) Measles\n (2) EBV\n (3) Molluscum contagiosum\n (4) RSV",
+        "2",
+        " 2</ANS"
+    ],
+    [
+        "During extraction of the upper first molar, the mesio buccal root is missing and is suspected to have been pushed into the maxillary sinus.\nThe best position for the patient immediately after the incident is\n (1) To position the patient upright\n (2) To position the patients in a semi inclined posture to visualize the perforation\n (3) Trendelenberg position\n (4) Reverse trendelenberg position",
+        "1",
+        " 2"
+    ],
+    [
+        "Rescue P.C.I is done for which of the following?\n (1) Persistent chest pain with ST elevation > 60 min after thrombolysis\n (2) Persistent chest pain with ST elevation > 30 min after thrombolysis\n (3) Persistent Chest pain with ST elevation >90 min after thrombolysis\n (4) Pain with ST elevation for >120minutes after thrombolysis",
+        "3",
+        " 2</ANSER>"
+    ],
+    [
+        "Fever associated with infection\n (1) Accelerates bacterial and viral replication\n (2) Left shifts the oxygen dissociation curve\n (3) Is due to interleukin-1 released from CD4 T-helper cells\n (4) Increase oxygen release to tissue",
+        "4",
+        " 2"
+    ],
+    [
+        "Last organ to putrefy in females is?\n (1) Liver\n (2) Uterus\n (3) Brain\n (4) Breast",
+        "2",
+        " 2</ANS"
+    ],
+    [
+        "Hamartomatous lung tissue is?\n (1) Hypoplasia of lung\n (2) Congenital cyst\n (3) Lobar sequestration\n (4) Congenital cystic adenomatoid malformation",
+        "4",
+        " 3</ANAnswer>"
+    ],
+    [
+        "Test for diagnosis of pyogenic meningitis is?\n (1) Widal\n (2) CSF PCR\n (3) CSF examination\n (4) PET scan",
+        "3",
+        " 1</ANSWON"
+    ],
+    [
+        "Causes of thickened gallbladder wall on ultrasound examination are all except:\n (1) Postprandial state\n (2) Cholecystitis\n (3) Congestive cardiac failure\n (4) Kawasaki disease",
+        "4",
+        " 2</ANAnswer>"
+    ],
+    [
+        "In caloric test, cold water stimulation causes movement of eye -\n (1) Some side\n (2) Opposite side\n (3) Up\n (4) Do\\vn",
+        "2",
+        " 2</ANAnswer>"
+    ],
+    [
+        "Which of the following is not false about annual risk of TB\n (1) ARI of 1% = 75 new cases\n (2) Current ARI in India is 1.7%\n (3) It is represents new cases of TB\n (4) It is assessed by tuberculin conversion in previously non-vaccinated children",
+        "4",
+        " 4"
+    ],
+    [
+        "A 12-year-old girl presents to the casualty with symptoms of fever, shoness of breath, and cough. A chest X-ray reveals complete consolidation of the lower lobe of the left lung. Cultures of the lower lobe of the left lung would most likely reveal which organism?\n (1) Streptococcus pneumoniae\n (2) Staphylococcus aureus\n (3) Klebsiella pneumoniae\n (4) Pseudomonas aeruginosa",
+        "1",
+        " 1"
+    ],
+    [
+        "IgA deposits on skin biopsy\n (1) Henoch Schouleiln puspura\n (2) Giant cell aeritis\n (3) Microscopic polyangitis\n (4) Wegener's granulomatosis",
+        "1",
+        " 1</ANAnswer>"
+    ],
+    [
+        "A Dentin 'Primer'?\n (1) Etches the dentin\n (2) It increases the surface energy & wets the dentin surface\n (3) Removes the smear layer\n (4) Conditions the dentin",
+        "2",
+        " 2</ANAnswer>"
+    ],
+    [
+        "Which of the following hormonal activity is expected immediately prior to Ovulation?\n (1) LH surge\n (2) FSH surge\n (3) Progestrone surge\n (4) Estrogen surge",
+        "1",
+        " 1</ANSWON"
+    ],
+    [
+        "Following are fibrous joints :\n (1) Pubic symphysis\n (2) Fronto parietal suture\n (3) Manubrio sternal joint\n (4) Inf. radio ulnar joint",
+        "2",
+        " 1"
+    ],
+    [
+        "For exhumation the order should be passed by -\n (1) Chief judicial magistrate\n (2) Executive magistrate\n (3) Police officer\n (4) Session judge",
+        "2",
+        " 1</ANAnswer>"
+    ],
+    [
+        "The radiograph of a 32 year old patient is shown below. The patient is asymptomatic and the lesion revealed in the\u00a0radiograph is an accidental finding. The most likely diagnosis is:\n (1) Stafne\u2019s bone cavity\n (2) Radicular Cyst\n (3) Dentigerous cyst\n (4) Lateral periodontal cyst",
+        "1",
+        " 2"
+    ],
+    [
+        "Magistrate inquest not needed in: JIPMER 14\n (1) Homicide\n (2) Exhumation\n (3) Police custody death\n (4) Dowry death",
+        "1",
+        " 3</ANSWON"
+    ],
+    [
+        "Which of the following disease with bird, ahropod and human chain\n (1) Malaria\n (2) Japanese encephalitis\n (3) Paragonimus\n (4) Plague",
+        "2",
+        " 1</ANSWON>"
+    ],
+    [
+        "Potter syndrome is not assoiated with\n (1) Bilateral renal agenesis\n (2) Bilateral multicystic kidney disease\n (3) oligohydromnios\n (4) Polyhydromnios",
+        "1",
+        " 1"
+    ],
+    [
+        "Increase in pauwel's angle indicate\n (1) Good prognosis\n (2) Impaction\n (3) More chances of displacement\n (4) Trabecular alignment displacement",
+        "3",
+        " 2</ANDER>"
+    ],
+    [
+        "A 28 year old female teacher is found to have a prolonged bleeding time and normal platelet count. She had a bleeding of \"easy bleeding\" with frequent bleeding of the gums, epistaxis, cutaneous bleeding and menorrhagia, further testing revealed a deficiency of Von willebrand factor. Which of the following thrombogenic processes involving platelets is most directly impaired?\n (1) Adhesion\n (2) Aggregation\n (3) Formation of fibrinogen bridges\n (4) Conformational change with activation of phospholipid surface",
+        "1",
+        " 2"
+    ],
+    [
+        "Ifa Panchayat is dissolved, elections are to be held within?\n (1) 1 month\n (2) 3 months\n (3) 6 months\n (4) 1 year",
+        "3",
+        " 2"
+    ],
+    [
+        "Stomach is derived from ?\n (1) Foregut\n (2) Midgut\n (3) Hindgut\n (4) Allantois",
+        "1",
+        " 1"
+    ],
+    [
+        "Which of the following is the main enzyme responsible for activation of xenobiotics?\n (1) Cytochrome P-450\n (2) Glucuronyl transferase\n (3) Glutathione S-transferase\n (4) NADPH cytochrome P-450-reductase",
+        "1",
+        " 1</ANSWON>"
+    ],
+    [
+        "In Familial hypercholesterolemia there is deficiency of\n (1) LDL receptor\n (2) Apoprotein A\n (3) Apo protein C\n (4) Lipoprotein lipase",
+        "1",
+        " 2"
+    ],
+    [
+        "Botulinum affects all of the following, EXCEPT:\n (1) Neuromuscular junction\n (2) Preganglionic junction\n (3) Post ganglionic nerves\n (4) CNS",
+        "4",
+        " 2"
     ]
 ]
