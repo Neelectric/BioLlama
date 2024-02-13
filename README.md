@@ -21,7 +21,7 @@ The table below shows preliminary results, as reported by other papers or record
 | GTE-Llama                | 70B    |                     |            |   34    | 46.3      |
 | MedCPT-Llama             | 70B    |                     |            |   34.8  | 46.1      |
 | Llama-2-7B-chat-finetune | 7B     |                     |            |   17    |           |
-| BioLlama                 | 7B     |                     |            |   31    |           |
+| BioLlama                 | 7B     |                     |            |   35    |           |
 <!-- table -->
 
 ## 🔎 Dissertation
@@ -32,6 +32,8 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 14:51:52, 13.02.2024 | BioLlama | MedQA | 31.0 --> 35, 100 questions
+
  * 10:34:46, 13.02.2024 | Llama-2-70B-chat-GPTQ | MedMCQA | 46.3 --> 46.6, 1000 questions
 
  * 00:02:58, 13.02.2024 | Llama-2-13B-chat-GPTQ | MedMCQA | 38.6 --> 37.8, 1000 questions
