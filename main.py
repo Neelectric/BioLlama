@@ -12,14 +12,14 @@ from utilities.utilities import write_to_readme
 
 model =  "BioLlama" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ", "Llama-2-7B-chat-finetune"
 # model = "Llama-2-7B-chat-GPTQ"
-benchmark = "MedMCQA" # eg. "MedQA", "PubMedQA", "MedMCQA"
+benchmark = "MedQA" # eg. "MedQA", "PubMedQA", "MedMCQA"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"
 retrieval_text_mode = "brc" # eg. "full", "input_segmentation
 chunk_length = None
 top_k = 1
 b_start = 10
-num_questions = 100
+num_questions = 1000
 b_end = b_start + num_questions
 
 

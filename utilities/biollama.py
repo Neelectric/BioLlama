@@ -145,6 +145,14 @@ def cca_forward_true(self, input_ids, hidden_states):
             H_temp_decoded = self.biollama.tokenizer.decode(H_temp)
             H_list.append(H_temp)
             H_list_decoded.append(H_temp_decoded)
+
+    Hplus_list = [] # every chunk here consists of last token of preceding chunk + chunk itself (minus last token)
+    num_spliced_chunks = (n-(m-1)) // m 
+    for i in range(m-1, num_spliced_chunks * m, m): # note: this for loop iterates differently than the one above
+        Hplus_temp = hidden_states[:,i:i+m:,:]
+        Hplus_list.append(Hplus_temp)
+
+    
     if self.biollama.retrieved_chunk_storage == None: # If this is first decoding step, retrieve neighbours and store them
         E_no_continuations = medcpt_FAISS_retrieval(
             H_list_decoded[0:l-1], # we do not retrieve for the last chunk, following RETRO
@@ -162,7 +170,7 @@ def cca_forward_true(self, input_ids, hidden_states):
             db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
         )    
         self.biollama.retrieved_chunk_storage = E_no_continuations
-    elif ((n-31) % 32 == 0): # if this is not first decoding step, but we've generated enough to consider a new chunk, retrieve new neighbours and update store
+    elif ((n-31) % 32 == 0) or (len(Hplus_list) > len(self.biollama.retrieved_chunk_storage)): # if this is not first decoding step, but we've generated enough to consider a new chunk, retrieve new neighbours and update store
         E_no_continuations = medcpt_FAISS_retrieval(
             H_list_decoded[0:l-1], # we do not retrieve for the last chunk, following RETRO
             db_name="RCT200ktrain",
@@ -181,22 +189,20 @@ def cca_forward_true(self, input_ids, hidden_states):
         self.biollama.retrieved_chunk_storage = E_no_continuations
     else: # otherwise, we do not need retrieval (as it would just retrieve the same as we already have stored)
         E_no_continuations = self.biollama.retrieved_chunk_storage
-    print(f"Current sequence length: {n}, num retrieved chunks: {len(E_no_continuations)}")
-    if self.biollama.retrieved_chunk_storage == E_no_continuations:
-        print("Storage and newly retrieved_chunks are identical!!")
-    elif self.biollama.retrieved_chunk_storage == None:
-        print("Setting chunk storage for this first time here!")
-        self.biollama.retrieved_chunk_storage = E_no_continuations
-    else:
-        print("Retrieved_chunks contains extra items as follows:")
-        print(f"{E_no_continuations not in self.biollama.retrieved_chunk_storage}")
-        self.biollama.retrieved_chunk_storage = E_no_continuations
+    # print(f"Current sequence length: {n}, num retrieved chunks: {len(E_no_continuations)}")
+    # if self.biollama.retrieved_chunk_storage == E_no_continuations:
+    #     print("Storage and newly retrieved_chunks are identical!!")
+    # elif self.biollama.retrieved_chunk_storage == None:
+    #     print("Setting chunk storage for this first time here!")
+    #     self.biollama.retrieved_chunk_storage = E_no_continuations
+    # else:
+    #     print("Retrieved_chunks contains extra items as follows:")
+    #     print(f"{E_no_continuations not in self.biollama.retrieved_chunk_storage}")
+    #     self.biollama.retrieved_chunk_storage = E_no_continuations
     
-    Hplus_list = [] # every chunk here consists of last token of preceding chunk + chunk itself (minus last token)
-    num_spliced_chunks = (n-(m-1)) // m 
-    for i in range(m-1, num_spliced_chunks * m, m): # note: this for loop iterates differently than the one above
-        Hplus_temp = hidden_states[:,i:i+m:,:]
-        Hplus_list.append(Hplus_temp)
+    
+
+    # print(f"we're about to iterate {len(Hplus_list)} times, over {len(E_no_continuations)} neighbours")
     ca_list = None
     for i in range(len(Hplus_list)): # for these spliced chunks in Hplus_list, calculate cross attentions with neighbours
         Hplus_ca = ca(self, Hplus_list[i], E_no_continuations[i])
@@ -239,6 +245,7 @@ def RETRO_layer_forward(self, *args, **kwargs):
     # RMS Norm
     residual = hidden_states
     hidden_states = self.input_layernorm(hidden_states)
+    if (hidden_states.device != residual.device): hidden_states.to(residual.device)
     
     # Self-Attention 
     hidden_states, self_attn_weights, present_key_value = self.self_attn(
@@ -250,7 +257,7 @@ def RETRO_layer_forward(self, *args, **kwargs):
         use_cache=use_cache,
         # **kwargs,
     )
-
+    if (hidden_states.device != residual.device): hidden_states.to(residual.device)
     # Residual Connection
     hidden_states = residual + hidden_states
 

@@ -3,7 +3,7 @@
 # Utility methods for prompt engineering, culminating in "promptify"
 
 def system_prompt():
-    return "You are an excellently helpful AI assistant that answers biomedical questions. "
+    return " "
 
 def retrieval_augmentation(chunks):
     output = "The following chunks were retrieved from biomedical literature to help you:\n"
@@ -16,7 +16,7 @@ def few_shot(benchmark):
     if benchmark == "bioASQ_no_snippet":
         example = "<QUESTION>Orteronel was developed for treatment of which cancer?</QUESTION>\n<ANSWER> castration-resistant prostate cancer</ANSWER>\nYou must now answer the following biomedical question AS SUCCINCTLY AS YOU CAN. Do not use more than 5 words."
     elif benchmark == "MedQA":
-        example = "<QUESTION>A 23-year-old pregnant woman at 22 weeks gestation presents with burning upon urination. She states it started 1 day ago and has been worsening despite drinking more water and taking cranberry extract. She otherwise feels well and is followed by a doctor for her pregnancy. Her temperature is 97.7°F (36.5°C), blood pressure is 122/77 mmHg, pulse is 80/min, respirations are 19/min, and oxygen saturation is 98% on room air. Physical exam is notable for an absence of costovertebral angle tenderness and a gravid uterus. Which of the following is the best treatment for this patient? \n(A) Ampicillin \n(B) Ceftriaxone \n(C) Ciprofloxacin \n(D) Doxycycline \n(E) Nitrofurantoin</QUESTION>\n<ANSWER> (E) Nitrofurantoin</ANSWER>\n"
+        example = "<QUESTION>A 23-year-old pregnant woman at 22 weeks gestation presents with burning upon urination. She states it started 1 day ago and has been worsening despite drinking more water and taking cranberry extract. She otherwise feels well and is followed by a doctor for her pregnancy. Her temperature is 97.7°F (36.5°C), blood pressure is 122/77 mmHg, pulse is 80/min, respirations are 19/min, and oxygen saturation is 98% on room air. Physical exam is notable for an absence of costovertebral angle tenderness and a gravid uterus. Which of the following is the best treatment for this patient?\n (A) Ampicillin\n (B) Ceftriaxone\n (C) Ciprofloxacin\n (D) Doxycycline\n (E) Nitrofurantoin</QUESTION>\n<ANSWER> (E) Nitrofurantoin</ANSWER>\n"
     elif benchmark == "PubMedQA":
         example = "<QUESTION>Do mitochondria play a role in remodelling lace plant leaves during programmed cell death?</QUESTION>\n<ANSWER> Yes</ANSWER>\nDo not justify your response, respond with only Yes, No or Maybe."
     elif benchmark == "MedMCQA":

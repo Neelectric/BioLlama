@@ -3,14 +3,15 @@
 # Primary method for creation of callable "llm" object, adapted from exllama's "test_benchmark_inference.py"
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
+import os, glob
+import json
+import argparse
+import torch
 
 from src.model import ExLlama, ExLlamaCache, ExLlamaConfig
 from src.tokenizer import ExLlamaTokenizer
 from src.generator import ExLlamaGenerator
 from src.alt_generator import ExLlamaAltGenerator
-import os, glob
-import json
-import argparse
 import src.model_init as model_init
 from utilities.biollama import BioLlama
 
@@ -109,12 +110,13 @@ def finetuned_biollama(model_directory, prompts, max_new_tokens, model_object = 
     print("overriding model_id with 'meta-llama/Llama-2-7b-chat-hf'")
     if model_object is None:
         chunk_length = 32
-        new_model = BioLlama(model_id='meta-llama/Llama-2-7b-chat-hf', chunk_length=chunk_length, RETRO_layer_ids = [15], training=False)
+        new_model = BioLlama(model_id='meta-llama/Llama-2-7b-chat-hf', chunk_length=chunk_length, RETRO_layer_ids = [15], training=True, torch_dtype=torch.float16)
     else:
         new_model = model_object
     #set model temperature to 0.01
     generations = []
     for prompt in prompts:
+        # print(prompt)
         num_tokens, text = new_model.generate(prompt=prompt, max_new_tokens=15)
         generations.append(text)
     return generations, new_model
