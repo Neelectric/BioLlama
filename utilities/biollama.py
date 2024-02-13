@@ -7,7 +7,7 @@ import torch
 import time
 import math
 from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM, AutoModelForSequenceClassification
-from transformers.models.llama.modeling_llama import LlamaSdpaAttention, LlamaRMSNorm
+from transformers.models.llama.modeling_llama import LlamaSdpaAttention, LlamaRMSNorm, apply_rotary_pos_emb
 from .db_retrieval import medcpt_FAISS_retrieval, load_db
 
 # New method that allows us to replace the forward pass on the LlamaForCausalLm object
@@ -77,19 +77,59 @@ def cca_forward(self, input_ids):
     )
     return hidden_states
 
-def ca(e, h):
-    something = e+h
-    return something
+def ca(self, hidden_states, e): # The following combines the HF Transformers LlamaSdpaAttention and RETRO code
+    embed_tokens = self.biollama.model.base_model.embed_tokens
+    e_0 = e[0]
+    e_encoded = self.biollama.tokenizer(e_0, return_tensors="pt")
+    e_input_ids = e_encoded.input_ids
+    e_input_ids = e_input_ids[:,0:32] # it aint pretty but retrieved chunks are usually not 32 long...
+    e_encoded_and_embedded = embed_tokens(e_input_ids)
+
+    cca_attn = self.cca_attn
+    bsz, q_len, _ = hidden_states.size()
+    position_ids = torch.arange(hidden_states.shape[-2], dtype=torch.long, device=hidden_states.device).unsqueeze(0)
+
+    query_states = cca_attn.q_proj(e_encoded_and_embedded)
+    key_states = cca_attn.k_proj(hidden_states)
+    value_states = cca_attn.v_proj(hidden_states)
+
+    query_states = query_states.view(bsz, q_len, cca_attn.num_heads, cca_attn.head_dim).transpose(1, 2)
+    key_states = key_states.view(bsz, q_len, cca_attn.num_key_value_heads, cca_attn.head_dim).transpose(1, 2)
+    value_states = value_states.view(bsz, q_len, cca_attn.num_key_value_heads, cca_attn.head_dim).transpose(1, 2)
+
+    kv_seq_len = key_states.shape[-2]
+    cos, sin = cca_attn.rotary_emb(value_states, seq_len=kv_seq_len)
+
+    query_states, key_states = apply_rotary_pos_emb(query_states, key_states, cos, sin, position_ids)
+
+    attn_output = torch.nn.functional.scaled_dot_product_attention(
+            query_states,
+            key_states,
+            value_states,
+            attn_mask=None,
+            dropout_p=self.attention_dropout if self.training else 0.0,
+            # The q_len > 1 is necessary to match with AttentionMaskConverter.to_causal_4d that does not create a causal mask in case q_len == 1.
+            is_causal=cca_attn.is_causal and q_len > 1,
+        )
+
+    attn_output = attn_output.transpose(1, 2).contiguous()
+    attn_output = attn_output.reshape(bsz, q_len, self.hidden_size)
+
+    attn_output = cca_attn.o_proj(attn_output)
+
+    return attn_output
+
 
 # Cross Chunked Attention (true version, following DeepMind's suggestion as closely as possible)
-def cca_forward_true(self, input_ids):
+def cca_forward_true(self, input_ids, hidden_states):
+    hidden_states = self.pre_cca_layernorm(hidden_states)
     input_ids = [int(element) for element in input_ids[0]]
     n = len(input_ids)
     m = self.biollama.chunk_length
     l = math.ceil(n/m)
-    H_list = []
-    H_list_decoded = []
-    for i in range(l):
+    H_list = [] # For splitting the input into l chunks of size m (the last one will probably be shorter)
+    H_list_decoded = [] # Keeping a decoded version for retrieval lookup
+    for i in range(l): 
         if (i+1)*m < n:
             H_temp = input_ids[i*m:(i+1)*m]
             H_temp_decoded = self.biollama.tokenizer.decode(H_temp)
@@ -102,7 +142,7 @@ def cca_forward_true(self, input_ids):
             H_list_decoded.append(H_temp_decoded)
     
     E_no_continuations = medcpt_FAISS_retrieval(
-        H_list_decoded[0:l-1],
+        H_list_decoded[0:l-1], # we do not retrieve for the last chunk, following RETRO
         db_name="RCT200ktrain",
         retrieval_text_mode="input_segmentation",
         chunk_length=self.biollama.chunk_length,
@@ -110,24 +150,32 @@ def cca_forward_true(self, input_ids):
         query_model=self.biollama.query_model, # passed as a pre-loaded object to save time
         rerank_tokenizer=self.biollama.rerank_tokenizer, # passed as a pre-loaded object to save time
         rerank_model=self.biollama.rerank_model, # passed as a pre-loaded object to save time
-        top_k=2,
+        top_k=2, # retrieve top 2, following RETRO
         k=5,
         db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
         db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
     )    
 
-    Hplus_list = []
-    num_spliced_chunks = (n-(m-1)) // l
-    for i in range(m-1, num_spliced_chunks * m, m):
-        Hplus_temp = input_ids[i:i*m]
+    Hplus_list = [] # every chunk here consists of last token of preceding chunk + chunk itself (minus last token)
+    num_spliced_chunks = (n-(m-1)) // m 
+    for i in range(m-1, num_spliced_chunks * m, m): # note: this for loop iterates differently than the one above
+        # Hplus_temp = torch.tensor(input_ids[i:i+m])
+        Hplus_temp = hidden_states[:,i:i+m:,:]
         Hplus_list.append(Hplus_temp)
-
-    ca_list = []
-    for i in range(len(Hplus_list)):
-        Hplus_ca = ca(Hplus_list[i], E_no_continuations[i])
-        ca_list += Hplus_ca
+    ca_list = None
+    for i in range(len(Hplus_list)): # for these spliced chunks in Hplus_list, calculate cross attentions with neighbours
+        Hplus_ca = ca(self, Hplus_list[i], E_no_continuations[i])
+        if ca_list == None:
+            ca_list = Hplus_ca
+        else:
+            ca_list = torch.cat((ca_list, Hplus_ca), dim=1)
+        # ca_list += Hplus_ca
     
-    output = H_list[0][0:-2] + ca_list + H_list[-1][1:]
+    # output = H_list[0][0:-2] + ca_list + H_list[-1][1:] #  concatenate together, following RETRO
+    last_tokens_offset = (m-1) + num_spliced_chunks*m
+    # output = hidden_states[:,0:m-1] + ca_list + hidden_states[:,last_tokens_offset:] #  concatenate together, following RETRO
+    prefix_and_ca_tensors = torch.cat((hidden_states[:,0:m-1], ca_list), dim=1)
+    output = torch.cat((prefix_and_ca_tensors, hidden_states[:,last_tokens_offset:]), dim=1)
     return output
 
 # Altered forward pass to replace the LlamaForwardPass of RETRO layers
@@ -182,7 +230,7 @@ def RETRO_layer_forward(self, *args, **kwargs):
             first_prompts_states = torch.cat((first_prompts_states, next_prompt_states), dim=0)
         hidden_states = first_prompts_states
     else:
-        hidden_states = cca_forward_true(self, input_ids)
+        hidden_states = cca_forward_true(self, input_ids, hidden_states)
     hs_shape = hidden_states.shape
     rs_shape = residual.shape
     size_difference = rs_shape[1] - hs_shape[1]

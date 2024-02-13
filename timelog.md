@@ -428,7 +428,7 @@
 ### Friday - 02 Feb 2023
 * *1 hour* Looking at an issue in training runs where a retrieved chunk seems to have length 31??
 
-## Week 21 - ?? hours
+## Week 21 - 11.5 hours
 ### Tuesday - 06 Feb 2023
 * *1 hour* Call with Dr Qiao Jin, lead author of PubMedQA/MedCPT for advice on using his systems
 * *1 hour* Comparing L2 finetune vs BioLlama finetune
@@ -454,3 +454,6 @@
 * *0.5 hours* Adding support for MedCPT retrieval with no reranker
 * *1 hours* Finishing cleaner RETRO-fit, adapting for variable batch sizes
 * *2 hours* First time BioLlama gets 30% accuracy on MedQA!!!
+* *2.5 hours* Starting to implement true CCA
+* *1 hour* Further work implementing true CCA
+* *1 hour* True CCA coming along with custom SdpaAttention implementation
