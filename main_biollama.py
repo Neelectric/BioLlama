@@ -13,7 +13,7 @@ questions = [prompt, prompt2]
 db_name = "RCT200ktrain"
 retrieval_text_mode = "input_segmentation"
 
-prompt = questions[0]
+prompt = questions[1]
 model_id = 'meta-llama/Llama-2-7b-chat-hf'
 chunk_length = 32
 

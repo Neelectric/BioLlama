@@ -457,3 +457,4 @@
 * *2.5 hours* Starting to implement true CCA
 * *1 hour* Further work implementing true CCA
 * *1 hour* True CCA coming along with custom SdpaAttention implementation
+* *1 hour* Starting first finetune of BioLlama with true CCA

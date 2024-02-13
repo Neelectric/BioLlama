@@ -110,7 +110,7 @@ def ca(self, hidden_states, e): # The following combines the HF Transformers Lla
             key_states,
             value_states,
             attn_mask=None,
-            dropout_p=self.attention_dropout if self.training else 0.0,
+            dropout_p=cca_attn.attention_dropout if self.training else 0.0,
             # The q_len > 1 is necessary to match with AttentionMaskConverter.to_causal_4d that does not create a causal mask in case q_len == 1.
             is_causal=cca_attn.is_causal and q_len > 1,
         )
@@ -230,14 +230,19 @@ def RETRO_layer_forward(self, *args, **kwargs):
     # Chunked Cross Attention
     residual = hidden_states
     if hidden_states.shape[0] > 1: # if we are processing prompts in a batch (for eg during training), adapt CCA
-        first_prompts_states = cca_forward(self, torch.unsqueeze(input_ids[0], dim=0), position_ids)
+        # first_prompts_states = cca_forward(self, torch.unsqueeze(input_ids[0], dim=0), position_ids)
+        # for i in range(1,hidden_states.shape[0]):
+        #     next_prompt_states = cca_forward(self, torch.unsqueeze(input_ids[i], dim=0), position_ids)
+        #     first_prompts_states = torch.cat((first_prompts_states, next_prompt_states), dim=0)
+        # hidden_states = first_prompts_states
+        first_prompts_states = cca_forward_true(self, torch.unsqueeze(input_ids[0], dim=0), hidden_states)
         for i in range(1,hidden_states.shape[0]):
-            next_prompt_states = cca_forward(self, torch.unsqueeze(input_ids[i], dim=0), position_ids)
+            next_prompt_states = cca_forward_true(self, torch.unsqueeze(input_ids[i], dim=0), hidden_states)
             first_prompts_states = torch.cat((first_prompts_states, next_prompt_states), dim=0)
         hidden_states = first_prompts_states
     else:
-        # hidden_states = cca_forward_true(self, input_ids, hidden_states)
-        hidden_states = cca_forward(self, input_ids)
+        hidden_states = cca_forward_true(self, input_ids, hidden_states)
+        # hidden_states = cca_forward(self, input_ids)
     hs_shape = hidden_states.shape
     rs_shape = residual.shape
     size_difference = rs_shape[1] - hs_shape[1]
