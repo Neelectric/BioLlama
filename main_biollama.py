@@ -1,7 +1,7 @@
 from utilities.biollama import BioLlama
 import time
 import torch
-from utilities.db_retrieval import medcpt_FAISS_retrieval
+# from utilities.db_retrieval import medcpt_FAISS_retrieval
 
 # chunk1 = "<s> Which is the main calcium p"
 # chunk2 = "ump of the sarcoplasmic"
@@ -44,7 +44,7 @@ chunk_length = 32
 time_before_setup = time.time()
 BioLlama = BioLlama(model_id=model_id, RETRO_layer_ids=[15], chunk_length=chunk_length, training=True, torch_dtype=torch.float16)
 time_before_generation = time.time()
-num_tokens, text = BioLlama.generate(prompt=prompt, max_new_tokens=50)
+num_tokens, text = BioLlama.generate(prompt=prompt, max_new_tokens=100)
 
 time_after = time.time()
 
@@ -53,6 +53,7 @@ print(text)
 # actual_response = text[len(prompt):]
 # print(actual_response)
 # print(f"Actual response length: {len(actual_response)}")
+print(f"Number of tokens: {num_tokens}")
 print(f"Time taken for setup: {time_before_generation - time_before_setup}")
 print(f"Time taken for generation: {time_after - time_before_generation}")
 print(f"Tokens per second: {num_tokens/(time_after - time_before_generation)}")

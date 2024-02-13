@@ -145,32 +145,56 @@ def cca_forward_true(self, input_ids, hidden_states):
             H_temp_decoded = self.biollama.tokenizer.decode(H_temp)
             H_list.append(H_temp)
             H_list_decoded.append(H_temp_decoded)
-    
-    E_no_continuations = medcpt_FAISS_retrieval(
-        H_list_decoded[0:l-1], # we do not retrieve for the last chunk, following RETRO
-        db_name="RCT200ktrain",
-        retrieval_text_mode="input_segmentation",
-        chunk_length=self.biollama.chunk_length,
-        verbose=False,
-        query_tokenizer=self.biollama.query_tokenizer, # passed as a pre-loaded object to save time
-        query_model=self.biollama.query_model, # passed as a pre-loaded object to save time
-        rerank_tokenizer=self.biollama.rerank_tokenizer, # passed as a pre-loaded object to save time
-        rerank_model=self.biollama.rerank_model, # passed as a pre-loaded object to save time
-        top_k=1, # retrieve top 2, following RETRO
-        k=1,
-        db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
-        db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
-    )    
+    if self.biollama.retrieved_chunk_storage == None: # If this is first decoding step, retrieve neighbours and store them
+        E_no_continuations = medcpt_FAISS_retrieval(
+            H_list_decoded[0:l-1], # we do not retrieve for the last chunk, following RETRO
+            db_name="RCT200ktrain",
+            retrieval_text_mode="input_segmentation",
+            chunk_length=self.biollama.chunk_length,
+            verbose=False,
+            query_tokenizer=self.biollama.query_tokenizer, # passed as a pre-loaded object to save time
+            query_model=self.biollama.query_model, # passed as a pre-loaded object to save time
+            rerank_tokenizer=self.biollama.rerank_tokenizer, # passed as a pre-loaded object to save time
+            rerank_model=self.biollama.rerank_model, # passed as a pre-loaded object to save time
+            top_k=1, # normally retrieve top 2, following RETRO
+            k=1,
+            db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
+            db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
+        )    
+        self.biollama.retrieved_chunk_storage = E_no_continuations
+    elif ((n-31) % 32 == 0): # if this is not first decoding step, but we've generated enough to consider a new chunk, retrieve new neighbours and update store
+        E_no_continuations = medcpt_FAISS_retrieval(
+            H_list_decoded[0:l-1], # we do not retrieve for the last chunk, following RETRO
+            db_name="RCT200ktrain",
+            retrieval_text_mode="input_segmentation",
+            chunk_length=self.biollama.chunk_length,
+            verbose=False,
+            query_tokenizer=self.biollama.query_tokenizer, # passed as a pre-loaded object to save time
+            query_model=self.biollama.query_model, # passed as a pre-loaded object to save time
+            rerank_tokenizer=self.biollama.rerank_tokenizer, # passed as a pre-loaded object to save time
+            rerank_model=self.biollama.rerank_model, # passed as a pre-loaded object to save time
+            top_k=1, # retrieve top 2, following RETRO
+            k=1,
+            db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
+            db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
+        )    
+        self.biollama.retrieved_chunk_storage = E_no_continuations
+    else: # otherwise, we do not need retrieval (as it would just retrieve the same as we already have stored)
+        E_no_continuations = self.biollama.retrieved_chunk_storage
     print(f"Current sequence length: {n}, num retrieved chunks: {len(E_no_continuations)}")
-    print("Retrieved chunks:")
-    for chunk in E_no_continuations:
-        print(f"   {chunk}")
+    if self.biollama.retrieved_chunk_storage == E_no_continuations:
+        print("Storage and newly retrieved_chunks are identical!!")
+    elif self.biollama.retrieved_chunk_storage == None:
+        print("Setting chunk storage for this first time here!")
+        self.biollama.retrieved_chunk_storage = E_no_continuations
+    else:
+        print("Retrieved_chunks contains extra items as follows:")
+        print(f"{E_no_continuations not in self.biollama.retrieved_chunk_storage}")
+        self.biollama.retrieved_chunk_storage = E_no_continuations
     
-
     Hplus_list = [] # every chunk here consists of last token of preceding chunk + chunk itself (minus last token)
     num_spliced_chunks = (n-(m-1)) // m 
     for i in range(m-1, num_spliced_chunks * m, m): # note: this for loop iterates differently than the one above
-        # Hplus_temp = torch.tensor(input_ids[i:i+m])
         Hplus_temp = hidden_states[:,i:i+m:,:]
         Hplus_list.append(Hplus_temp)
     ca_list = None
@@ -180,11 +204,9 @@ def cca_forward_true(self, input_ids, hidden_states):
             ca_list = Hplus_ca
         else:
             ca_list = torch.cat((ca_list, Hplus_ca), dim=1)
-        # ca_list += Hplus_ca
     
-    # output = H_list[0][0:-2] + ca_list + H_list[-1][1:] #  concatenate together, following RETRO
+    # concatenate together, following RETRO
     last_tokens_offset = (m-1) + num_spliced_chunks*m
-    # output = hidden_states[:,0:m-1] + ca_list + hidden_states[:,last_tokens_offset:] #  concatenate together, following RETRO
     prefix_and_ca_tensors = torch.cat((hidden_states[:,0:m-1], ca_list), dim=1)
     output = torch.cat((prefix_and_ca_tensors, hidden_states[:,last_tokens_offset:]), dim=1)
     return output
@@ -306,6 +328,7 @@ class BioLlama:
         db_faiss, db_json = load_db("medcpt", "RCT200ktrain", "input_segmentation", chunk_length=chunk_length)
         self.db_faiss = db_faiss
         self.db_json = db_json
+        self.retrieved_chunk_storage = None
 
     def generate(self, prompt, max_new_tokens=100):
         if (type(prompt) == list) and (len(prompt)>1):
@@ -318,5 +341,6 @@ class BioLlama:
         self.model.input_ids_biollama = inputs["input_ids"]
         self.model.prompt_biollama = prompt
         generate_ids = self.model.generate(inputs.input_ids.to(self.device), max_new_tokens=max_new_tokens, use_cache=False)
-        num_tokens = len(generate_ids)
+        # print(f"generate_ids is {generate_ids}")
+        num_tokens = len(generate_ids[0])
         return (num_tokens, self.tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False,)[0],)
