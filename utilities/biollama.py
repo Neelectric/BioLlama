@@ -146,6 +146,7 @@ def cca_forward_true(self, input_ids, hidden_states):
         db_name="RCT200ktrain",
         retrieval_text_mode="input_segmentation",
         chunk_length=self.biollama.chunk_length,
+        verbose=False,
         query_tokenizer=self.biollama.query_tokenizer, # passed as a pre-loaded object to save time
         query_model=self.biollama.query_model, # passed as a pre-loaded object to save time
         rerank_tokenizer=self.biollama.rerank_tokenizer, # passed as a pre-loaded object to save time

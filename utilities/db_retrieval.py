@@ -528,7 +528,7 @@ def medcpt_FAISS_retrieval(
     # this is with arbitrary choices: k=1, max_length (how many tokens are in input i think?) = 512
     chunk_list = []
     retrieval_quality = []
-    disable = False
+    disable = True
     # if "questions" is just a string, we make it a list so iteration is not character-wise
     if type(questions) == str:
         questions = [questions]
