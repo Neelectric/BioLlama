@@ -79,6 +79,7 @@ def model_new_forward(self, *args, **kwargs):
 
 def ca(self, hidden_states, e): # The following combines the HF Transformers LlamaSdpaAttention and RETRO code
     embed_tokens = self.biollama.model.base_model.embed_tokens
+    cca_attn = self.cca_attn
     if type(e) == list: 
         e_0 = e[0] 
     else: 
@@ -87,8 +88,10 @@ def ca(self, hidden_states, e): # The following combines the HF Transformers Lla
     e_input_ids = e_encoded.input_ids
     e_input_ids = e_input_ids[:,0:32] # it aint pretty but retrieved chunks are usually not 32 long...
     e_encoded_and_embedded = embed_tokens(e_input_ids)
+    if e_encoded_and_embedded.device != cca_attn.q_proj.weight.device: # sometimes it complains about tensors not being on same device
+        e_encoded_and_embedded = e_encoded_and_embedded.to(cca_attn.q_proj.weight.device)
 
-    cca_attn = self.cca_attn
+    
     bsz, q_len, _ = hidden_states.size()
     position_ids = torch.arange(hidden_states.shape[-2], dtype=torch.long, device=hidden_states.device).unsqueeze(0)
 
@@ -318,7 +321,7 @@ class BioLlama:
         elif (torch_dtype == torch.int8):
             if training: raise Exception("Cannot train with quantization, train unquantized and quantize after training")
             bnb_config = BitsAndBytesConfig(load_in_8bit=True)
-            torch_dtype=torch.bfloat16
+            torch_dtype=torch.ffloat16
         else:
             bnb_config = None
 

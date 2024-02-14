@@ -40,7 +40,7 @@ db_name = "RCT200ktrain"
 retrieval_text_mode = "input_segmentation"
 
 prompt = questions[0]
-model_id = 'meta-llama/Llama-2-7b-chat-hf'
+model_id = 'meta-llama/Llama-2-70b-chat-hf'
 chunk_length = 32
 
 time_before_setup = time.time()
@@ -48,7 +48,7 @@ BioLlama = BioLlama(model_id=model_id,
                     RETRO_layer_ids=[15], 
                     chunk_length=chunk_length, 
                     training=False, 
-                    torch_dtype=torch.int8)
+                    torch_dtype="int4")
 time_before_generation = time.time()
 num_tokens, text = BioLlama.generate(prompt=prompt, max_new_tokens=50)
 

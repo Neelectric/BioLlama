@@ -469,3 +469,6 @@
 * *1 hour* Trying to optimise BioLlama true CCA
 * *1.5 hours* Making batch inference faster, further benchmarking
 * *1 hour* Coding in bed (low-key kind of fun, should do this more often)
+
+### Wednesday - 14 Feb 2023
+* *1 hour* Achieving 4bit quantization of biollama

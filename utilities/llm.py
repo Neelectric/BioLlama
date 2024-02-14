@@ -107,15 +107,15 @@ def finetuned_llama2(model_directory, prompts, max_new_tokens, model_object = No
     return generations, new_model
 
 def finetuned_biollama(model_directory, prompts, max_new_tokens, model_object = None):
-    override_directory = 'meta-llama/Llama-2-13b-chat-hf'
+    override_directory = 'meta-llama/Llama-2-7b-chat-hf'
     print(f"overriding model_id with {override_directory}")
     if model_object is None:
         chunk_length = 32
         new_model = BioLlama(model_id=override_directory, 
                              chunk_length=chunk_length, 
                              RETRO_layer_ids = [15], 
-                             training=True, 
-                             torch_dtype=torch.float16)
+                             training=False, 
+                             torch_dtype="int4")
     else:
         new_model = model_object
     #set model temperature to 0.01
