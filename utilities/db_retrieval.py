@@ -484,7 +484,9 @@ def load_db(embedding_model, db_name, retrieval_text_mode, chunk_length=None):
     # print(os.getcwd())
     with open(index_path_json, "r") as json_file:
         knowledge_db_as_JSON = json.load(json_file)
-    return faiss.read_index(index_path_faiss), knowledge_db_as_JSON
+    index = faiss.read_index(index_path_faiss)
+    # index = index.to_gpu(gpu_id=0)
+    return index, knowledge_db_as_JSON
 
 
 def medcpt_FAISS_retrieval(
@@ -549,7 +551,9 @@ def medcpt_FAISS_retrieval(
                 max_length=512,
             )
             # encode the queries (use the [CLS] last hidden states as the representations)
+            encoded.to("cuda:0")
             embeds = query_model(**encoded).last_hidden_state[:, 0, :]
+        
         distances, indices = db_faiss.search(embeds, k)
         distances = distances.flatten()
         indices = indices.flatten()

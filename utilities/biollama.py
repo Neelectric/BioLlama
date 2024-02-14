@@ -6,7 +6,7 @@
 import torch
 import time
 import math
-from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM, AutoModelForSequenceClassification
+from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM, AutoModelForSequenceClassification, BitsAndBytesConfig
 from transformers.models.llama.modeling_llama import LlamaSdpaAttention, LlamaRMSNorm, apply_rotary_pos_emb
 from .db_retrieval import medcpt_FAISS_retrieval, load_db
 
@@ -126,7 +126,7 @@ def ca(self, hidden_states, e): # The following combines the HF Transformers Lla
 # Cross Chunked Attention (true version, following DeepMind's suggestion as closely as possible)
 def cca_forward_true(self, input_ids, hidden_states):
     if (hidden_states.device != self.pre_cca_layernorm.weight.device):
-        hidden_states.to(self.pre_cca_layernorm.weight.device)
+        hidden_states = hidden_states.to(self.pre_cca_layernorm.weight.device)
     hidden_states = self.pre_cca_layernorm(hidden_states)
     input_ids = [int(element) for element in input_ids[0]]
     n = len(input_ids)
@@ -200,8 +200,6 @@ def cca_forward_true(self, input_ids, hidden_states):
     #     print(f"{E_no_continuations not in self.biollama.retrieved_chunk_storage}")
     #     self.biollama.retrieved_chunk_storage = E_no_continuations
     
-    
-
     # print(f"we're about to iterate {len(Hplus_list)} times, over {len(E_no_continuations)} neighbours")
     ca_list = None
     for i in range(len(Hplus_list)): # for these spliced chunks in Hplus_list, calculate cross attentions with neighbours
@@ -218,8 +216,7 @@ def cca_forward_true(self, input_ids, hidden_states):
     return output
 
 # Altered forward pass to replace the LlamaForwardPass of RETRO layers
-def RETRO_layer_forward(self, *args, **kwargs):
-    #this combines insights from the intermediate decoding implementation, and the HF transformers implementation
+def RETRO_layer_forward(self, *args, **kwargs): #this combines insights from the intermediate decoding implementation, and the HF transformers implementation
     # Preparation
     hidden_states = args[0]  # usually a tuple where the first element is what we want
     if (len(kwargs) == 0 and len(args) == 1):
@@ -245,7 +242,7 @@ def RETRO_layer_forward(self, *args, **kwargs):
     # RMS Norm
     residual = hidden_states
     hidden_states = self.input_layernorm(hidden_states)
-    if (hidden_states.device != residual.device): hidden_states.to(residual.device)
+    if (hidden_states.device != residual.device): hidden_states = hidden_states.to(residual.device)
     
     # Self-Attention 
     hidden_states, self_attn_weights, present_key_value = self.self_attn(
@@ -257,7 +254,7 @@ def RETRO_layer_forward(self, *args, **kwargs):
         use_cache=use_cache,
         # **kwargs,
     )
-    if (hidden_states.device != residual.device): hidden_states.to(residual.device)
+    if (hidden_states.device != residual.device): hidden_states = hidden_states.to(residual.device)
     # Residual Connection
     hidden_states = residual + hidden_states
 
@@ -285,12 +282,14 @@ def RETRO_layer_forward(self, *args, **kwargs):
         if prefix.device != hidden_states.device:  #before we concatenate, check if they are on the same device. if not, move prefix to the same device as hidden_states
             prefix = prefix.to(hidden_states.device) #without this, there have been issues in the past
         hidden_states = torch.cat((prefix, hidden_states), dim=1)
+    if (hidden_states.device != residual.device): hidden_states = hidden_states.to(residual.device)
     hidden_states = residual + hidden_states
 
     # Fully Connected
     residual = hidden_states
     hidden_states = self.post_attention_layernorm(hidden_states)
     hidden_states = self.mlp(hidden_states)
+    if (hidden_states.device != residual.device): hidden_states = hidden_states.to(residual.device)
     hidden_states = residual + hidden_states
     outputs = (hidden_states,)
     return outputs
@@ -311,10 +310,22 @@ def RETROfit_layer(layer, layer_id, biollama, training, torch_dtype):
 
 class BioLlama:
     def __init__(self, model_id, chunk_length, RETRO_layer_ids=[15], training=False, torch_dtype=torch.float32):
+        # If quantization is lower than float32 (ie int8 or int4), we need a BitsAndBytesConfig
+        if (torch_dtype == "int4"):
+            if training: raise Exception("Cannot train with quantization, train unquantized and quantize after training")
+            bnb_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype="float16", bnb_4bit_use_double_quant=False)
+            torch_dtype=torch.bfloat16
+        elif (torch_dtype == torch.int8):
+            if training: raise Exception("Cannot train with quantization, train unquantized and quantize after training")
+            bnb_config = BitsAndBytesConfig(load_in_8bit=True)
+            torch_dtype=torch.bfloat16
+        else:
+            bnb_config = None
+
         # Model setup
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
-        self.model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto", torch_dtype=torch_dtype)
+        self.model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto", torch_dtype=torch_dtype, quantization_config=bnb_config)
         self.model.config.use_cache = False  # testing this in hopes of less cca issues
         self.model.generation_config.temperature = 0.01
         self.state_dict = self.model.state_dict()
@@ -329,9 +340,13 @@ class BioLlama:
         self.model.old_forward = self.model.forward
         self.model.forward = model_new_forward.__get__(self.model)
         self.query_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")
+        # self.query_tokenizer.to("cuda")
         self.query_model = AutoModel.from_pretrained("ncbi/MedCPT-Query-Encoder")
+        self.query_model.to("cuda:0")
         self.rerank_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Cross-Encoder")
+        # self.rerank_tokenizer.to("cuda")
         self.rerank_model = AutoModelForSequenceClassification.from_pretrained("ncbi/MedCPT-Cross-Encoder")
+        self.rerank_model.to("cuda:0")
         db_faiss, db_json = load_db("medcpt", "RCT200ktrain", "input_segmentation", chunk_length=chunk_length)
         self.db_faiss = db_faiss
         self.db_json = db_json
