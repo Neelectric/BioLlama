@@ -551,7 +551,7 @@ def medcpt_FAISS_retrieval(
                 max_length=512,
             )
             # encode the queries (use the [CLS] last hidden states as the representations)
-            encoded.to("cuda:0")
+            # encoded.to("cuda:0")
             embeds = query_model(**encoded).last_hidden_state[:, 0, :]
         
         distances, indices = db_faiss.search(embeds, k)

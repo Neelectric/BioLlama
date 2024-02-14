@@ -342,11 +342,11 @@ class BioLlama:
         self.query_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")
         # self.query_tokenizer.to("cuda")
         self.query_model = AutoModel.from_pretrained("ncbi/MedCPT-Query-Encoder")
-        self.query_model.to("cuda:0")
+        # self.query_model.to("cuda:0")
         self.rerank_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Cross-Encoder")
         # self.rerank_tokenizer.to("cuda")
         self.rerank_model = AutoModelForSequenceClassification.from_pretrained("ncbi/MedCPT-Cross-Encoder")
-        self.rerank_model.to("cuda:0")
+        # self.rerank_model.to("cuda:0")
         db_faiss, db_json = load_db("medcpt", "RCT200ktrain", "input_segmentation", chunk_length=chunk_length)
         self.db_faiss = db_faiss
         self.db_json = db_json
