@@ -32,7 +32,8 @@ def inference(model="Llama-2-70B-chat-GPTQ",
               retrieval_text_mode = "full",
               chunk_length = 16,
               top_k = 1,
-              db_name = "RCT20ktrain"):
+              db_name = "RCT20ktrain",
+              torch_dtype = None):
     
     #preparatory steps
     start_time = time.time() # time before batch inference
@@ -67,7 +68,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     #helper function for batch inference
     def batch_llm_inference(prompts, max_new_tokens, model_object):
         llm_output = []
-        llm_generator, model_object = llm(model_directory, prompts, max_new_tokens, "std", model_object)
+        llm_generator, model_object = llm(model_directory, prompts, max_new_tokens, "std", model_object, torch_dtype)
         for line in llm_generator:
             llm_output.append(line)
         return llm_output, model_object

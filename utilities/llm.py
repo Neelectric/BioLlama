@@ -16,12 +16,12 @@ import src.model_init as model_init
 from utilities.biollama import BioLlama
 
 #function that creates a callable "llm" object
-def llm(model_directory, prompts, max_new_tokens, generator_mode, model_object):
+def llm(model_directory, prompts, max_new_tokens, generator_mode, model_object, torch_dtype):
     if model_directory == "/home/service/BioLlama/utilities/finetuning/llama2_training_output/":
         output, model_object = finetuned_llama2(model_directory, prompts, max_new_tokens, model_object)
         return output, model_object
     elif model_directory == "/home/service/BioLlama/utilities/finetuning/biollama_training_output/":
-        output, model_object = finetuned_biollama(model_directory, prompts, max_new_tokens, model_object)
+        output, model_object = finetuned_biollama(model_directory, prompts, max_new_tokens, model_object, torch_dtype)
         return output, model_object
     # Locate files we need within that directory
     tokenizer_path = os.path.join(model_directory, "tokenizer.model")
@@ -106,16 +106,16 @@ def finetuned_llama2(model_directory, prompts, max_new_tokens, model_object = No
         generations.append(decoded_generated)
     return generations, new_model
 
-def finetuned_biollama(model_directory, prompts, max_new_tokens, model_object = None):
-    override_directory = 'meta-llama/Llama-2-7b-chat-hf'
-    print(f"overriding model_id with {override_directory}")
+def finetuned_biollama(model_directory, prompts, max_new_tokens, model_object = None, torch_dtype = None):
+    override_directory = 'meta-llama/Llama-2-13b-chat-hf'
+    print(f"overriding model_id with {override_directory}, using torch_dtype {torch_dtype}")
     if model_object is None:
         chunk_length = 32
         new_model = BioLlama(model_id=override_directory, 
                              chunk_length=chunk_length, 
                              RETRO_layer_ids = [15], 
                              training=False, 
-                             torch_dtype="int4")
+                             torch_dtype=torch_dtype)
     else:
         new_model = model_object
     #set model temperature to 0.01

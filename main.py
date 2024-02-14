@@ -9,9 +9,13 @@
 from utilities.inference import inference
 from utilities.exact_match import exact_match
 from utilities.utilities import write_to_readme
+import torch
 
 model =  "BioLlama" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ", "Llama-2-7B-chat-finetune"
 # model = "Llama-2-7B-chat-GPTQ"
+torch_dtype = None
+if model == "BioLlama":
+    torch_dtype = "int4"
 benchmark = "MedQA" # eg. "MedQA", "PubMedQA", "MedMCQA"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"
@@ -33,7 +37,8 @@ inference(model=model,
         retrieval_text_mode=retrieval_text_mode,
         chunk_length=chunk_length,
         top_k=top_k,
-        db_name=db_name)
+        db_name=db_name,
+        torch_dtype=torch_dtype,)
 
 if benchmark == "MedQA" or benchmark == "PubMedQA" or benchmark == "MedMCQA":
     accuracy = 100*exact_match(model=model, benchmark=benchmark)

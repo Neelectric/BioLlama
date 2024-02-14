@@ -472,3 +472,7 @@
 
 ### Wednesday - 14 Feb 2023
 * *1 hour* Achieving 4bit quantization of biollama
+* *1 hour* Further benchmarking of biollama
+* *1 hour* Diss write-up work on key contributions
+* *0.5 hours* Seventeenth meeting with supervisor
+* *1.5 hours* Further work refining key contributions, graphs and bibtex
