@@ -15,7 +15,7 @@ model =  "BioLlama" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llam
 # model = "Llama-2-7B-chat-GPTQ"
 torch_dtype = None
 if model == "BioLlama":
-    torch_dtype = "int4"
+    torch_dtype = torch.float16
 benchmark = "MedQA" # eg. "MedQA", "PubMedQA", "MedMCQA"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"
@@ -39,6 +39,9 @@ inference(model=model,
         top_k=top_k,
         db_name=db_name,
         torch_dtype=torch_dtype,)
+
+if torch_dtype is not None:
+    print(f"Used dtype {torch_dtype}")
 
 if benchmark == "MedQA" or benchmark == "PubMedQA" or benchmark == "MedMCQA":
     accuracy = 100*exact_match(model=model, benchmark=benchmark)

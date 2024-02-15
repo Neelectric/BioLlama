@@ -476,3 +476,4 @@
 * *1 hour* Diss write-up work on key contributions
 * *0.5 hours* Seventeenth meeting with supervisor
 * *1.5 hours* Further work refining key contributions, graphs and bibtex
+* *1.5 hours* Structure of diss, thinking of a new title, Background section
