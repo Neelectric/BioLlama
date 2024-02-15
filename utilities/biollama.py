@@ -7,7 +7,7 @@ import torch
 import time
 import math
 from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM, AutoModelForSequenceClassification, BitsAndBytesConfig
-from transformers.models.llama.modeling_llama import LlamaSdpaAttention, LlamaRMSNorm, apply_rotary_pos_emb
+from transformers.models.llama.modeling_llama import LlamaSdpaAttention, LlamaRMSNorm, apply_rotary_pos_emb, repeat_kv
 from .db_retrieval import medcpt_FAISS_retrieval, load_db
 
 # New method that allows us to replace the forward pass on the LlamaForCausalLm object
@@ -108,6 +108,9 @@ def ca(self, hidden_states, e): # The following combines the HF Transformers Lla
 
     query_states, key_states = apply_rotary_pos_emb(query_states, key_states, cos, sin, position_ids)
 
+    key_states = repeat_kv(key_states, cca_attn.num_key_value_groups)
+    value_states = repeat_kv(value_states, cca_attn.num_key_value_groups)
+    
     attn_output = torch.nn.functional.scaled_dot_product_attention(
             query_states,
             key_states,

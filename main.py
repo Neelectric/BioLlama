@@ -11,7 +11,7 @@ from utilities.exact_match import exact_match
 from utilities.utilities import write_to_readme
 import torch
 
-model =  "BioLlama" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ", "Llama-2-7B-chat-finetune"
+model =  "BioLlama-70B" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ", "Llama-2-7B-chat-finetune"
 # model = "Llama-2-7B-chat-GPTQ"
 torch_dtype = None
 if model == "BioLlama":

@@ -25,6 +25,7 @@ The table below shows preliminary results, as reported by other papers or record
 | Llama-2-7B-chat-finetune | 7B     |                     |            |   17    |           |
 | BioLlama-7B              | 7B     |                     |            |   35    | 30        |
 | BioLlama-13B             | 13B    |                     |            |   39    |           |
+| BioLlama-70B             | 70B    |                     |            |   39    |           |
 <!-- table -->
 
 ## 🔎 Dissertation

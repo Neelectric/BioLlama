@@ -477,3 +477,6 @@
 * *0.5 hours* Seventeenth meeting with supervisor
 * *1.5 hours* Further work refining key contributions, graphs and bibtex
 * *1.5 hours* Structure of diss, thinking of a new title, Background section
+
+### Thursday - 15 Feb 2023
+* *1 hour* Working on BioLlama-70B

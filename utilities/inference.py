@@ -60,8 +60,13 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     #change model directory if dealing with a finetuned model
     if model[-8:] == "finetune":
         model_directory = "/home/service/BioLlama/utilities/finetuning/llama2_training_output/"
-    if model[-8:] == "BioLlama":
-        model_directory = "/home/service/BioLlama/utilities/finetuning/biollama_training_output/"
+    elif model == "BioLlama-7B":
+        model_directory = 'meta-llama/Llama-2-7b-chat-hf'
+    elif model == "BioLlama-13B":
+        model_directory = 'meta-llama/Llama-2-13b-chat-hf'
+    elif model == "BioLlama-70B":
+        model_directory = 'meta-llama/Llama-2-70b-chat-hf'
+
     
     print(f"--------------Start of inference of {model} on questions {b_start} to {b_end}------------------")
 
