@@ -20,7 +20,7 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode, model_object, 
     if model_directory == "/home/service/BioLlama/utilities/finetuning/llama2_training_output/":
         output, model_object = finetuned_llama2(model_directory, prompts, max_new_tokens, model_object)
         return output, model_object
-    elif model_directory == "/home/service/BioLlama/utilities/finetuning/biollama_training_output/":
+    elif model_directory[:10] == "meta-llama":
         output, model_object = finetuned_biollama(model_directory, prompts, max_new_tokens, model_object, torch_dtype)
         return output, model_object
     # Locate files we need within that directory
