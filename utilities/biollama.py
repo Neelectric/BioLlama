@@ -8,6 +8,7 @@ import time
 import math
 from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM, AutoModelForSequenceClassification, BitsAndBytesConfig
 from transformers.models.llama.modeling_llama import LlamaSdpaAttention, LlamaRMSNorm, apply_rotary_pos_emb, repeat_kv
+from transformers.modeling_utils import load_state_dict
 from .db_retrieval import medcpt_FAISS_retrieval, load_db
 
 # New method that allows us to replace the forward pass on the LlamaForCausalLm object
@@ -158,7 +159,10 @@ def cca_forward_true(self, input_ids, hidden_states):
         Hplus_temp = hidden_states[:,i:i+m:,:]
         Hplus_list.append(Hplus_temp)
 
-    
+    # if first dimension of hidden states is not 1, we need to do retrieval for the different
+        # prompts currently moving through the model
+
+
     if self.biollama.retrieved_chunk_storage == None: # If this is first decoding step, retrieve neighbours and store them
         E_no_continuations = medcpt_FAISS_retrieval(
             H_list_decoded[0:l-1], # we do not retrieve for the last chunk, following RETRO
@@ -267,14 +271,9 @@ def RETRO_layer_forward(self, *args, **kwargs): #this combines insights from the
     # Chunked Cross Attention
     residual = hidden_states
     if hidden_states.shape[0] > 1: # if we are processing prompts in a batch (for eg during training), adapt CCA
-        # first_prompts_states = cca_forward(self, torch.unsqueeze(input_ids[0], dim=0), position_ids)
-        # for i in range(1,hidden_states.shape[0]):
-        #     next_prompt_states = cca_forward(self, torch.unsqueeze(input_ids[i], dim=0), position_ids)
-        #     first_prompts_states = torch.cat((first_prompts_states, next_prompt_states), dim=0)
-        # hidden_states = first_prompts_states
-        first_prompts_states = cca_forward_true(self, torch.unsqueeze(input_ids[0], dim=0), hidden_states)
+        first_prompts_states = cca_forward_true(self, input_ids, hidden_states[0].unsqueeze(0))
         for i in range(1,hidden_states.shape[0]):
-            next_prompt_states = cca_forward_true(self, torch.unsqueeze(input_ids[i], dim=0), hidden_states)
+            next_prompt_states = cca_forward_true(self, input_ids, hidden_states[i].unsqueeze(0))
             first_prompts_states = torch.cat((first_prompts_states, next_prompt_states), dim=0)
         hidden_states = first_prompts_states
     else:
@@ -314,6 +313,31 @@ def RETROfit_layer(layer, layer_id, biollama, training, torch_dtype):
     layer.forward = RETRO_layer_forward.__get__(layer)
     return
 
+def load_RETRO_weights(model, RETRO_layer_ids, CCA_state_dict):
+    for i, layer in enumerate(model.model.layers): # switch pre-specified decoder layers to be a RETRO layer
+            if i in RETRO_layer_ids:#load cca_attn weights
+                k_string = "model.layers." + str(i) + ".cca_attn.k_proj.weight"
+                k_weight = CCA_state_dict[k_string].clone()
+                layer.cca_attn.k_proj.weight.data = k_weight
+
+                q_string = "model.layers." + str(i) + ".cca_attn.q_proj.weight"
+                q_weight = CCA_state_dict[q_string].clone()
+                layer.cca_attn.q_proj.weight.data = q_weight
+
+                v_string = "model.layers." + str(i) + ".cca_attn.v_proj.weight"
+                v_weight = CCA_state_dict[v_string].clone()
+                layer.cca_attn.v_proj.weight.data = v_weight
+
+                o_string = "model.layers." + str(i) + ".cca_attn.o_proj.weight"
+                o_weight = CCA_state_dict[o_string].clone()
+                layer.cca_attn.o_proj.weight.data = o_weight
+
+                pre_cca_layernorm_string = "model.layers." + str(i) + ".pre_cca_layernorm.weight"
+                pre_cca_layernorm_weight = CCA_state_dict[pre_cca_layernorm_string].clone()
+                layer.pre_cca_layernorm.weight.data = pre_cca_layernorm_weight
+                layer = layer.to("cuda")
+    return
+
 class BioLlama:
     def __init__(self, model_id, chunk_length, RETRO_layer_ids=[15], training=False, torch_dtype=torch.float32):
         # If quantization is lower than float32 (ie int8 or int4), we need a BitsAndBytesConfig
@@ -334,7 +358,7 @@ class BioLlama:
         self.model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto", torch_dtype=torch_dtype, quantization_config=bnb_config)
         self.model.config.use_cache = False  # testing this in hopes of less cca issues
         self.model.generation_config.temperature = 0.01
-        self.state_dict = self.model.state_dict()
+        # self.state_dict = self.model.state_dict()
 
         #RETRO-fit and retrieval preparation
         self.RETRO_layer_ids = RETRO_layer_ids
@@ -342,7 +366,12 @@ class BioLlama:
         self.chunk_length = chunk_length
         for i, layer in enumerate(self.model.model.layers): # switch pre-specified decoder layers to be a RETRO layer
             if i in RETRO_layer_ids:
-                RETROfit_layer(layer, i, self, training, torch_dtype)        
+                RETROfit_layer(layer, i, self, training, torch_dtype)   
+        if not training and model_id.startswith("/home/service/"):
+            CCA_state_dict = load_state_dict('/home/service/BioLlama/utilities/finetuning/biollama_training_output/model-00003-of-00006.safetensors')
+            load_RETRO_weights(self.model, RETRO_layer_ids, CCA_state_dict)
+            del CCA_state_dict
+
         self.model.old_forward = self.model.forward
         self.model.forward = model_new_forward.__get__(self.model)
         self.query_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")

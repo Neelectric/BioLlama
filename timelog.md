@@ -482,4 +482,6 @@
 * *1 hour* Working on BioLlama-70B
 
 ### Friday - 16 Feb 2023
-* *0.5 hours* Debugging and restarting BioLlama-70B infernece
+* *0.5 hours* Debugging and restarting BioLlama-70B inference
+* *1 hour* Fixing BioLlama batch inference to re-add support for training
+* *1 hour* 5k step BioLlama-7B-float32 training run, trying to piece things together

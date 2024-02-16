@@ -107,7 +107,7 @@ def finetuned_llama2(model_directory, prompts, max_new_tokens, model_object = No
     return generations, new_model
 
 def finetuned_biollama(model_directory, prompts, max_new_tokens, model_object = None, torch_dtype = None):
-    # override_directory = 'meta-llama/Llama-2-13b-chat-hf'
+    # override_directory = "/home/service/BioLlama/utilities/finetuning/biollama_training_output/"
     # print(f"overriding model_id with {override_directory}, using torch_dtype {torch_dtype}")
     if model_object is None:
         chunk_length = 32
@@ -122,6 +122,6 @@ def finetuned_biollama(model_directory, prompts, max_new_tokens, model_object = 
     generations = []
     for prompt in prompts:
         # print(prompt)
-        num_tokens, text = new_model.generate(prompt=prompt, max_new_tokens=20)
+        num_tokens, text = new_model.generate(prompt=prompt, max_new_tokens=max_new_tokens)
         generations.append(text)
     return generations, new_model

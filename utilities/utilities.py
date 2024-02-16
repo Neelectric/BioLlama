@@ -70,4 +70,5 @@ def write_to_readme(model, benchmark, result, db_name, retrieval_text_mode, top_
     return
 
 if __name__ == "__main__":
+    # write_to_readme("BioLlama", "PubMedQA", 99.99 )
     write_to_readme("BioLlama", "PubMedQA", 99.99 )
