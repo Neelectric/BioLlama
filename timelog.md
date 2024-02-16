@@ -480,3 +480,6 @@
 
 ### Thursday - 15 Feb 2023
 * *1 hour* Working on BioLlama-70B
+
+### Friday - 16 Feb 2023
+* *0.5 hours* Debugging and restarting BioLlama-70B infernece
