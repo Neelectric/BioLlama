@@ -103,7 +103,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
             json.dump(raw_responses, outfile)
         print("We have generated " + str(len(raw_responses)) + " responses.")
 
-    if model[-8:] == "finetune" or model[-8:] == "BioLlama":
+    if model[-8:] == "finetune" or model[0:8] == "BioLlama":
         parse_output_finetuned(benchmark,
                                 benchmark_questions,
                                 benchmark_answers,

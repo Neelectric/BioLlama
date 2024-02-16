@@ -122,6 +122,6 @@ def finetuned_biollama(model_directory, prompts, max_new_tokens, model_object = 
     generations = []
     for prompt in prompts:
         # print(prompt)
-        num_tokens, text = new_model.generate(prompt=prompt, max_new_tokens=15)
+        num_tokens, text = new_model.generate(prompt=prompt, max_new_tokens=20)
         generations.append(text)
     return generations, new_model
