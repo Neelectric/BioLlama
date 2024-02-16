@@ -358,7 +358,7 @@ class BioLlama:
         self.model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto", torch_dtype=torch_dtype, quantization_config=bnb_config)
         self.model.config.use_cache = False  # testing this in hopes of less cca issues
         self.model.generation_config.temperature = 0.01
-        # self.state_dict = self.model.state_dict()
+        self.state_dict = self.model.state_dict()
 
         #RETRO-fit and retrieval preparation
         self.RETRO_layer_ids = RETRO_layer_ids
@@ -368,7 +368,8 @@ class BioLlama:
             if i in RETRO_layer_ids:
                 RETROfit_layer(layer, i, self, training, torch_dtype)   
         if not training and model_id.startswith("/home/service/"):
-            CCA_state_dict = load_state_dict('/home/service/BioLlama/utilities/finetuning/biollama_training_output/model-00003-of-00006.safetensors')
+            print(f"LOADING THE 7B BIOLLAMA WEIGHTS FOR CCA")
+            CCA_state_dict = load_state_dict('/home/service/BioLlama/utilities/finetuning/biollama_training_output/7/model-00002-of-00003.safetensors')
             load_RETRO_weights(self.model, RETRO_layer_ids, CCA_state_dict)
             del CCA_state_dict
 

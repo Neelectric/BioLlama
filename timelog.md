@@ -485,3 +485,5 @@
 * *0.5 hours* Debugging and restarting BioLlama-70B inference
 * *1 hour* Fixing BioLlama batch inference to re-add support for training
 * *1 hour* 5k step BioLlama-7B-float32 training run, trying to piece things together
+* *3 hours* Trying to get BioLlama-7B to train with all layers in torch.float16
+* *1.5 hours* Fighting full layer finetunes, BioLlama-70B, and finally crying a little

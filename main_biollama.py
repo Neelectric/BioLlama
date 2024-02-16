@@ -1,28 +1,7 @@
 from utilities.biollama import BioLlama
 import time
 import torch
-# from utilities.db_retrieval import medcpt_FAISS_retrieval
 
-# chunk1 = "<s> Which is the main calcium p"
-# chunk2 = "ump of the sarcoplasmic"
-# chunk3 = "reticulum? Answer:"
-# chunks = [chunk1, chunk2, chunk3]
-# retrieved_chunks = medcpt_FAISS_retrieval( # example 16: '[CLS] sarcoplasmic reticulum ( sr ) ca ( 2 + ) - handling proteins play'
-#         chunks,
-#         db_name="RCT200ktrain",
-#         retrieval_text_mode="input_segmentation",
-#         chunk_length=32,
-#         # query_tokenizer=self.biollama.query_tokenizer, # passed as a pre-loaded object to save time
-#         # query_model=self.biollama.query_model, # passed as a pre-loaded object to save time
-#         # rerank_tokenizer=self.biollama.rerank_tokenizer, # passed as a pre-loaded object to save time
-#         # rerank_model=self.biollama.rerank_model, # passed as a pre-loaded object to save time
-#         top_k=1,
-#         k=5,
-#         # db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
-#         # db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
-#     )
-# print(chunks)
-# print(retrieved_chunks)
 
 # questions = ["Which is the main calcium pump of the sarcoplasmic reticulum? Answer:"]
 amended_questions = ["The main calcium pump of the sarcoplasmic reticulum is "]
