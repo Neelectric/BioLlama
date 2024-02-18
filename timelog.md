@@ -448,7 +448,7 @@
 ### Saturday - 10 Feb 2023
 * *1 hour* Starting to edit RETRO-fit approach
 
-## Week 22
+## Week 22 - 36 hours
 ### Monday - 12 Feb 2023
 * *1 hour* Further changes to RETRO-fitting
 * *1 hour* Major refactor of RETRO-fit, replaying RETROLayer/CCA classes with attributes and methods
@@ -487,3 +487,6 @@
 * *1 hour* 5k step BioLlama-7B-float32 training run, trying to piece things together
 * *3 hours* Trying to get BioLlama-7B to train with all layers in torch.float16
 * *1.5 hours* Fighting full layer finetunes, BioLlama-70B, and finally crying a little
+
+### Saturday - 17 Feb 2023
+* *0.5 hours* Reviewing some inference results
