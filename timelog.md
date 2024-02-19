@@ -495,3 +495,8 @@
 ### Sunday - 18 Feb 2023
 * *6.5 hours* Further work on the diss introduction, explaining transformers in background chapter
 * *2.5 hours* Reworking images in the diss, formatting, referencing figures and acknowledgements
+
+## Week 23 - hours
+### Monday - 19 Feb 2023
+* *2 hours* Researching self-attention and cross-attention explanations
+* *0.5 hours* Further inferene tests
