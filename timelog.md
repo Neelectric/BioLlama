@@ -448,7 +448,7 @@
 ### Saturday - 10 Feb 2023
 * *1 hour* Starting to edit RETRO-fit approach
 
-## Week 22 - 36 hours
+## Week 22 - 47.5 hours
 ### Monday - 12 Feb 2023
 * *1 hour* Further changes to RETRO-fitting
 * *1 hour* Major refactor of RETRO-fit, replaying RETROLayer/CCA classes with attributes and methods
@@ -490,3 +490,8 @@
 
 ### Saturday - 17 Feb 2023
 * *0.5 hours* Reviewing some inference results
+* *2.5 hours* Starting to flesh out diss introduction, some background sections
+
+### Sunday - 18 Feb 2023
+* *6.5 hours* Further work on the diss introduction, explaining transformers in background chapter
+* *2.5 hours* Reworking images in the diss, formatting, referencing figures and acknowledgements
