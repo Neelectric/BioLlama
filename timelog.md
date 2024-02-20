@@ -499,4 +499,8 @@
 ## Week 23 - hours
 ### Monday - 19 Feb 2023
 * *2 hours* Researching self-attention and cross-attention explanations
-* *0.5 hours* Further inferene tests
+* *0.5 hours* Further inference tests
+
+### Tuesday - 20 Feb 2023
+* *2.5 hours* Trying to fix Nvidia drivers that a coworker blew up
+* *1 hour* Working on improving understanding of BioLlama

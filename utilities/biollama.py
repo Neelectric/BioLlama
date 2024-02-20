@@ -159,10 +159,6 @@ def cca_forward_true(self, input_ids, hidden_states):
         Hplus_temp = hidden_states[:,i:i+m:,:]
         Hplus_list.append(Hplus_temp)
 
-    # if first dimension of hidden states is not 1, we need to do retrieval for the different
-        # prompts currently moving through the model
-
-
     if self.biollama.retrieved_chunk_storage == None: # If this is first decoding step, retrieve neighbours and store them
         E_no_continuations = medcpt_FAISS_retrieval(
             H_list_decoded[0:l-1], # we do not retrieve for the last chunk, following RETRO
@@ -199,20 +195,12 @@ def cca_forward_true(self, input_ids, hidden_states):
         self.biollama.retrieved_chunk_storage = E_no_continuations
     else: # otherwise, we do not need retrieval (as it would just retrieve the same as we already have stored)
         E_no_continuations = self.biollama.retrieved_chunk_storage
-    # print(f"Current sequence length: {n}, num retrieved chunks: {len(E_no_continuations)}")
-    # if self.biollama.retrieved_chunk_storage == E_no_continuations:
-    #     print("Storage and newly retrieved_chunks are identical!!")
-    # elif self.biollama.retrieved_chunk_storage == None:
-    #     print("Setting chunk storage for this first time here!")
-    #     self.biollama.retrieved_chunk_storage = E_no_continuations
-    # else:
-    #     print("Retrieved_chunks contains extra items as follows:")
-    #     print(f"{E_no_continuations not in self.biollama.retrieved_chunk_storage}")
-    #     self.biollama.retrieved_chunk_storage = E_no_continuations
-    
-    # print(f"we're about to iterate {len(Hplus_list)} times, over {len(E_no_continuations)} neighbours")
+
     ca_list = None
     for i in range(len(Hplus_list)): # for these spliced chunks in Hplus_list, calculate cross attentions with neighbours
+        # print(f"performing cross-attention of")
+        # print(f"chunk:     {H_list_decoded[i+1]}")
+        # print(f"neighbour: {E_no_continuations[i]}")
         Hplus_ca = ca(self, Hplus_list[i], E_no_continuations[i])
         if ca_list == None:
             ca_list = Hplus_ca

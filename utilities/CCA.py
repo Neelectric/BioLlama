@@ -34,11 +34,3 @@
 # this hopefully gives the output of size we desire....
 
 
-
-
-
-
-
-
-# the following is a high level overview of Cross-Attention
-
