@@ -11,12 +11,12 @@ from utilities.exact_match import exact_match
 from utilities.utilities import write_to_readme
 import torch
 
-model =  "BioLlama-13B" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ", "Llama-2-7B-chat-finetune"
+model =  "BioLlama-7B" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ", "Llama-2-7B-chat-finetune"
 # model = "Llama-2-7B-chat-GPTQ"
 torch_dtype = None
 
 if model[:8] == "BioLlama":
-    torch_dtype = torch.float16
+    torch_dtype = "int4"
 benchmark = "MedMCQA" # eg. "MedQA", "PubMedQA", "MedMCQA"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"
@@ -24,7 +24,7 @@ retrieval_text_mode = None # eg. "full", "input_segmentation
 chunk_length = None
 top_k = 1
 b_start = 10
-num_questions = 1000
+num_questions = 100
 b_end = b_start + num_questions
 
 

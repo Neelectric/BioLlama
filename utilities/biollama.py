@@ -96,9 +96,9 @@ def ca(self, hidden_states, e): # The following combines the HF Transformers Lla
     bsz, q_len, _ = hidden_states.size()
     position_ids = torch.arange(hidden_states.shape[-2], dtype=torch.long, device=hidden_states.device).unsqueeze(0)
 
-    query_states = cca_attn.q_proj(e_encoded_and_embedded)
-    key_states = cca_attn.k_proj(hidden_states)
-    value_states = cca_attn.v_proj(hidden_states)
+    query_states = cca_attn.q_proj(hidden_states)
+    key_states = cca_attn.k_proj(e_encoded_and_embedded)
+    value_states = cca_attn.v_proj(e_encoded_and_embedded)
 
     query_states = query_states.view(bsz, q_len, cca_attn.num_heads, cca_attn.head_dim).transpose(1, 2)
     key_states = key_states.view(bsz, q_len, cca_attn.num_key_value_heads, cca_attn.head_dim).transpose(1, 2)
