@@ -504,3 +504,10 @@
 ### Tuesday - 20 Feb 2023
 * *2.5 hours* Trying to fix Nvidia drivers that a coworker blew up
 * *1 hour* Working on improving understanding of BioLlama
+
+### Wednesday - 21 Feb 2023
+* *0.5 hours* Eighteenth meeting with supervisor
+* *2.5 hours* Trying to debug and fix NVIDIA drivers as destroyed on workstation by coworker
+
+### Thursday - 22 Feb 2023
+* *2 hours* Reading multiple Med-RAG papers
