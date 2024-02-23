@@ -74,8 +74,8 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     def batch_llm_inference(prompts, max_new_tokens, model_object):
         llm_output = []
         llm_generator, model_object = llm(model_directory, prompts, max_new_tokens, "std", model_object, torch_dtype)
-        for line in llm_generator:
-            llm_output.append(line)
+        for output_string in llm_generator:
+            llm_output.append(output_string)
         return llm_output, model_object
 
     #perform batch inference
@@ -89,6 +89,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
                 raw_responses += temp_responses
             with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
                 json.dump(raw_responses, outfile)
+            del model_object
         else:
             raw_responses += batch_llm_inference(prompts, max_new_tokens)
             if type(raw_responses) != type([]):

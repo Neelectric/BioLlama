@@ -27,12 +27,17 @@ b_start = 10
 num_questions = 100
 b_end = b_start + num_questions
 
+# if benchmark name starts with "bioASQ" then set max_new_tokens to 40
+if benchmark[:6] == "bioASQ":
+    max_new_tokens = 45
+else:
+    max_new_tokens = 30
 
 inference(model=model,
         benchmark=benchmark,
         b_start=b_start,
         b_end=b_end,
-        max_new_tokens=38,
+        max_new_tokens=max_new_tokens,
         inference_mode="std",
         retrieval_model=retrieval_model,
         retrieval_text_mode=retrieval_text_mode,

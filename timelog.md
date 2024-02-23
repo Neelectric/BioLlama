@@ -515,3 +515,4 @@
 ### Friday - 23 Feb 2023
 * *2.5 hours* Further work on background section of diss, different benchmark examples
 * *1.5 hours* Fixing BioASQ with snippets, adding support for enriched datasets
+* *1 hour* Readding support for LLM_as_judge

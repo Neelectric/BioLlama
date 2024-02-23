@@ -8,8 +8,9 @@ def parse_output_GPTQ(benchmark,
                       targetfile):
     #detect answers to benchmark questions in response from the LLM
     pattern = r'<ANSWER>(.*?)</[aA][nN][sS][wW][eE][rR]>'
+    # pattern_emergency = r'<ANSWER>(.*?)'
     responses = []
-
+    weird_counter = 0
     for raw_response in raw_responses:
         # print("Raw response: " + raw_response  + "\n")
         response = re.findall(pattern, raw_response, re.DOTALL)
@@ -19,8 +20,17 @@ def parse_output_GPTQ(benchmark,
         elif len(response) == 2:
             responses.append(response[1])
         else:
-            responses.append("LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: " + raw_response)
+            last_answer_index = raw_response.rfind('<ANSWER>')
+            response = raw_response[last_answer_index + len('<ANSWER>'):].strip()
+            responses.append(response)
+            weird_counter += 1
+            # response = re.findall(pattern_emergency, raw_response, re.DOTALL)
+            # if len(response) == 1:
+            #     responses.append(response[0])
+            # else:
+            # responses.append("LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: " + raw_response)
     #parse the output and write it to file
+    print(f"In total, {weird_counter} responses did not use <ANSWER> tags properly.")
     if benchmark == "bioASQ_no_snippet" or benchmark == "bioASQ_with_snippet":
         output = []
         for i in range(len(responses)):

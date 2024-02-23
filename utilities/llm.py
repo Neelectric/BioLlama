@@ -17,12 +17,18 @@ from utilities.biollama import BioLlama
 
 #function that creates a callable "llm" object
 def llm(model_directory, prompts, max_new_tokens, generator_mode, model_object, torch_dtype):
+    # if we are using biollama, origina llama weights or a finetuned model, use different inference methods
     if model_directory == "/home/service/BioLlama/utilities/finetuning/llama2_training_output/":
         output, model_object = finetuned_llama2(model_directory, prompts, max_new_tokens, model_object)
         return output, model_object
     elif model_directory[:10] == "meta-llama":
         output, model_object = finetuned_biollama(model_directory, prompts, max_new_tokens, model_object, torch_dtype)
         return output, model_object
+    # otherwise, we are dealing with exllama int4 GPTQ weights. if generator already exists, use it
+    if model_object is not None:
+        output = model_object.generate_simple(prompts, max_new_tokens = max_new_tokens)
+        return output, model_object
+    #otherwise, create a new exllama object
     # Locate files we need within that directory
     tokenizer_path = os.path.join(model_directory, "tokenizer.model")
     model_config_path = os.path.join(model_directory, "config.json")
@@ -56,6 +62,7 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode, model_object, 
     config = model_init.make_config(args)
     config.model_path = model_path                          # supply path to model weights file
     model = ExLlama(config)                                 # create ExLlama instance and load the weights
+    model_object = model
     tokenizer = ExLlamaTokenizer(tokenizer_path)            # create tokenizer from tokenizer model file
     
     # Configure generator
@@ -86,7 +93,7 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode, model_object, 
         #generator.settings.stop_strings = ["</ANSWER>"]
         stop_conditions = ["</ANSWER>"]
         output = generator.generate(prompts, max_new_tokens=max_new_tokens, gen_settings=generator.settings, stop_conditions=stop_conditions, encode_special_characters=False)
-    return output, model_object
+    return output, generator
 
 def finetuned_llama2(model_directory, prompts, max_new_tokens, model_object = None):
     if model_object is None:

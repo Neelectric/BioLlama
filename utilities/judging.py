@@ -33,14 +33,14 @@ def llm_as_judge(model_to_mark='Llama-2-70B-chat-GPTQ', benchmark_to_mark="bioAS
         #throw an error complaining we are neither using bioASQ_no_snippet nor bioASQ_with_snippet
         print("Error: Benchmark not supported for judging")
         return
-    start_index = 0
-    end_index = 1000
+    # start_index = 0
+    # end_index = 1000
 
-    prompts = prompts[start_index:end_index]
+    # prompts = prompts[start_index:end_index]
     print(f"--------Start of Llama-2-70B marking {model_to_mark} on {benchmark_to_mark}--------")
     def raw_llm_inference(prompts, max_new_tokens):
         llm_output = []
-        llm_generator = llm(model_directory, prompts, max_new_tokens)
+        llm_generator = llm(model_directory, prompts, max_new_tokens, "std", None, None)
         for line in llm_generator:
             llm_output.append(line)
         return llm_output
