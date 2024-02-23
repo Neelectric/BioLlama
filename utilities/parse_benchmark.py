@@ -60,6 +60,35 @@ def parse_BioASQ_with_snippet(version="5b"):
             num_factoids += 1
         else:
             num_non_factoid += 1
+    
+    # the following would support for the GoldenEnriched questions
+    # thing is, these are identical to the ones we are already loading. so it would replicate
+    filename_list = os.listdir('benchmarks/BioASQ/Task5BGoldenEnriched/')
+    enriched_data = []
+    for filename in filename_list:
+        # print(filename)
+        with open('benchmarks/BioASQ/Task5BGoldenEnriched/'+ filename, 'rb') as json_file:
+            temp_data = json_file.read().decode('utf-8')
+            enriched_data.append(json.loads(temp_data))
+
+    for set in enriched_data:
+        # print(set.keys())
+        for question in set["questions"]:
+            if question["type"] not in question_types:
+                question_types[question["type"]] = 1
+            else:
+                question_types[question["type"]] += 1
+            if question["type"] == "factoid":
+                snippet_index = min(10,len(question["snippets"]))
+                snippets = question["snippets"][0:snippet_index]
+                snippets = [snippet['text'] for snippet in snippets]
+                benchmark_questions.append([snippets,question['body']])
+                benchmark_answers.append(question['exact_answer'])
+                num_factoids += 1
+            else:
+                num_non_factoid += 1
+    
+
     print(f"Benchmark contains {num_factoids + num_non_factoid} questions, made up of {question_types}")
     return benchmark_questions, benchmark_answers
 

@@ -15,13 +15,13 @@ def parse_output_GPTQ(benchmark,
         response = re.findall(pattern, raw_response, re.DOTALL)
         # print("Response: " + str(response) + "\n")
         if len(response) > 2 and benchmark=="MedQA":
-            responses.append(response[2][2:])
-        elif len(response) > 2:
-            responses.append(response[2])
+            responses.append(response[2][1:])
+        elif len(response) == 2:
+            responses.append(response[1])
         else:
             responses.append("LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: " + raw_response)
     #parse the output and write it to file
-    if benchmark == "bioASQ_no_snippet":
+    if benchmark == "bioASQ_no_snippet" or benchmark == "bioASQ_with_snippet":
         output = []
         for i in range(len(responses)):
             instance = []

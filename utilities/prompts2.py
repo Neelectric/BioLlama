@@ -23,27 +23,30 @@ def few_shot(benchmark):
         example = "<QUESTION> Which of the following is not true for myelinated nerve fibers: \n(1) Impulse through myelinated fibers is slower than non-myelinated fibers \n(2) Membrane currents are generated at nodes of Ranvier \n(3) Saltatory conduction of impulses is seen \n(4) Local anesthesia is effective only when the nerve is not covered by myelin sheath</QUESTION>\n<ANSWER> 3</ANSWER>\nSelect the correct choice for the following question. State nothing other than the index of the correct choice, without brackets."
     return format_string + "\n" + example + "\n<QUESTION>"
 
+def add_bioASQ_snippets(question):
+    format_string = "You start all of your responses with <ANSWER> and end them with </ANSWER>. "
+    snippets = question[0]
+    factoid_question = question[1]
+    if snippets == []:
+        return format_string, factoid_question
+    output = format_string + "Using the following text snippets, answer the question that follows.\n<SNIPPETS>\n"
+    for snippet in snippets:
+        output += snippet + "\n"
+    output += "</SNIPPETS>\n<QUESTION>"
+    return output, factoid_question
+
 def promptify(benchmark, question, retrieval_mode = None, retrieved_chunks = None, model = None):
-    if model == "Llama-2-7B-chat-finetune":
-        pass
-        # promptified = system_prompt()
-        # promptified += question
-        # promptified += "</QUESTION>\n<ANSWER> "
-        # print(promptified)
-        promptified = system_prompt()
-        if retrieval_mode != None:
-            promptified += retrieval_augmentation(retrieved_chunks)
-        promptified += few_shot(benchmark)
-        promptified += question
-        promptified += "</QUESTION>\n<ANSWER> "
+    promptified = system_prompt()
+    if retrieval_mode != None:
+        promptified += retrieval_augmentation(retrieved_chunks)
+    if benchmark == "bioASQ_with_snippet":
+        snippet_addition, question = add_bioASQ_snippets(question)
+        promptified += snippet_addition
     else:
-        promptified = system_prompt()
-        if retrieval_mode != None:
-            promptified += retrieval_augmentation(retrieved_chunks)
         promptified += few_shot(benchmark)
-        promptified += question
-        promptified += "</QUESTION>\n<ANSWER> "
-        # print(promptified)
+    promptified += question
+    promptified += "</QUESTION>\n<ANSWER>"
+    # print(promptified)
     return promptified
 
 def promptify_for_judging(question, true_answer, model_response):
@@ -56,4 +59,5 @@ def promptify_for_judging(question, true_answer, model_response):
         + model_response
         + "</student_response>\n<judging>The student response is"
     )
+    print(promptified)
     return promptified
