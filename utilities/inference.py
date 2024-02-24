@@ -15,6 +15,7 @@ from utilities.parse_benchmark import parse_benchmark, parse_bioASQ_no_snippet, 
 from utilities.prompts2 import promptify, promptify_for_judging
 from utilities.db_retrieval import gte_FAISS_retrieval, medcpt_FAISS_retrieval
 from utilities.parse_output import parse_output_GPTQ, parse_output_finetuned
+import torch
 #method summary:
 # 1. Load specified benchmark
 # 2. Prepare specified model
@@ -89,7 +90,14 @@ def inference(model="Llama-2-70B-chat-GPTQ",
                 raw_responses += temp_responses
             with open("output/TEMPORARY_INFERENCE_FILE.json", "w") as outfile: 
                 json.dump(raw_responses, outfile)
-            del model_object
+            # after we are done with the model object, we remove it from the GPUs
+            #model_object.cache.key_states()
+            model_object.cache.zero()
+            model_object.model.free_unmanaged()
+            model_object = None
+            torch.cuda.empty_cache()
+            torch.cuda.empty_cache()
+
         else:
             raw_responses += batch_llm_inference(prompts, max_new_tokens)
             if type(raw_responses) != type([]):

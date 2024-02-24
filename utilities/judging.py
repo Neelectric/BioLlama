@@ -33,37 +33,36 @@ def llm_as_judge(model_to_mark='Llama-2-70B-chat-GPTQ', benchmark_to_mark="bioAS
         #throw an error complaining we are neither using bioASQ_no_snippet nor bioASQ_with_snippet
         print("Error: Benchmark not supported for judging")
         return
-    # start_index = 0
-    # end_index = 1000
 
     # prompts = prompts[start_index:end_index]
     print(f"--------Start of Llama-2-70B marking {model_to_mark} on {benchmark_to_mark}--------")
-    def raw_llm_inference(prompts, max_new_tokens):
-        llm_output = []
-        llm_generator = llm(model_directory, prompts, max_new_tokens, "std", None, None)
-        for line in llm_generator:
-            llm_output.append(line)
-        return llm_output
 
+    def batch_llm_inference(prompts, max_new_tokens, model_object):
+        llm_output = []
+        llm_generator, model_object = llm(model_directory, prompts, max_new_tokens, "std", model_object, torch_dtype=None)
+        for output_string in llm_generator:
+            llm_output.append(output_string)
+        return llm_output, model_object
+    model_object = None
     raw_responses = []
+    max_new_tokens = 15
     for i in tqdm(range(len(prompts)//10), desc="Batch Inference"):
         temp_prompts = list(prompts[i*10:(i+1)*10])
-        raw_responses += raw_llm_inference(temp_prompts, 8)
+        temp_responses, model_object = batch_llm_inference(temp_prompts, max_new_tokens, model_object)  
+        raw_responses += temp_responses
+        
 
     print("We have generated " + str(len(raw_responses)) + " responses.")
 
 
-    # correct_count = 0
-    # incorrect_count = 0
     correct_pattern = r'\bcorrect\b'
     incorrect_pattern = r'\bincorrect\b'
-    # responses = []
     total_num_correct = 0
     total_num_incorrect = 0
     total_num_weird = 0
     judging_output = []
     for raw_response in raw_responses:
-        print("\n")
+        # print(raw_response)
         count_correct = len(re.findall(correct_pattern, raw_response, flags=re.IGNORECASE))
         count_incorrect = len(re.findall(incorrect_pattern, raw_response, flags=re.IGNORECASE))
         if count_correct > count_incorrect:

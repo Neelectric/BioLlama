@@ -59,5 +59,5 @@ def promptify_for_judging(question, true_answer, model_response):
         + model_response
         + "</student_response>\n<judging>The student response is"
     )
-    print(promptified)
+    # print(promptified)
     return promptified

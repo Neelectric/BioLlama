@@ -34,6 +34,11 @@ def write_to_readme(model, benchmark, result, db_name, retrieval_text_mode, top_
     with open('README.md', 'r') as file:
         readme = file.read()
     before_table, table, after_table = readme.split("<!-- table -->")
+    if benchmark == "bioASQ_with_snippet":
+        benchmark = "BioASQ5b (snippets)"
+    elif benchmark == "bioASQ_no_snippet":
+        print("Error! BioASQ no snippet not supported yet.")
+        return
 
     #read table into a dataframe, delete first row & excess whitespace in column/row strings
     df = pd.read_csv(StringIO(table), sep='|')

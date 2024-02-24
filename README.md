@@ -9,7 +9,7 @@ In the past, "RAGLlama" implied that retrieval was done with GTE-Large as an emb
 The table below shows preliminary results, as reported by other papers or recorded by me
 
  <!-- table -->
-| Model                    | Size   | BioASQ5b snippets   | PubMedQA   | MedQA   | MedMCQA   |
+| Model                    | Size   | BioASQ5b (snippets) | PubMedQA   | MedQA   | MedMCQA   |
 |:-------------------------|:-------|:--------------------|:-----------|:--------|:----------|
 | **As reported**          |        |                     |            |         |           |
 | M42                      | 70B    | -                   | -          | 61.5    | 60.9      |

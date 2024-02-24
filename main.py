@@ -24,7 +24,7 @@ retrieval_text_mode = None # eg. "full", "input_segmentation
 chunk_length = None
 top_k = 1
 b_start = 10
-num_questions = 100
+num_questions = 1000
 b_end = b_start + num_questions
 
 # if benchmark name starts with "bioASQ" then set max_new_tokens to 40

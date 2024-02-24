@@ -28,8 +28,9 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode, model_object, 
     if model_object is not None:
         output = model_object.generate_simple(prompts, max_new_tokens = max_new_tokens)
         return output, model_object
-    #otherwise, create a new exllama object
-    # Locate files we need within that directory
+    #otherwise, create a new exllama object. to be safe, we start by freeing up memory:
+    torch.cuda.empty_cache()
+    # Locate files we need within our directory
     tokenizer_path = os.path.join(model_directory, "tokenizer.model")
     model_config_path = os.path.join(model_directory, "config.json")
     st_pattern = os.path.join(model_directory, "*.safetensors")
@@ -48,10 +49,13 @@ def llm(model_directory, prompts, max_new_tokens, generator_mode, model_object, 
         args.gpu_split = "4,20"
         #args.length = 1700
         args.gpu_peer_fix = True
+    elif model_directory == "../models/Llama-2-7B-chat-GPTQ/":
+        args.gpu_split = "7.2,24"
     else:
         #args.gpu_split = "24,17"
         #args.gpu_peer_fix = True
-        args.gpu_split = "17.2,24"
+        args.gpu_split = "16,24"
+        # args.gpu_split = "17.2,24"
     model_init.post_parse(args)
     model_init.get_model_files(args)
 
