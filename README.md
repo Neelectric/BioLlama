@@ -24,8 +24,8 @@ The table below shows preliminary results, as reported by other papers or record
 | MedCPT-Llama             | 70B    |                       |            | 34.8    | 46.1      |
 | Llama-2-7B-chat-finetune | 7B     |                       |            | 17      |           |
 | BioLlama-7B              | 7B     |                       | 54.7       | 35      | 30        |
-| BioLlama-13B             | 13B    |                       |            | 39      |           |
-| BioLlama-70B             | 70B    |                       |            | 37      |           |
+| BioLlama-13B             | 13B    |                       | 67.5       | 39      |           |
+| BioLlama-70B             | 70B    |                       | 61.0       | 37      |           |
 <!-- table -->
 
 ## 🔎 Dissertation
@@ -36,7 +36,11 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
- * 17:39:27, 26.02.2024 | BioLlama-7B | PubMedQA |  --> 54.7, 1000 questions
+ * 20:36:31, 26.02.2024 | BioLlama-70B | PubMedQA |  --> 61.0, 200 questions (int4)
+
+ * 19:32:05, 26.02.2024 | BioLlama-13B | PubMedQA |  --> 67.5, 200 questions (float16)
+
+ * 17:39:27, 26.02.2024 | BioLlama-7B | PubMedQA |  --> 54.7, 1000 questions (float32)
 
  * 13:02:36, 26.02.2024 | Llama-2-70B-chat-GPTQ | PubMedQA | 69.8 --> 75.35, 1000 questions
 
@@ -121,6 +125,8 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
+
 
 
 

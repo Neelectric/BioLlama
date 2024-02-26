@@ -741,5 +741,6 @@ if __name__ == "__main__":
             retrieval_text_mode="input_segmentation",
             chunk_length=16,
         )
-# questions = ["Which is the main calcium pump of the sarcoplasmic reticulum?"]
-# medcpt_FAISS_retrieval(questions=questions, db_name="RCT200ktrain", retrieval_text_mode="input_segmentation", chunk_length=16)
+# questions = ["calcium pump"]
+# neighbours = medcpt_FAISS_retrieval(questions=questions, db_name="RCT200ktrain", retrieval_text_mode="input_segmentation", chunk_length=16)
+# print(neighbours)

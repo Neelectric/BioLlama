@@ -520,3 +520,10 @@
 ### Sunday - 25 Feb 2023
 * *13.5 hours* Close to finished with introduction and background
 * *0.5 hours* Some minor benchmarking on bioASQ
+
+## Week 24 - hours
+### Monday 26 Feb 2023
+* *8.5 hours* Further work on background, some inference tests
+* *2 hours* First benchmarks of BioLlama-7B/13B/70B on PubMedQA
+* *2 hours* Further work on explaining attention and cross attention
+* *2 hours* Changes to CCA figure, starting to explain RETRO in Background
