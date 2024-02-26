@@ -3,7 +3,7 @@
 # Utility methods for prompt engineering, culminating in "promptify"
 
 def system_prompt():
-    return " "
+    return ""
 
 def retrieval_augmentation(chunks):
     output = "The following chunks were retrieved from biomedical literature to help you:\n"
@@ -23,7 +23,7 @@ def few_shot(benchmark):
         example = "<QUESTION> Which of the following is not true for myelinated nerve fibers: \n(1) Impulse through myelinated fibers is slower than non-myelinated fibers \n(2) Membrane currents are generated at nodes of Ranvier \n(3) Saltatory conduction of impulses is seen \n(4) Local anesthesia is effective only when the nerve is not covered by myelin sheath</QUESTION>\n<ANSWER> 3</ANSWER>\nSelect the correct choice for the following question. State nothing other than the index of the correct choice, without brackets."
     return format_string + "\n" + example + "\n<QUESTION>"
 
-def add_bioASQ_snippets(question):
+def add_snippets(question):
     format_string = "You start all of your responses with <ANSWER> and end them with </ANSWER>. "
     snippets = question[0]
     factoid_question = question[1]
@@ -39,8 +39,8 @@ def promptify(benchmark, question, retrieval_mode = None, retrieved_chunks = Non
     promptified = system_prompt()
     if retrieval_mode != None:
         promptified += retrieval_augmentation(retrieved_chunks)
-    if benchmark == "bioASQ_with_snippet":
-        snippet_addition, question = add_bioASQ_snippets(question)
+    if benchmark == "bioASQ_with_snippet" or benchmark == "PubMedQA":
+        snippet_addition, question = add_snippets(question)
         promptified += snippet_addition
     else:
         promptified += few_shot(benchmark)

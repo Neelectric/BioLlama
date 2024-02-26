@@ -496,7 +496,7 @@
 * *6.5 hours* Further work on the diss introduction, explaining transformers in background chapter
 * *2.5 hours* Reworking images in the diss, formatting, referencing figures and acknowledgements
 
-## Week 23 - hours
+## Week 23 - 30 hours
 ### Monday - 19 Feb 2023
 * *2 hours* Researching self-attention and cross-attention explanations
 * *0.5 hours* Further inference tests
@@ -516,3 +516,7 @@
 * *2.5 hours* Further work on background section of diss, different benchmark examples
 * *1.5 hours* Fixing BioASQ with snippets, adding support for enriched datasets
 * *1 hour* Readding support for LLM_as_judge
+
+### Sunday - 25 Feb 2023
+* *13.5 hours* Close to finished with introduction and background
+* *0.5 hours* Some minor benchmarking on bioASQ
