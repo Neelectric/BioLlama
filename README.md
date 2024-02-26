@@ -17,9 +17,9 @@ The table below shows preliminary results, as reported by other papers or record
 | Med-PaLM 2               | 540B   | -                     | 81.8       | 86.5    | 72.3      |
 | BIOREADER                | 229.5M | 81.88                 | -          | 42.96   | -         |
 | **Produced By Me**       |        |                       |            |         |           |
-| Llama-2-7B-chat-GPTQ     | 7B     | 91.91489361702128     | 54.5       | 25.6    | 32.1      |
-| Llama-2-13B-chat-GPTQ    | 13B    | 78.33                 | 46.4       | 31.3    | 37.8      |
-| Llama-2-70B-chat-GPTQ    | 70B    | 85.41                 | 69.8       | 36.4    | 46.6      |
+| Llama-2-7B-chat-GPTQ     | 7B     | 91.91                 | 54.5       | 25.6    | 32.1      |
+| Llama-2-13B-chat-GPTQ    | 13B    | 91.70                 | 46.4       | 31.3    | 37.8      |
+| Llama-2-70B-chat-GPTQ    | 70B    | 93.4                  | 69.8       | 36.4    | 46.6      |
 | GTE-Llama                | 70B    |                       |            | 34      | 46.3      |
 | MedCPT-Llama             | 70B    |                       |            | 34.8    | 46.1      |
 | Llama-2-7B-chat-finetune | 7B     |                       |            | 17      |           |
@@ -36,6 +36,10 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 02:32:15, 24.02.2024 | Llama-2-70B-chat-GPTQ | BioASQ5b (snippets) | 85.41 --> 93.4, 1000 questions
+
+ * 01:58:29, 24.02.2024 | Llama-2-13B-chat-GPTQ | BioASQ5b (snippets) | 78.33 --> 91.70212765957447, 1000 questions
+
  * 01:34:42, 24.02.2024 | Llama-2-7B-chat-GPTQ | BioASQ5b (snippets) | 73.75 --> 91.91489361702128, 1000 questions
 
  * 16:54:24, 16.02.2024 | BioLlama-70B | MedQA | --> 37.0, 100 questions
@@ -109,6 +113,8 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
+
 
 
 

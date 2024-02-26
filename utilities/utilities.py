@@ -39,6 +39,9 @@ def write_to_readme(model, benchmark, result, db_name, retrieval_text_mode, top_
     elif benchmark == "bioASQ_no_snippet":
         print("Error! BioASQ no snippet not supported yet.")
         return
+    
+    #ensure that result only has 2 decimal places
+    result = round(result, 2)
 
     #read table into a dataframe, delete first row & excess whitespace in column/row strings
     df = pd.read_csv(StringIO(table), sep='|')
@@ -68,8 +71,7 @@ def write_to_readme(model, benchmark, result, db_name, retrieval_text_mode, top_
     changelog = new_change + changelog
     after_table = before_changelog_after_table + '<!-- changelog -->\n' + changelog + "\n<!-- changelog -->"+ after_changelog_after_table
     new_readme = before_table + '<!-- table -->\n' + new_table + "\n<!-- table -->"+ after_table
-    # print(new_table)
-    # print(changelog)
+
     with open('README.md', 'w') as file:
         file.write(new_readme)
     return
