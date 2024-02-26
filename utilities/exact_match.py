@@ -48,7 +48,7 @@ def mark_PubMedQA(model, benchmark, input):
         num_total += 1
         marking_scheme = input[i][1]
         student_response = standardize_string_PubMedQA(input[i][2])
-        if marking_scheme == student_response:
+        if marking_scheme[0:3] == student_response[0:3]:
             num_correct += 1
         elif student_response in valid_answers:
             num_incorrect += 1

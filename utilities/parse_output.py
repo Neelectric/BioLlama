@@ -17,6 +17,8 @@ def parse_output_GPTQ(benchmark,
         # print("Response: " + str(response) + "\n")
         if len(response) > 2 and benchmark=="MedQA":
             responses.append(response[2][1:])
+        elif len(response) > 2 and benchmark=="PubMedQA":
+            responses.append(response[2])
         elif len(response) == 2:
             responses.append(response[1])
         else:
@@ -98,6 +100,17 @@ def parse_output_finetuned(benchmark,
         for i in range(len(responses)):
             instance = []
             instance.append(benchmark_questions[i+b_start])
+            instance.append(benchmark_answers[i+b_start])
+            instance.append(responses[i])
+            output.append(instance)
+        with open(targetfile, "w") as outfile: 
+            json.dump(output, outfile)
+        print("Written output to " + targetfile)
+    if benchmark == "bioASQ_no_snippet" or benchmark == "bioASQ_with_snippet" or benchmark == "PubMedQA":
+        output = []
+        for i in range(len(responses)):
+            instance = []
+            instance.append(benchmark_questions[i+b_start][1])
             instance.append(benchmark_answers[i+b_start])
             instance.append(responses[i])
             output.append(instance)

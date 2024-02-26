@@ -54,7 +54,8 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     
     #promptifying questions
     chunk_index = 0
-    for question in benchmark_questions[b_start:min(b_end, len(benchmark_questions))]:
+    num_questions = b_start + b_end
+    for question in benchmark_questions[b_start:min(b_end, num_questions)]:
         prompts.append(promptify(benchmark=benchmark, question=question, retrieval_mode=retrieval_model, retrieved_chunks=retrieved_chunks[chunk_index], model=model)) #promptify questions
         chunk_index += 1
     
@@ -68,9 +69,8 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     elif model == "BioLlama-70B":
         model_directory = 'meta-llama/Llama-2-70b-chat-hf'
 
-    
-    print(f"--------------Start of inference of {model} on questions {b_start} to {b_end}------------------")
 
+    print(f"--------------Start of inference of {model} on {benchmark} questions {b_start} to {b_start + num_questions}------------------")
     #helper function for batch inference
     def batch_llm_inference(prompts, max_new_tokens, model_object):
         llm_output = []
@@ -92,10 +92,10 @@ def inference(model="Llama-2-70B-chat-GPTQ",
                 json.dump(raw_responses, outfile)
             # after we are done with the model object, we remove it from the GPUs
             #model_object.cache.key_states()
-            model_object.cache.zero()
-            model_object.model.free_unmanaged()
+            if model_directory[0:10] != "meta-llama":
+                model_object.cache.zero()
+                model_object.model.free_unmanaged()
             model_object = None
-            torch.cuda.empty_cache()
             torch.cuda.empty_cache()
 
         else:
