@@ -206,6 +206,21 @@ if __name__ == "__main__":
        benchmark_questions, benchmark_answers = parse_bioASQ_no_snippet("5b")
     if(args.b == "bioASQ_with_snippet"):
         benchmark_questions, benchmark_answers = parse_BioASQ_with_snippet("5b")
+        max_length = 0
+        max_snippet_num = 0
+        for benchmark_question in benchmark_questions:
+            snippets = benchmark_question[0]
+            question = benchmark_question[1]
+            length = len(question)
+            if len(snippets) > max_snippet_num:
+                max_snippet_num = len(snippets)
+            for snippet in snippets:
+                length += len(snippet)
+            print(length)
+            if length > max_length:
+                max_length = length
+        print(f"max length is {max_length}")
+        print(f"max snippet num is {max_snippet_num}")
     elif(args.b == "MedQA_US"):
         benchmark_questions, benchmark_answers = parse_MedQA("US")
     elif(args.b == "PubMedQA"):

@@ -85,9 +85,11 @@ def ca(self, hidden_states, e): # The following combines the HF Transformers Lla
         e_0 = e[0] 
     else: 
         e_0 = e
-    e_encoded = self.biollama.tokenizer(e_0, return_tensors="pt")
+    self.biollama.tokenizer.padding_side = 'left'  # this line and the following can be necessary to prevent padding bugs
+    self.biollama.tokenizer.pad_token = self.biollama.tokenizer.eos_token
+    e_encoded = self.biollama.tokenizer(e_0, return_tensors="pt", max_length=32, padding="max_length") # e can come out as shorter than 32, in which case we pad
     e_input_ids = e_encoded.input_ids
-    e_input_ids = e_input_ids[:,0:32] # it aint pretty but retrieved chunks are usually not 32 long...
+    e_input_ids = e_input_ids[:,0:32] # in case e is longer than 32 tokens, we truncate
     e_encoded_and_embedded = embed_tokens(e_input_ids)
     if e_encoded_and_embedded.device != cca_attn.q_proj.weight.device: # sometimes it complains about tensors not being on same device
         e_encoded_and_embedded = e_encoded_and_embedded.to(cca_attn.q_proj.weight.device)
@@ -124,9 +126,7 @@ def ca(self, hidden_states, e): # The following combines the HF Transformers Lla
 
     attn_output = attn_output.transpose(1, 2).contiguous()
     attn_output = attn_output.reshape(bsz, q_len, self.hidden_size)
-
     attn_output = cca_attn.o_proj(attn_output)
-
     return attn_output
 
 
@@ -152,6 +152,7 @@ def cca_forward_true(self, input_ids, hidden_states):
             H_temp_decoded = self.biollama.tokenizer.decode(H_temp)
             H_list.append(H_temp)
             H_list_decoded.append(H_temp_decoded)
+    # print(f"decoded is {H_list_decoded}")
 
     Hplus_list = [] # every chunk here consists of last token of preceding chunk + chunk itself (minus last token)
     num_spliced_chunks = (n-(m-1)) // m 
@@ -388,5 +389,5 @@ class BioLlama:
         self.model.prompt_biollama = prompt
         generate_ids = self.model.generate(inputs.input_ids.to(self.device), max_new_tokens=max_new_tokens, use_cache=False)
         # print(f"generate_ids is {generate_ids}")
-        num_tokens = len(generate_ids[0])
+        num_tokens = len(generate_ids[0]) - len(inputs.input_ids[0])
         return (num_tokens, self.tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False,)[0],)

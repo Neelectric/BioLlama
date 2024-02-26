@@ -39,7 +39,7 @@ def mark_MedQA(model, benchmark, input):
     return accuracy
 
 def mark_PubMedQA(model, benchmark, input):
-    valid_answers = ["yes","maybe","no"]
+    valid_binary = ["ye","no"]
     num_correct = 0
     num_incorrect = 0
     num_total = 0
@@ -48,11 +48,13 @@ def mark_PubMedQA(model, benchmark, input):
         num_total += 1
         marking_scheme = input[i][1]
         student_response = standardize_string_PubMedQA(input[i][2])
-        if marking_scheme[0:3] == student_response[0:3]:
+        # print(f"Marking scheme vs student response: {marking_scheme[0:2], student_response[0:2]}")
+        if marking_scheme[0:2] == student_response[0:2]:
             num_correct += 1
-        elif student_response in valid_answers:
+        elif student_response[0:2] in valid_binary or student_response[0:5] == "maybe":
             num_incorrect += 1
         else:
+            # print(f"Invalid response: {student_response}")
             num_invalid += 1
 
     accuracy = num_correct/num_total
