@@ -106,12 +106,16 @@ def parse_output_finetuned(benchmark,
         with open(targetfile, "w") as outfile: 
             json.dump(output, outfile)
         print("Written output to " + targetfile)
-    if benchmark == "bioASQ_no_snippet" or benchmark == "bioASQ_with_snippet" or benchmark == "PubMedQA":
+    if benchmark == "bioASQ_no_snippet" or benchmark == "bioASQ_with_snippet":
         output = []
         for i in range(len(responses)):
             instance = []
-            instance.append(benchmark_questions[i+b_start][1])
-            instance.append(benchmark_answers[i+b_start])
+            instance.append(benchmark_questions[i+b_start])
+            if type(benchmark_answers[i+b_start][0]) != type("String lol"):
+                instance.append(benchmark_answers[i+b_start][0][0])
+            else:
+                instance.append(benchmark_answers[i+b_start][0])
+            
             instance.append(responses[i])
             output.append(instance)
         with open(targetfile, "w") as outfile: 
