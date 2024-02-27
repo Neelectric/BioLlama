@@ -17,7 +17,7 @@ model =  "BioLlama-7B" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "L
 torch_dtype = None
 if model[:8] == "BioLlama":
     torch_dtype = "int4"
-benchmark = "MedMCQA" # eg. "MedQA", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
+benchmark = "MedQA" # eg. "MedQA", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"
 retrieval_text_mode = None # eg. "full", "input_segmentation
