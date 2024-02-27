@@ -23,8 +23,8 @@ The table below shows preliminary results, as reported by other papers or record
 | GTE-Llama                | 70B    |                       |            | 34      | 46.3      |
 | MedCPT-Llama             | 70B    |                       |            | 34.8    | 46.1      |
 | Llama-2-7B-chat-finetune | 7B     |                       |            | 17      |           |
-| BioLlama-7B              | 7B     | 82.34                 | 54.7       | 35      | 30        |
-| BioLlama-13B             | 13B    | 87.02                 | 67.5       | 39      |           |
+| BioLlama-7B              | 7B     | 82.34                 | 54.7       | 35      | 31.0      |
+| BioLlama-13B             | 13B    | 87.02                 | 67.5       | 39      | 36.1      |
 | BioLlama-70B             | 70B    | 87.45                 | 70.4       | 37      |           |
 <!-- table -->
 
@@ -36,6 +36,12 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 19:58:33, 27.02.2024 | BioLlama-7B | MedMCQA | 30 --> 31.0, 1000 questions
+
+ * 19:58:06, 27.02.2024 | BioLlama-13B | MedMCQA | 24.0 --> 36.1, 1000 questions
+
+ * 19:52:11, 27.02.2024 | BioLlama-13B | MedMCQA |  --> 24.0, 1000 questions
+
  * 17:46:46, 27.02.2024 | BioLlama-7B | BioASQ5b (snippets) |  --> 82.34, 1000 questions
 
  * 16:43:29, 27.02.2024 | BioLlama-13B | BioASQ5b (snippets) |  --> 87.02, 1000 questions
@@ -133,6 +139,9 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
+
+
 
 
 
