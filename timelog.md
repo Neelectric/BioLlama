@@ -530,3 +530,4 @@
 
 ### Tuesday - 27 Feb 2023
 * *2 hours* First benchmarks of BioLlama-70B/13B/7B on BioASQ
+* *5 hours* Adding explanations of all benchmarks to Background, removing Retrieval in Prompt (RiP)

@@ -24,60 +24,6 @@ def model_new_forward(self, *args, **kwargs):
         raise Exception("input_ids or labels not found in kwargs")
     return output
 
-# Cross Chunked Attention (temporary, altered version), currently retired
-# def cca_forward(self, input_ids):
-#     embed_tokens = self.biollama.model.base_model.embed_tokens
-#     input_ids = [int(element) for element in input_ids[0]]
-#     chunk_length = self.biollama.chunk_length # pruning input_ids to be the last chunk_length tokens
-#     if len(input_ids) > chunk_length: pass #  issue with this: difference in num tokens given by MedCPT query tokenizer vs llama2 tokenizer
-#     input_ids = input_ids[-chunk_length:]
-#     tokens = self.biollama.tokenizer.decode(input_ids)
-#     if tokens[:4] == "<s> ": tokens = tokens[4:] # without the leading "<s> "
-#     retrieved_chunk = medcpt_FAISS_retrieval( # example 16: '[CLS] sarcoplasmic reticulum ( sr ) ca ( 2 + ) - handling proteins play'
-#         tokens, # example 32: "and stimulation of sarcoplasmic reticulum calcium atpase. we examined the hemodynamic, echocardiographic, and neurohormonal effects of intravenous istaroxime in patients hospitalized with"
-#         db_name="RCT200ktrain",
-#         retrieval_text_mode="input_segmentation",
-#         chunk_length=self.biollama.chunk_length,
-#         query_tokenizer=self.biollama.query_tokenizer, # passed as a pre-loaded object to save time
-#         query_model=self.biollama.query_model, # passed as a pre-loaded object to save time
-#         rerank_tokenizer=self.biollama.rerank_tokenizer, # passed as a pre-loaded object to save time
-#         rerank_model=self.biollama.rerank_model, # passed as a pre-loaded object to save time
-#         top_k=1,
-#         k=5,
-#         db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
-#         db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
-#     )
-
-#     if type(retrieved_chunk[0]) == list: retrieved_chunk = retrieved_chunk[0]
-#     # print(f"tokens is:\n{tokens}")
-#     # print(f"retrieved chunk is:\n{retrieved_chunk}")
-    
-#     encoded_chunk = self.biollama.tokenizer(retrieved_chunk, return_tensors="pt") # we then use the llama2 tokenizer to encode this chunk
-#     chunk_input_ids = encoded_chunk.input_ids # get input_ids of tokens of the encoded chunk
-
-#     # Here i prune the last tokens off, otherwise matmul fails
-#     unnested_chunk_input_ids = torch.unbind(chunk_input_ids, dim=0)[0] # unnest the chunk_input_ids
-#     cutoff = len(input_ids) # this is the number of tokens in the sequence with which we performed retrieval, ie 32
-#     sliced_chunk_input_ids = unnested_chunk_input_ids[0:cutoff] # this slices chunk_input_ids to length chunk_length
-#     chunk_input_ids = sliced_chunk_input_ids.reshape((1, cutoff))
-
-#     # Next, they are embedded using the model's embed_tokens layer
-#     inputs_embeds = embed_tokens(chunk_input_ids)
-#     embeds_shape = inputs_embeds.shape
-#     hidden_states = inputs_embeds
-#     position_ids = torch.arange(embeds_shape[-2], dtype=torch.long, device=inputs_embeds.device).unsqueeze(0)
-
-#     # Before passing to cca_attn, we perform pre_cca_layernorm
-#     hidden_states = self.pre_cca_layernorm(hidden_states)
-
-#     # Finally, we perform cca_attn, which is currently just self-attetnion on the retrieved chunk
-#     hidden_states, self_attn_weights, present_key_value = self.cca_attn(  #when input_ids or hidden_states has shape [1,33] this line explodes
-#         hidden_states=hidden_states,
-#         position_ids=position_ids,
-#         use_cache=False,
-#     )
-#     return hidden_states
-
 def ca(self, hidden_states, e): # The following combines the HF Transformers LlamaSdpaAttention and RETRO code
     embed_tokens = self.biollama.model.base_model.embed_tokens
     cca_attn = self.cca_attn
@@ -94,7 +40,6 @@ def ca(self, hidden_states, e): # The following combines the HF Transformers Lla
     if e_encoded_and_embedded.device != cca_attn.q_proj.weight.device: # sometimes it complains about tensors not being on same device
         e_encoded_and_embedded = e_encoded_and_embedded.to(cca_attn.q_proj.weight.device)
 
-    
     bsz, q_len, _ = hidden_states.size()
     position_ids = torch.arange(hidden_states.shape[-2], dtype=torch.long, device=hidden_states.device).unsqueeze(0)
 
@@ -199,9 +144,6 @@ def cca_forward_true(self, input_ids, hidden_states):
 
     ca_list = None
     for i in range(len(Hplus_list)): # for these spliced chunks in Hplus_list, calculate cross attentions with neighbours
-        # print(f"performing cross-attention of")
-        # print(f"chunk:     {H_list_decoded[i+1]}")
-        # print(f"neighbour: {E_no_continuations[i]}")
         Hplus_ca = ca(self, Hplus_list[i], E_no_continuations[i])
         if ca_list == None:
             ca_list = Hplus_ca
@@ -267,7 +209,6 @@ def RETRO_layer_forward(self, *args, **kwargs): #this combines insights from the
         hidden_states = first_prompts_states
     else:
         hidden_states = cca_forward_true(self, input_ids, hidden_states)
-        # hidden_states = cca_forward(self, input_ids)
     hs_shape = hidden_states.shape
     rs_shape = residual.shape
     size_difference = rs_shape[1] - hs_shape[1]
@@ -345,7 +286,7 @@ class BioLlama:
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
         self.model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto", torch_dtype=torch_dtype, quantization_config=bnb_config)
-        self.model.config.use_cache = False  # testing this in hopes of less cca issues
+        self.model.config.use_cache = False  # leaving this out has caused cca issues in the past
         self.model.generation_config.temperature = 0.01
         self.state_dict = self.model.state_dict()
 
@@ -364,14 +305,12 @@ class BioLlama:
 
         self.model.old_forward = self.model.forward
         self.model.forward = model_new_forward.__get__(self.model)
+
+        # Prepare the MedCPT suite and the retrieval corpus
         self.query_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")
-        # self.query_tokenizer.to("cuda")
         self.query_model = AutoModel.from_pretrained("ncbi/MedCPT-Query-Encoder")
-        # self.query_model.to("cuda:0")
         self.rerank_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Cross-Encoder")
-        # self.rerank_tokenizer.to("cuda")
         self.rerank_model = AutoModelForSequenceClassification.from_pretrained("ncbi/MedCPT-Cross-Encoder")
-        # self.rerank_model.to("cuda:0")
         db_faiss, db_json = load_db("medcpt", "RCT200ktrain", "input_segmentation", chunk_length=chunk_length)
         self.db_faiss = db_faiss
         self.db_json = db_json
@@ -388,6 +327,5 @@ class BioLlama:
         self.model.input_ids_biollama = inputs["input_ids"]
         self.model.prompt_biollama = prompt
         generate_ids = self.model.generate(inputs.input_ids.to(self.device), max_new_tokens=max_new_tokens, use_cache=False)
-        # print(f"generate_ids is {generate_ids}")
         num_tokens = len(generate_ids[0]) - len(inputs.input_ids[0])
         return (num_tokens, self.tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False,)[0],)
