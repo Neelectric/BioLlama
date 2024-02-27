@@ -531,3 +531,5 @@
 ### Tuesday - 27 Feb 2023
 * *2 hours* First benchmarks of BioLlama-70B/13B/7B on BioASQ
 * *5 hours* Adding explanations of all benchmarks to Background, removing Retrieval in Prompt (RiP)
+* *1 hour* Thorough proof-reading of progress so far, editing of benchmark explanations
+* *0.5 hours* Refining proposed research direction
