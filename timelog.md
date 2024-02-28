@@ -533,3 +533,8 @@
 * *5 hours* Adding explanations of all benchmarks to Background, removing Retrieval in Prompt (RiP)
 * *1 hour* Thorough proof-reading of progress so far, editing of benchmark explanations
 * *0.5 hours* Refining proposed research direction
+* *1.5 hours* Describing PMA and PMC
+* *1.5 hours* Explaining CCA and RETRO with figure
+
+### Wednesday - 28 Feb 2023
+* *1 hour* Revisiting autofaiss and PMA index

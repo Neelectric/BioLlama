@@ -488,6 +488,42 @@ def load_db(embedding_model, db_name, retrieval_text_mode, chunk_length=None):
     # index = index.to_gpu(gpu_id=0)
     return index, knowledge_db_as_JSON
 
+def medcpt_FAISS_pubmed_retrieval(
+    questions,
+):
+    k = 10
+    index_path = "/home/service/BioLlama/vectorstores/PubMed/knn.index"
+    pma = faiss.read_index(index_path)
+
+    query_model = AutoModel.from_pretrained("ncbi/MedCPT-Query-Encoder")
+    query_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")
+    rerank_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Cross-Encoder")
+    rerank_model = AutoModelForSequenceClassification.from_pretrained("ncbi/MedCPT-Cross-Encoder")
+
+    for question in questions:
+        with torch.no_grad(): # This code is taken directly from the MedCPT GitHub/HF tutorial
+                # tokenize the queries
+            encoded = query_tokenizer(
+                question,
+                truncation=True,
+                padding=True,
+                return_tensors="pt",
+                max_length=512,
+            )
+            # encode the queries (use the [CLS] last hidden states as the representations)
+            # encoded.to("cuda:0")
+            embeds = query_model(**encoded).last_hidden_state[:, 0, :]
+            
+        distances, indices = pma.search(embeds, k)
+        # distances = distances.flatten()
+        # indices = indices.flatten()
+
+    # print(list(zip(distances[0], indices[0])))
+    print(indices)
+    print(distances)
+
+    return
+
 
 def medcpt_FAISS_retrieval(
     questions,
@@ -715,7 +751,7 @@ def section_distribution_stats(questions, chunk_length):
 
 
 if __name__ == "__main__":
-    quit()
+    pass
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--db_name", type=str, help="Name of the database to build index for."
@@ -741,6 +777,7 @@ if __name__ == "__main__":
             retrieval_text_mode="input_segmentation",
             chunk_length=16,
         )
-# questions = ["calcium pump"]
-# neighbours = medcpt_FAISS_retrieval(questions=questions, db_name="RCT200ktrain", retrieval_text_mode="input_segmentation", chunk_length=16)
-# print(neighbours)
+
+questions = ["Which is the main calcium pump of the sarcoplasmic reticulum?"]
+        
+medcpt_FAISS_pubmed_retrieval(questions=questions)
