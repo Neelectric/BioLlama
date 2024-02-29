@@ -11,6 +11,7 @@ import json
 import faiss
 import os
 import torch
+import autofaiss
 
 local_transformers = False
 if local_transformers:
@@ -431,19 +432,7 @@ def build_index_medcpt(db_name, mode, chunk_length):
 
 def load_db(embedding_model, db_name, retrieval_text_mode, chunk_length=None):
     if retrieval_text_mode == "input_segmentation":
-        index_path_faiss = (
-            "vectorstores/"
-            + db_name
-            + "/"
-            + embedding_model
-            + "/"
-            + retrieval_text_mode
-            + "/db_faiss_"
-            + str(chunk_length)
-            + "/"
-            + db_name
-            + ".index"
-        )
+        index_path_faiss = ("vectorstores/" + db_name + "/" + embedding_model + "/" + retrieval_text_mode + "/db_faiss_" + str(chunk_length) + "/" + db_name + ".index")
         index_path_json = (
             "vectorstores/"
             + db_name
@@ -480,8 +469,6 @@ def load_db(embedding_model, db_name, retrieval_text_mode, chunk_length=None):
             + db_name
             + ".json"
         )
-    # print("Attempting to load FAISS index for " + index_path_faiss)
-    # print(os.getcwd())
     with open(index_path_json, "r") as json_file:
         knowledge_db_as_JSON = json.load(json_file)
     index = faiss.read_index(index_path_faiss)
@@ -491,14 +478,15 @@ def load_db(embedding_model, db_name, retrieval_text_mode, chunk_length=None):
 def medcpt_FAISS_pubmed_retrieval(
     questions,
 ):
-    k = 10
+    k = 20
     index_path = "/home/service/BioLlama/vectorstores/PubMed/knn.index"
     pma = faiss.read_index(index_path)
+    pma.metric_type = faiss.METRIC_INNER_PRODUCT
 
     query_model = AutoModel.from_pretrained("ncbi/MedCPT-Query-Encoder")
     query_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")
-    rerank_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Cross-Encoder")
-    rerank_model = AutoModelForSequenceClassification.from_pretrained("ncbi/MedCPT-Cross-Encoder")
+    # rerank_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Cross-Encoder")
+    # rerank_model = AutoModelForSequenceClassification.from_pretrained("ncbi/MedCPT-Cross-Encoder")
 
     for question in questions:
         with torch.no_grad(): # This code is taken directly from the MedCPT GitHub/HF tutorial
@@ -515,12 +503,12 @@ def medcpt_FAISS_pubmed_retrieval(
             embeds = query_model(**encoded).last_hidden_state[:, 0, :]
             
         distances, indices = pma.search(embeds, k)
-        # distances = distances.flatten()
-        # indices = indices.flatten()
-
-    # print(list(zip(distances[0], indices[0])))
+        distances = distances.flatten()
+        indices = indices.flatten()
+        
     print(indices)
     print(distances)
+    #12375147
 
     return
 
@@ -547,9 +535,6 @@ def medcpt_FAISS_retrieval(
             "medcpt", db_name, retrieval_text_mode, chunk_length=chunk_length
         )
     time_after_loading_db = time.time()
-    # if local_transformers:
-    # from ..finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModel
-    # from ..finetuning.cti.transformers.transformers.src.transformers.models.auto import AutoTokenizer, AutoModel
     if (query_tokenizer == None) or (query_model == None):
         query_model = AutoModel.from_pretrained("ncbi/MedCPT-Query-Encoder")
         query_tokenizer = AutoTokenizer.from_pretrained("ncbi/MedCPT-Query-Encoder")
@@ -611,15 +596,10 @@ def medcpt_FAISS_retrieval(
                 # encode the queries (use the [CLS] last hidden states as the representations)
                 logits = rerank_model(**encoded).logits.squeeze(dim=1).numpy()
 
-            # "logits" now gives us relevance scores. we want to use to resort the chunks array
-            # by the relevance scores in logits, where higher relevance should be first
+            # "logits" now gives us relevance scores. we want to use to resort the chunks array by the relevance scores in logits, where higher relevance should be first
             # we can do this by sorting the indices of logits, and then using those indices to sort chunks
-            sorted_scores = sorted(
-                zip(chunks, logits), key=lambda x: x[1], reverse=True
-            )
-            sorted_chunkid_indices = sorted(
-                zip(indices, logits), key=lambda x: x[1], reverse=True
-            )
+            sorted_scores = sorted(zip(chunks, logits), key=lambda x: x[1], reverse=True)
+            sorted_chunkid_indices = sorted(zip(indices, logits), key=lambda x: x[1], reverse=True)
             sorted_indices = np.array([x[1] for x in sorted_scores])
 
             # can use the following to see "after which item do logits turn negative"
@@ -778,6 +758,8 @@ if __name__ == "__main__":
             chunk_length=16,
         )
 
-questions = ["Which is the main calcium pump of the sarcoplasmic reticulum?"]
-        
+questions = ["The purpose of this randomized, double-blind parallel group study was to compare the safety, tolerability and acceptability of Easyhaler and Turbuhaler dry powder inhalers for the delivery of budesonide 800 microg day(-1) in adult asthmatic patients who had already been treated with inhaled corticosteroids for at least 6 months prior to the study Additionally the efficacy of the products was evaluated. The main objective was to evaluate the systemic safety of budesonide inhaled from Easyhaler (Giona Easyhaler, Orion Pharma, Finland) as determined by serum and urine cortisol measurements. The secondary objective was to compare the tolerability acceptability and efficacy of the two devices in the administration of budesonide."]
 medcpt_FAISS_pubmed_retrieval(questions=questions)
+
+# neighbours = medcpt_FAISS_retrieval(questions=questions, db_name="RCT200ktrain", retrieval_text_mode="input_segmentation", chunk_length=32, verbose=True)
+# print(neighbours)
