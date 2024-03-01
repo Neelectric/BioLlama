@@ -97,11 +97,11 @@ def parse_MedQA_4(version="US"):
     # print(txt_files)
     # dir_path = os.path.dirname(os.path.realpath(__file__))
     # print(dir_path)
-    with open('benchmarks/MedQA-4-option/phrases_no_exclude_test.jsonl', 'r') as file:
+    with open('benchmarks/MedQA-4-option/test.jsonl', 'r') as file:
         for line in file:
             record = json.loads(line)
             data.append(record)
-    print("Loading Benchmark from MedQA-4-option/phrases_no_exclude_test.jsonl")
+    print("Loading Benchmark from MedQA-4-option/test.jsonl")
     benchmark_questions = []
     benchmark_answers = []
     num_questions_with_4_options = 0
