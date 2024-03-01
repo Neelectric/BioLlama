@@ -7,20 +7,20 @@ The aim of this project is to enhance models of varying sizes from the Llama2 fa
 The table below shows preliminary results, as reported by other papers or recorded by me. Note that in many cases these are out of date, a more accu
 
  <!-- table -->
-| Model                 | Size   | BioASQ5b (snippets)   | PubMedQA   | MedQA   | MedMCQA   |
-|:----------------------|:-------|:----------------------|:-----------|:--------|:----------|
-| **As reported**       |        |                       |            |         |           |
-| M42                   | 70B    | -                     | -          | 61.5    | 60.9      |
-| Med-PaLM              | 540B   | -                     | 79.0       | 67.6    | 57.6      |
-| Med-PaLM 2            | 540B   | -                     | 81.8       | 86.5    | 72.3      |
-| BIOREADER             | 229.5M | 81.88                 | -          | 42.96   | -         |
-| **Produced By Me**    |        |                       |            |         |           |
-| Llama-2-7B-chat-GPTQ  | 7B     | 91.91                 | 59.49      | 25.6    | 32.1      |
-| Llama-2-13B-chat-GPTQ | 13B    | 91.70                 | 73.74      | 31.3    | 37.8      |
-| Llama-2-70B-chat-GPTQ | 70B    | 93.4                  | 75.35      | 36.4    | 46.6      |
-| BioLlama-7B           | 7B     | 82.34                 | 54.7       | 35      | 31.0      |
-| BioLlama-13B          | 13B    | 87.02                 | 67.5       | 39      | 36.1      |
-| BioLlama-70B          | 70B    | 87.45                 | 70.4       | 37      | 37.6      |
+| Model                 | Size   | BioASQ5b (snippets)   | PubMedQA   | MedQA-4   | MedQA-5   | MedMCQA   |
+|:----------------------|:-------|:----------------------|:-----------|:----------|:----------|:----------|
+| **As reported**       |        |                       |            |           |           |
+| M42                   | 70B    | -                     | -          | 61.5      |           | 60.9      |
+| Med-PaLM              | 540B   | -                     | 79.0       | 67.6      |           | 57.6      |
+| Med-PaLM 2            | 540B   | -                     | 81.8       | 86.5      |           | 72.3      |
+| BIOREADER             | 229.5M | 81.88                 | -          | 42.96     |           | -         |
+| **Produced By Me**    |        |                       |            |           |           |           |
+| Llama-2-7B-chat-GPTQ  | 7B     | 91.91                 | 59.49      | 30.9      | 25.6      | 32.1      |
+| Llama-2-13B-chat-GPTQ | 13B    | 91.70                 | 73.74      |           | 31.3      | 37.8      |
+| Llama-2-70B-chat-GPTQ | 70B    | 93.4                  | 75.35      |           | 36.4      | 46.6      |
+| BioLlama-7B           | 7B     | 82.34                 | 54.7       |           | 35        | 31.0      |
+| BioLlama-13B          | 13B    | 87.02                 | 67.5       |           | 39        | 36.1      |
+| BioLlama-70B          | 70B    | 87.45                 | 70.4       |           | 37        | 37.6      |
 <!-- table -->
 
 ## 🔎 Dissertation

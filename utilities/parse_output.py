@@ -15,7 +15,7 @@ def parse_output_GPTQ(benchmark,
         # print("Raw response: " + raw_response  + "\n")
         response = re.findall(pattern, raw_response, re.DOTALL)
         # print("Response: " + str(response) + "\n")
-        if len(response) > 2 and benchmark=="MedQA":
+        if len(response) > 2 and benchmark == "MedQA-4" or benchmark == "MedQA-5":
             responses.append(response[2][1:])
         elif len(response) > 2 and benchmark=="PubMedQA":
             responses.append(response[2])
@@ -49,7 +49,7 @@ def parse_output_GPTQ(benchmark,
             json.dump(output, outfile)
         print("Written output to " + targetfile)
 
-    elif benchmark == "MedQA" or benchmark == "MedMCQA":
+    elif benchmark == "MedQA-4" or benchmark == "MedQA-5" or benchmark == "MedMCQA":
         output = []
         for i in range(len(responses)):
             instance = []
@@ -89,13 +89,13 @@ def parse_output_finetuned(benchmark,
         # print("Raw response: " + raw_response  + "\n")
         response = re.findall(pattern, raw_response, re.DOTALL)
         # print("Response: " + str(response) + "\n")
-        if len(response) == 1 and benchmark=="MedQA":
+        if len(response) == 1 and benchmark == "MedQA-4" or benchmark == "MedQA-5":
             responses.append(response[0][3:])
         elif len(response) > 2:
             responses.append(response[2])
         else:
             responses.append("LLM SEEMS TO HAVE FAILED TO GENERATE A RESPONSE: " + raw_response)
-    if benchmark == "MedQA" or benchmark == "MedMCQA":
+    if benchmark == "MedQA-4" or benchmark == "MedQA-5" or benchmark == "MedMCQA":
         output = []
         for i in range(len(responses)):
             instance = []

@@ -56,7 +56,7 @@ def write_to_readme(model, benchmark, result, db_name, retrieval_text_mode, top_
     df.loc[df['Model'] == model, benchmark] = result
     print("Changed " + str(old_result) + " to " + str(result) + " for " + model + " on " + benchmark)
     df = df.drop(columns=['Unnamed: 0'])
-    df = df.drop(columns=['Unnamed: 7'])
+    df = df.drop(columns=['Unnamed: 8'])
 
     #reconvert dataframe to markdown
     new_table = df.to_markdown(index=False)

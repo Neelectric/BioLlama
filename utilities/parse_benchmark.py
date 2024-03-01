@@ -90,7 +90,40 @@ def parse_BioASQ_with_snippet(version="5b"):
     print(f"Benchmark contains {num_factoids + num_non_factoid} questions, made up of {question_types}")
     return benchmark_questions, benchmark_answers
 
-def parse_MedQA(version="US"):
+def parse_MedQA_4(version="US"):
+    #load raw data from benchmarks/MedQA-USMLE/US/train.jsonl, which has a dictionary on each line
+    data = []
+    # txt_files = glob.glob("../benchmarks")
+    # print(txt_files)
+    # dir_path = os.path.dirname(os.path.realpath(__file__))
+    # print(dir_path)
+    with open('benchmarks/MedQA-4-option/phrases_no_exclude_test.jsonl', 'r') as file:
+        for line in file:
+            record = json.loads(line)
+            data.append(record)
+    print("Loading Benchmark from MedQA-4-option/phrases_no_exclude_test.jsonl")
+    benchmark_questions = []
+    benchmark_answers = []
+    num_questions_with_4_options = 0
+    num_questions_with_non_4_options = 0
+    
+    #for every question, ensure that there are 5 options, and add to output
+    for instance in data:
+        MCQ_question = instance["question"]
+        if len(instance["options"].keys())== 4:
+            num_questions_with_4_options += 1
+        else:
+            num_questions_with_non_4_options += 1
+        for option in instance["options"].keys():
+            MCQ_question += "\n (" + option + ") " + instance["options"][option]
+        MCQ_answer = "(" + instance['answer_idx'] + ") " + instance["answer"]
+        benchmark_questions.append(MCQ_question)
+        benchmark_answers.append(MCQ_answer)
+    print("Benchmark contains " + str(len(data)) + " questions, made up of " + str(num_questions_with_4_options) + " with 4 options and " + str(num_questions_with_non_4_options) + " with non-4 options")
+    return benchmark_questions, benchmark_answers
+
+
+def parse_MedQA_5(version="US"):
     #load raw data from benchmarks/MedQA-USMLE/US/train.jsonl, which has a dictionary on each line
     data = []
     # txt_files = glob.glob("../benchmarks")
@@ -185,10 +218,12 @@ def parse_benchmark(benchmark):
     #call correct parsing function based on argument
     if(benchmark == "bioASQ_no_snippet"):
        benchmark_questions, benchmark_answers = parse_bioASQ_no_snippet("5b")
-    if(benchmark == "bioASQ_with_snippet"):
+    elif(benchmark == "bioASQ_with_snippet"):
         benchmark_questions, benchmark_answers = parse_BioASQ_with_snippet("5b")
-    elif(benchmark == "MedQA"):
-        benchmark_questions, benchmark_answers = parse_MedQA("US")
+    elif(benchmark == "MedQA-4"):
+        benchmark_questions, benchmark_answers = parse_MedQA_4("US")
+    elif(benchmark == "MedQA-5"):
+        benchmark_questions, benchmark_answers = parse_MedQA_5("US")
     elif(benchmark == "PubMedQA"):
         benchmark_questions, benchmark_answers = parse_PubMedQA()
     elif(benchmark == "MedMCQA"):
@@ -222,7 +257,7 @@ if __name__ == "__main__":
         print(f"max length is {max_length}")
         print(f"max snippet num is {max_snippet_num}")
     elif(args.b == "MedQA_US"):
-        benchmark_questions, benchmark_answers = parse_MedQA("US")
+        benchmark_questions, benchmark_answers = parse_MedQA_5("US")
     elif(args.b == "PubMedQA"):
         benchmark_questions, benchmark_answers = parse_PubMedQA()
     elif(args.b == "MedMCQA"):

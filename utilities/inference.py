@@ -11,7 +11,7 @@ import argparse
 from tqdm import tqdm
 from utilities.llm import llm as llm
 from src.count_tokens import count_tokens
-from utilities.parse_benchmark import parse_benchmark, parse_bioASQ_no_snippet, parse_BioASQ_with_snippet, parse_MedQA, parse_PubMedQA, parse_MedMCQA
+from utilities.parse_benchmark import parse_benchmark, parse_bioASQ_no_snippet, parse_BioASQ_with_snippet, parse_MedQA_5, parse_PubMedQA, parse_MedMCQA
 from utilities.prompts2 import promptify, promptify_for_judging
 from utilities.db_retrieval import gte_FAISS_retrieval, medcpt_FAISS_retrieval
 from utilities.parse_output import parse_output_GPTQ, parse_output_finetuned

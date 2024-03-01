@@ -10,11 +10,9 @@ def standardize_string_PubMedQA(string):
     return re.sub(r'[. ]+', '', string.strip()).lower()
 
 def mark_MedQA(model, benchmark, input):
-    #if model ends in "finetune", save this as a bool
-    finetune = False
+    finetune = False #if model ends in "finetune", save this as a bool
     if model[-8:] == "finetune" or model[:8] == "BioLlama":
         finetune = True
-
     num_correct = 0
     num_total = 0
     if finetune:
@@ -31,9 +29,7 @@ def mark_MedQA(model, benchmark, input):
             num_total += 1
             if input[i][1] == input[i][2]:
                 num_correct += 1
-
     accuracy = num_correct/num_total
-
     print(f"Marking model {model} performance on benchmark {benchmark}")
     print("Accuracy is " + str(accuracy) + " with a total of " + str(num_total) + " responses.")
     return accuracy
@@ -86,7 +82,7 @@ def exact_match(model, benchmark):
     with open(output_file, 'rb') as json_file:
         json_data = json_file.read().decode('utf-8')
     data = json.loads(json_data)
-    if(benchmark == "MedQA"):
+    if(benchmark == "MedQA-4") or (benchmark == "MedQA-5"):
         accuracy = mark_MedQA(model, benchmark, data)
     elif(benchmark == "PubMedQA"):
         accuracy = mark_PubMedQA(model, benchmark, data)

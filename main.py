@@ -3,7 +3,7 @@
 #The purpose of this file is to provide a full pipeline for BioLlama
 #It is called with a number of parameters, as outlined below
 # -m : the model to use. Options are Llama2 (in 7B, 13B or 70B)
-# -b : the benchmark to use. Options are BioASQ5b_factoid_with_snippet, MedQA, PubMedQA, MedMCQA
+# -b : the benchmark to use. Options are BioASQ5b_factoid_with_snippet, MedQA-5, PubMedQA, MedMCQA
 # -e : the evaluation method to use. Options are exact_match and judging
 
 from utilities.inference import inference
@@ -12,19 +12,19 @@ from utilities.judging import llm_as_judge
 from utilities.utilities import write_to_readme
 import torch
 
-model =  "Llama-2-7B-chat-GPTQ" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ", "Llama-2-7B-chat-finetune"
+model =  "Llama-2-13B-chat-GPTQ" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ", "Llama-2-7B-chat-finetune"
 
 torch_dtype = None
 if model[:8] == "BioLlama":
     torch_dtype = torch.float32
-benchmark = "MedQA" # eg. "MedQA", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
+benchmark = "MedQA-4" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"
 retrieval_text_mode = None # eg. "full", "input_segmentation
 chunk_length = None
 top_k = 1
 b_start = 10
-num_questions = 100
+num_questions = 1000
 b_end = b_start + num_questions
 
 #if benchmark name starts with "bioASQ" set max_new_tokens to 40
@@ -53,7 +53,7 @@ inference(model=model,
 if torch_dtype is not None:
     print(f"Used dtype {torch_dtype}")
 
-if benchmark == "MedQA" or benchmark == "PubMedQA" or benchmark == "MedMCQA":
+if benchmark == "MedQA-4" or benchmark == "MedQA-5" or benchmark == "PubMedQA" or benchmark == "MedMCQA":
     accuracy = 100*exact_match(model=model, benchmark=benchmark)
 
 elif benchmark == "bioASQ_no_snippet" or benchmark == "bioASQ_with_snippet":
