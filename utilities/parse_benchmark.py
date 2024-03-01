@@ -122,7 +122,6 @@ def parse_MedQA_4(version="US"):
     print("Benchmark contains " + str(len(data)) + " questions, made up of " + str(num_questions_with_4_options) + " with 4 options and " + str(num_questions_with_non_4_options) + " with non-4 options")
     return benchmark_questions, benchmark_answers
 
-
 def parse_MedQA_5(version="US"):
     #load raw data from benchmarks/MedQA-USMLE/US/train.jsonl, which has a dictionary on each line
     data = []
@@ -214,7 +213,7 @@ def parse_MedMCQA(version="train.json"):
     #     print(f"{subject}: {subject_names[subject]}")
     return benchmark_questions, benchmark_answers
 
-def parse_benchmark(benchmark):
+def parse_benchmark(benchmark, version = None):
     #call correct parsing function based on argument
     if(benchmark == "bioASQ_no_snippet"):
        benchmark_questions, benchmark_answers = parse_bioASQ_no_snippet("5b")
@@ -227,7 +226,7 @@ def parse_benchmark(benchmark):
     elif(benchmark == "PubMedQA"):
         benchmark_questions, benchmark_answers = parse_PubMedQA()
     elif(benchmark == "MedMCQA"):
-        benchmark_questions, benchmark_answers = parse_MedMCQA()
+        benchmark_questions, benchmark_answers = parse_MedMCQA(version)
     return benchmark_questions, benchmark_answers
 
 if __name__ == "__main__":

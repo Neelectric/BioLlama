@@ -18,7 +18,7 @@ The table below shows preliminary results, as reported by other papers or record
 | Llama-2-7B-chat-GPTQ  | 7B     | 91.91                 | 59.49      | 30.9      | 25.6      | 32.1      |
 | Llama-2-13B-chat-GPTQ | 13B    | 91.70                 | 73.74      | 36.9      | 31.3      | 37.8      |
 | Llama-2-70B-chat-GPTQ | 70B    | 93.4                  | 75.35      | 44.3      | 36.4      | 46.6      |
-| BioLlama-7B           | 7B     | 82.34                 | 54.7       |           | 35        | 31.0      |
+| BioLlama-7B           | 7B     | 82.34                 | 54.7       | 37        | 35        | 31.0      |
 | BioLlama-13B          | 13B    | 87.02                 | 67.5       |           | 39        | 36.1      |
 | BioLlama-70B          | 70B    | 87.45                 | 70.4       |           | 37        | 37.6      |
 <!-- table -->

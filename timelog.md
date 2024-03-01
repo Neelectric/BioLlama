@@ -550,3 +550,4 @@
 * *0.5 hours* Dissertation feeback
 * *2 hours* Revisiting finetuning, MedQA BioLlama-7B inference
 * *2 hours* Adding support for MedQA-4 option, differentiating into MedQA-4 and MedQA-5
+* *1 hours* Adding proper support for MedMCQA train/dev/test splits
