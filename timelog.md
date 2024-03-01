@@ -543,3 +543,9 @@
 ### Thursday - 29 Feb 2023
 * *3 hours* Working on PMA indexing and retrieval
 * *1 hours* Retrieval attempts
+
+### Friday - 30 Feb 2023
+* *1.5 hours* Revisiting PMA retrieval
+* *0.5 hours* PMC pretraining
+* *0.5 hours* Dissertation feeback
+* *2 hours* Revisiting finetuning, MedQA BioLlama-7B inference

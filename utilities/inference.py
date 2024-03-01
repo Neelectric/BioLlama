@@ -60,8 +60,10 @@ def inference(model="Llama-2-70B-chat-GPTQ",
         chunk_index += 1
     
     #change model directory if dealing with a finetuned model
-    if model[-8:] == "finetune":
+    if model == "Llama-2-7B-chat-finetune":
         model_directory = "/home/service/BioLlama/utilities/finetuning/llama2_training_output/"
+    elif model == "BioLlama-7B-finetune":
+        model_directory = "/home/service/BioLlama/utilities/finetuning/biollama_training_output/7/"
     elif model == "BioLlama-7B":
         model_directory = 'meta-llama/Llama-2-7b-chat-hf'
     elif model == "BioLlama-13B":
@@ -92,11 +94,12 @@ def inference(model="Llama-2-70B-chat-GPTQ",
                 json.dump(raw_responses, outfile)
             # after we are done with the model object, we remove it from the GPUs
             #model_object.cache.key_states()
-            if model_directory[0:10] != "meta-llama":
-                model_object.cache.zero()
-                model_object.model.free_unmanaged()
-            model_object = None
-            torch.cuda.empty_cache()
+            if "meta-llama" not in model_directory or "/home/service/BioLlama/utilities/finetuning/biollama_training_output/" not in model_directory:
+                if benchmark[:6] == "bioASQ":
+                    model_object.cache.zero()
+                    model_object.model.free_unmanaged()
+                    model_object = None
+                    torch.cuda.empty_cache()
 
         else:
             raw_responses += batch_llm_inference(prompts, max_new_tokens)

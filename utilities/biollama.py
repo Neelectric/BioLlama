@@ -15,6 +15,7 @@ from .db_retrieval import medcpt_FAISS_retrieval, load_db
 def model_new_forward(self, *args, **kwargs):
     if "input_ids" in kwargs:
         self.input_ids_biollama = kwargs["input_ids"]
+        # print(f"input_ids_biollama is {self.input_ids_biollama}")
         output = self.old_forward(*args, **kwargs)
     elif "labels" in kwargs:
         self.input_ids_biollama = kwargs["labels"]
@@ -298,10 +299,16 @@ class BioLlama:
             if i in RETRO_layer_ids:
                 RETROfit_layer(layer, i, self, training, torch_dtype)   
         if not training and model_id.startswith("/home/service/"):
-            print(f"LOADING THE 7B BIOLLAMA WEIGHTS FOR CCA")
-            CCA_state_dict = load_state_dict('/home/service/BioLlama/utilities/finetuning/biollama_training_output/7/model-00002-of-00003.safetensors')
-            load_RETRO_weights(self.model, RETRO_layer_ids, CCA_state_dict)
-            del CCA_state_dict
+            if (torch_dtype == torch.float16):
+                print(f"LOADING THE 7B BIOLLAMA WEIGHTS FOR CCA IN FLOAT16")
+                CCA_state_dict = load_state_dict('/home/service/BioLlama/utilities/finetuning/biollama_training_output/7/model-00002-of-00003.safetensors')
+                load_RETRO_weights(self.model, RETRO_layer_ids, CCA_state_dict)
+                del CCA_state_dict
+            elif (torch_dtype == torch.float32):
+                print(f"LOADING THE 7B BIOLLAMA WEIGHTS FOR CCA IN FLOAT32")
+                CCA_state_dict = load_state_dict('/home/service/BioLlama/utilities/finetuning/biollama_training_output/7/model-00003-of-00006.safetensors')
+                load_RETRO_weights(self.model, RETRO_layer_ids, CCA_state_dict)
+                del CCA_state_dict
 
         self.model.old_forward = self.model.forward
         self.model.forward = model_new_forward.__get__(self.model)

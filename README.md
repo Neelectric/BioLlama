@@ -4,7 +4,7 @@ Public repository to accompany the Level 4 Research Project "Retrieval enhanceme
 The aim of this project is to enhance models of varying sizes from the Llama2 family through retrieval. Using few-shot prompting techniques, an initial baseline is created to see how much performance can be "tickled" out of vanilla Llama2 in its 7B, 13B and 70B variants. Performance is measured using standard Biomedical QA and OpenQA benchmarks such as BioASQ, MedQA, PubMedQA and MedMCQA. After setting this baseline, a RETRO-fitted version of Llama 2, dubbed "BioLLama" as inspired by the recent "BioReader" paper, is benchmarked. BioLlama uses MedCPT as a retriever to extract 32 token long snippets from RCT200k or PubMedAbstracts, augmenting Llama-2 on designated RETRO layers.
 
 ## Results
-The table below shows preliminary results, as reported by other papers or recorded by me
+The table below shows preliminary results, as reported by other papers or recorded by me. Note that in many cases these are out of date, a more accu
 
  <!-- table -->
 | Model                 | Size   | BioASQ5b (snippets)   | PubMedQA   | MedQA   | MedMCQA   |

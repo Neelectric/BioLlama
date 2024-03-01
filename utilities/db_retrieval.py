@@ -758,8 +758,8 @@ if __name__ == "__main__":
             chunk_length=16,
         )
 
-questions = ["The purpose of this randomized, double-blind parallel group study was to compare the safety, tolerability and acceptability of Easyhaler and Turbuhaler dry powder inhalers for the delivery of budesonide 800 microg day(-1) in adult asthmatic patients who had already been treated with inhaled corticosteroids for at least 6 months prior to the study Additionally the efficacy of the products was evaluated. The main objective was to evaluate the systemic safety of budesonide inhaled from Easyhaler (Giona Easyhaler, Orion Pharma, Finland) as determined by serum and urine cortisol measurements. The secondary objective was to compare the tolerability acceptability and efficacy of the two devices in the administration of budesonide."]
-medcpt_FAISS_pubmed_retrieval(questions=questions)
+# questions = ["The purpose of this randomized, double-blind parallel group study was to compare the safety, tolerability and acceptability of Easyhaler and Turbuhaler dry powder inhalers for the delivery of budesonide 800 microg day(-1) in adult asthmatic patients who had already been treated with inhaled corticosteroids for at least 6 months prior to the study Additionally the efficacy of the products was evaluated. The main objective was to evaluate the systemic safety of budesonide inhaled from Easyhaler (Giona Easyhaler, Orion Pharma, Finland) as determined by serum and urine cortisol measurements. The secondary objective was to compare the tolerability acceptability and efficacy of the two devices in the administration of budesonide."]
+# medcpt_FAISS_pubmed_retrieval(questions=questions)
 
 # neighbours = medcpt_FAISS_retrieval(questions=questions, db_name="RCT200ktrain", retrieval_text_mode="input_segmentation", chunk_length=32, verbose=True)
 # print(neighbours)
