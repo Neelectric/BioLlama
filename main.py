@@ -12,7 +12,7 @@ from utilities.judging import llm_as_judge
 from utilities.utilities import write_to_readme
 import torch
 
-model =  "Llama-2-70B-chat-GPTQ" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ", "Llama-2-7B-chat-finetune"
+model =  "BioLlama-7B" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-13B-chat-GPTQ", "Llama-2-70B-chat-GPTQ", "Llama-2-7B-chat-finetune"
 
 torch_dtype = None
 if model[:8] == "BioLlama":
@@ -24,7 +24,7 @@ retrieval_text_mode = None # eg. "full", "input_segmentation
 chunk_length = None
 top_k = 1
 b_start = 10
-num_questions = 1000
+num_questions = 100
 b_end = b_start + num_questions
 
 #if benchmark name starts with "bioASQ" set max_new_tokens to 40
