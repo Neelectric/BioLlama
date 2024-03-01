@@ -538,3 +538,8 @@
 
 ### Wednesday - 28 Feb 2023
 * *1 hour* Revisiting autofaiss and PMA index
+* *1.5 hours* Further work on PMA indices
+
+### Thursday - 29 Feb 2023
+* *3 hours* Working on PMA indexing and retrieval
+* *1 hours* Retrieval attempts

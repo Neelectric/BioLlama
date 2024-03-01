@@ -59,4 +59,11 @@ pmids = [raw_index_2_pmid[index] for index in indices]
 
 print(pmids)
 target_final = pmids[0]
-print(pubmed_chunk_list[0][target_final])
+# print(pubmed_chunk_list[0][target_final])
+
+for i in range(38):
+    if target_final in pubmed_chunk_list[i].keys():
+        print(i)
+        right_chunk = i
+        break
+print(pubmed_chunk_list[right_chunk][target_final])
