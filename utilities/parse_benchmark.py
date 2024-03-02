@@ -169,8 +169,9 @@ def parse_PubMedQA(version=""):
 
 def parse_MedMCQA(version="train.json"):
     #load raw data from benchmarks/MedMCQA/ + version
+    if version == None: version = "train.json"
     data = []
-    with open('benchmarks/MedMCQA/'+version, 'r') as file:
+    with open('benchmarks/MedMCQA/'+ version, 'r') as file:
         for line in file:
             # Parse the JSON object from the line and append it to the list
             json_obj = json.loads(line)
