@@ -311,7 +311,6 @@ def build_lookupchart_medcpt(db_name, mode, chunk_length):
     # print(f"chunk with id 999 comes from abstract {abstract_id}")
     # print(f"its full text is {abstract}")
 
-
 def build_index_medcpt(db_name, mode, chunk_length):
     print("Building index with MedCPT")
     documents, documents_dict = read_documents(db_name, mode)

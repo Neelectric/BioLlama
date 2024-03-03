@@ -539,6 +539,7 @@
 ### Wednesday - 28 Feb 2023
 * *1 hour* Revisiting autofaiss and PMA index
 * *1.5 hours* Further work on PMA indices
+* *0.5 hours* Nineteenth meeting with supervisor
 
 ### Thursday - 29 Feb 2023
 * *3 hours* Working on PMA indexing and retrieval
@@ -554,3 +555,6 @@
 
 ### Saturday - 02 March 2023
 * *1 hour* Checking results of MedMCQA finetune 
+
+### Sunday - 03 March 2023
+* *1.5 hours* New finetuning runs on MedQA, new inference results of vanilla/finetuned BioLlama in varying sizes
