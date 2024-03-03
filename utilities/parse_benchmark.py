@@ -90,18 +90,15 @@ def parse_BioASQ_with_snippet(version="5b"):
     print(f"Benchmark contains {num_factoids + num_non_factoid} questions, made up of {question_types}")
     return benchmark_questions, benchmark_answers
 
-def parse_MedQA_4(version="US"):
+def parse_MedQA_4(version="test.jsonl"):
     #load raw data from benchmarks/MedQA-USMLE/US/train.jsonl, which has a dictionary on each line
     data = []
-    # txt_files = glob.glob("../benchmarks")
-    # print(txt_files)
-    # dir_path = os.path.dirname(os.path.realpath(__file__))
-    # print(dir_path)
-    with open('benchmarks/MedQA-4-option/test.jsonl', 'r') as file:
+    if version == None: version = "test.jsonl"
+    with open('benchmarks/MedQA-4-option/' + version, 'r') as file:
         for line in file:
             record = json.loads(line)
             data.append(record)
-    print("Loading Benchmark from MedQA-4-option/test.jsonl")
+    print("Loading Benchmark from MedQA-4-option/" + version)
     benchmark_questions = []
     benchmark_answers = []
     num_questions_with_4_options = 0
@@ -122,18 +119,15 @@ def parse_MedQA_4(version="US"):
     print("Benchmark contains " + str(len(data)) + " questions, made up of " + str(num_questions_with_4_options) + " with 4 options and " + str(num_questions_with_non_4_options) + " with non-4 options")
     return benchmark_questions, benchmark_answers
 
-def parse_MedQA_5(version="US"):
+def parse_MedQA_5(version="test.jsonl"):
     #load raw data from benchmarks/MedQA-USMLE/US/train.jsonl, which has a dictionary on each line
     data = []
-    # txt_files = glob.glob("../benchmarks")
-    # print(txt_files)
-    # dir_path = os.path.dirname(os.path.realpath(__file__))
-    # print(dir_path)
-    with open('benchmarks/MedQA-USMLE/US/test.jsonl', 'r') as file:
+    if version == None: version = "test.jsonl"
+    with open('benchmarks/MedQA-USMLE/US/' + version, 'r') as file:
         for line in file:
             record = json.loads(line)
             data.append(record)
-    print("Loading Benchmark from MedQA-USMLE/US/test.jsonl")
+    print("Loading Benchmark from MedQA-USMLE/US/" + version)
     benchmark_questions = []
     benchmark_answers = []
     num_questions_with_5_options = 0
@@ -221,9 +215,9 @@ def parse_benchmark(benchmark, version = None):
     elif(benchmark == "bioASQ_with_snippet"):
         benchmark_questions, benchmark_answers = parse_BioASQ_with_snippet("5b")
     elif(benchmark == "MedQA-4"):
-        benchmark_questions, benchmark_answers = parse_MedQA_4("US")
+        benchmark_questions, benchmark_answers = parse_MedQA_4(version)
     elif(benchmark == "MedQA-5"):
-        benchmark_questions, benchmark_answers = parse_MedQA_5("US")
+        benchmark_questions, benchmark_answers = parse_MedQA_5(version)
     elif(benchmark == "PubMedQA"):
         benchmark_questions, benchmark_answers = parse_PubMedQA()
     elif(benchmark == "MedMCQA"):
