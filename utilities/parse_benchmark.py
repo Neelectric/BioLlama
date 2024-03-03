@@ -69,7 +69,6 @@ def parse_BioASQ_with_snippet(version="5b"):
     #     with open('benchmarks/BioASQ/Task5BGoldenEnriched/'+ filename, 'rb') as json_file:
     #         temp_data = json_file.read().decode('utf-8')
     #         enriched_data.append(json.loads(temp_data))
-
     # for set in enriched_data:
     #     for question in set["questions"]:
     #         if question["type"] not in question_types:
@@ -86,7 +85,6 @@ def parse_BioASQ_with_snippet(version="5b"):
     #         else:
     #             num_non_factoid += 1
     
-
     print(f"Benchmark contains {num_factoids + num_non_factoid} questions, made up of {question_types}")
     return benchmark_questions, benchmark_answers
 
@@ -148,17 +146,18 @@ def parse_MedQA_5(version="test.jsonl"):
     print("Benchmark contains " + str(len(data)) + " questions, made up of " + str(num_questions_with_5_options) + " with 5 options and " + str(num_questions_with_non_5_options) + " with non-5 options")
     return benchmark_questions, benchmark_answers
 
-def parse_PubMedQA(version=""):
+def parse_PubMedQA(version="test.json"):
+    if version == None: version = "test.json"
     #read in raw benchmark
-    with open('benchmarks/PubMedQA/ori_pqal.json', 'rb') as json_file:
+    with open('benchmarks/PubMedQA/' + version, 'rb') as json_file:
         json_data = json_file.read().decode('utf-8')
     data = json.loads(json_data)
-    #print(len(data.keys()))
     benchmark_questions = []
     benchmark_answers = []
     for key, val in data.items():
         benchmark_questions.append([val["CONTEXTS"],val["QUESTION"]])
         benchmark_answers.append(val["final_decision"])
+    print("Benchmark contains " + str(len(benchmark_questions)) + " questions")
     return benchmark_questions, benchmark_answers
 
 def parse_MedMCQA(version="train.json"):
@@ -219,7 +218,7 @@ def parse_benchmark(benchmark, version = None):
     elif(benchmark == "MedQA-5"):
         benchmark_questions, benchmark_answers = parse_MedQA_5(version)
     elif(benchmark == "PubMedQA"):
-        benchmark_questions, benchmark_answers = parse_PubMedQA()
+        benchmark_questions, benchmark_answers = parse_PubMedQA(version)
     elif(benchmark == "MedMCQA"):
         benchmark_questions, benchmark_answers = parse_MedMCQA(version)
     return benchmark_questions, benchmark_answers

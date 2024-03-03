@@ -558,3 +558,6 @@
 
 ### Sunday - 03 March 2023
 * *1.5 hours* New finetuning runs on MedQA, new inference results of vanilla/finetuned BioLlama in varying sizes
+* *0.5 hours* Finishing forgotten meeting minutes for three meetings
+* *1 hour* New inference results on MedQA-4 and 5
+* *3 hours* Adding support for PubMedQA finetuning
