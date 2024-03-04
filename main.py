@@ -16,7 +16,7 @@ model =  "BioLlama-13B-finetune" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-
 
 torch_dtype = None
 if model[:8] == "BioLlama":
-    torch_dtype = torch.float16
+    torch_dtype = torch.bfloat16
 benchmark = "bioASQ_with_snippet" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"

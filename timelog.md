@@ -567,3 +567,4 @@
 ## Week 25 - hours
 ### Monday - 04 March 2023
 * *0.5 hours* New inference results
+* *2.5 hours* Adding support for BioLlama-13B finetuning in bfloat16, starting first finetune and inference tests

@@ -54,7 +54,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     
     #promptifying questions
     chunk_index = 0
-    num_questions = b_start + b_end
+    num_questions = b_end - b_start
     for question in benchmark_questions[b_start:min(b_end, len(benchmark_questions))]:
         prompts.append(promptify(benchmark=benchmark, question=question, retrieval_mode=retrieval_model, retrieved_chunks=retrieved_chunks[chunk_index], model=model)) #promptify questions
         chunk_index += 1
