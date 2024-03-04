@@ -309,6 +309,11 @@ class BioLlama:
                 CCA_state_dict = load_state_dict(model_id + 'model-00003-of-00006.safetensors')
                 load_RETRO_weights(self.model, RETRO_layer_ids, CCA_state_dict)
                 del CCA_state_dict
+            elif (bnb_config != None):
+                print(f"LOADING THE 7B BIOLLAMA WEIGHTS FOR CCA IN INT4")
+                CCA_state_dict = load_state_dict(model_id + 'model-00003-of-00006.safetensors')
+                load_RETRO_weights(self.model, RETRO_layer_ids, CCA_state_dict)
+                del CCA_state_dict
 
         self.model.old_forward = self.model.forward
         self.model.forward = model_new_forward.__get__(self.model)

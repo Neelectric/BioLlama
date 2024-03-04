@@ -563,3 +563,7 @@
 * *3 hours* Adding support for PubMedQA finetuning
 * *3.5 hours* Adding support for BioASQ finetuning, further inference results
 * *2 hours* Fixing error in BioASQ finetuning 
+
+## Week 25 - hours
+### Monday - 04 March 2023
+* *0.5 hours* New inference results

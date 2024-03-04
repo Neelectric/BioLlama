@@ -12,7 +12,7 @@ from utilities.judging import llm_as_judge
 from utilities.utilities import write_to_readme
 import torch
 
-model =  "BioLlama-7B" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune", "BioLlama-7B", "BioLlama-7B-finetune"
+model =  "BioLlama-7B-finetune" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune", "BioLlama-7B", "BioLlama-7B-finetune"
 
 torch_dtype = None
 if model[:8] == "BioLlama":
