@@ -40,18 +40,18 @@ if benchmark == "PubMedQA":
 if benchmark == "MedQA-4" or benchmark == "MedQA-5":
     max_new_tokens = 20
 
-inference(model=model,
-        benchmark=benchmark,
-        b_start=b_start,
-        b_end=b_end,
-        max_new_tokens=max_new_tokens,
-        inference_mode="std",
-        retrieval_model=retrieval_model,
-        retrieval_text_mode=retrieval_text_mode,
-        chunk_length=chunk_length,
-        top_k=top_k,
-        db_name=db_name,
-        torch_dtype=torch_dtype)
+# inference(model=model,
+#         benchmark=benchmark,
+#         b_start=b_start,
+#         b_end=b_end,
+#         max_new_tokens=max_new_tokens,
+#         inference_mode="std",
+#         retrieval_model=retrieval_model,
+#         retrieval_text_mode=retrieval_text_mode,
+#         chunk_length=chunk_length,
+#         top_k=top_k,
+#         db_name=db_name,
+#         torch_dtype=torch_dtype)
 
 if torch_dtype is not None:
     print(f"Used dtype {torch_dtype}")
