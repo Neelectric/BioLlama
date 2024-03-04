@@ -300,10 +300,16 @@ class BioLlama:
                 RETROfit_layer(layer, i, self, training, torch_dtype)   
         if not training and model_id.startswith("/home/service/"):
             if (torch_dtype == torch.float16):
-                print(f"LOADING THE 7B BIOLLAMA WEIGHTS FOR CCA IN FLOAT16")
-                CCA_state_dict = load_state_dict(model_id + 'model-00002-of-00003.safetensors')
-                load_RETRO_weights(self.model, RETRO_layer_ids, CCA_state_dict)
-                del CCA_state_dict
+                if "7" in model_id:
+                    print(f"LOADING THE 7B BIOLLAMA WEIGHTS FOR CCA IN FLOAT16")
+                    CCA_state_dict = load_state_dict(model_id + 'model-00002-of-00003.safetensors')
+                    load_RETRO_weights(self.model, RETRO_layer_ids, CCA_state_dict)
+                    del CCA_state_dict
+                elif "13" in model_id:
+                    print(f"LOADING THE 13B BIOLLAMA WEIGHTS FOR CCA IN FLOAT16")
+                    CCA_state_dict = load_state_dict(model_id + 'model-00003-of-00006.safetensors')
+                    load_RETRO_weights(self.model, RETRO_layer_ids, CCA_state_dict)
+                    del CCA_state_dict
             elif (torch_dtype == torch.float32):
                 print(f"LOADING THE 7B BIOLLAMA WEIGHTS FOR CCA IN FLOAT32")
                 CCA_state_dict = load_state_dict(model_id + 'model-00003-of-00006.safetensors')

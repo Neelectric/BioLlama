@@ -64,6 +64,8 @@ def inference(model="Llama-2-70B-chat-GPTQ",
         model_directory = "/home/service/BioLlama/utilities/finetuning/llama2_training_output/"
     elif model == "BioLlama-7B-finetune":
         model_directory = "/home/service/BioLlama/utilities/finetuning/biollama_training_output/" + benchmark + "/7/"
+    elif model == "BioLlama-13B-finetune":
+        model_directory = "/home/service/BioLlama/utilities/finetuning/biollama_training_output/" + benchmark + "/13/"
     elif model == "BioLlama-7B":
         model_directory = 'meta-llama/Llama-2-7b-chat-hf'
     elif model == "BioLlama-13B":
