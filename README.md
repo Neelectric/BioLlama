@@ -7,23 +7,24 @@ The aim of this project is to enhance models of varying sizes from the Llama2 fa
 The table below shows preliminary results, as reported by other papers or recorded by me. Note that in many cases these are out of date, a more accu
 
  <!-- table -->
-| Model                 | Size   | BioASQ5b (snippets)   | PubMedQA   | MedQA-4   | MedQA-5   | MedMCQA   |
-|:----------------------|:-------|:----------------------|:-----------|:----------|:----------|:----------|
-| **As reported**       |        |                       |            |           |           |           |
-| M42                   | 70B    | -                     | -          | 61.5      | -         | 60.9      |
-| Med-PaLM              | 540B   | -                     | 79.0       | 67.6      | -         | 57.6      |
-| Med-PaLM 2            | 540B   | -                     | 81.8       | 86.5      | -         | 72.3      |
-| BIOREADER             | 229.5M | 81.88                 | -          | 42.96     | -         | -         |
-| **Produced By Me**    |        |                       |            |           |           |           |
-| Llama-2-7B-chat-GPTQ  | 7B     | 91.91                 | 59.49      | 30.9      | 25.6      | 32.1      |
-| Llama-2-13B-chat-GPTQ | 13B    | 91.70                 | 73.74      | 36.9      | 31.3      | 37.8      |
-| Llama-2-70B-chat-GPTQ | 70B    | 93.4                  | 75.35      | 44.3      | 36.4      | 46.6      |
-| BioLlama-7B           | 7B     | 82.34                 | 58.3       | 29.8      |           | 31.0      |
-| BioLlama-13B          | 13B    | 87.02                 | 67.5       | 38.5      |           | 36.1      |
-| BioLlama-70B          | 70B    | 87.45                 | 70.4       | 40.4      |           | 37.6      |
-| BioLlama-7B-finetune  | 7B     |                       | 64.2       |           |           | 34.4      |
-| BioLlama-13B-finetune | 13B    |                       |            |           |           |           |
-| BioLlama-70B-finetune | 70B    |                       |            |           |           |           |
+| Model                  | Size   | BioASQ5b (snippets)   | PubMedQA   | MedQA-4   | MedQA-5   | MedMCQA   |
+|:-----------------------|:-------|:----------------------|:-----------|:----------|:----------|:----------|
+| **As reported**        |        |                       |            |           |           |           |
+| M42                    | 70B    | -                     | -          | 61.5      | -         | 60.9      |
+| Med-PaLM               | 540B   | -                     | 79.0       | 67.6      | -         | 57.6      |
+| Med-PaLM 2             | 540B   | -                     | 81.8       | 86.5      | -         | 72.3      |
+| BIOREADER              | 229.5M | 81.88                 | -          | 42.96     | -         | -         |
+| **Produced By Me**     |        |                       |            |           |           |           |
+| Llama-2-7B-chat-GPTQ   | 7B     | 91.91                 | 59.49      | 30.9      | 25.6      | 32.1      |
+| Llama-2-13B-chat-GPTQ  | 13B    | 91.70                 | 73.74      | 36.9      | 31.3      | 37.8      |
+| Llama-2-70B-chat-GPTQ  | 70B    | 93.4                  | 75.35      | 44.3      | 36.4      | 46.6      |
+| BioLlama-7B            | 7B     | 82.34                 | 58.3       | 29.6      |           | 31.0      |
+| BioLlama-13B           | 13B    | 87.02                 | 67.5       | 38.5      | 34.0      | 36.1      |
+| BioLlama-70B           | 70B    | 87.45                 | 70.4       | 40.4      | 40.0      | 37.6      |
+| BioLlama-7B-finetune   | 7B     |                       | 64.2       |           |           | 34.4      |
+| BioLlama-13B-finetune  | 13B    |                       |            |           |           |           |
+| BioLlama-70B-finetune  | 70B    |                       |            |           |           |           |
+| BioLlama-7B-finetune-2 | 7B     |                       |            |           |           |           |
 <!-- table -->
 
 ## 🔎 Dissertation
@@ -34,6 +35,12 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 11:44:08, 04.03.2024 | BioLlama-13B | MedQA-5 |  --> 34.0, 1000 questions
+
+ * 07:57:13, 04.03.2024 | BioLlama-70B | MedQA-5 |  --> 40.0, 1000 questions
+
+ * 23:16:22, 03.03.2024 | BioLlama-7B | MedQA-4 | 29.8 --> 29.6, 1000 questions
+
  * 21:10:14, 03.03.2024 | BioLlama-7B-finetune | PubMedQA |  --> 64.2, 1000 questions
 
  * 16:47:05, 03.03.2024 | BioLlama-7B | MedQA-4 |  --> 29.8, 1000 questions
@@ -159,6 +166,9 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
+
+
 
 
 

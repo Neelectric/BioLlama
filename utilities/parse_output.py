@@ -115,9 +115,11 @@ def parse_output_finetuned(benchmark,
                 instance.append(benchmark_answers[i+b_start][0][0])
             else:
                 instance.append(benchmark_answers[i+b_start][0])
-            
             instance.append(responses[i])
             output.append(instance)
+        with open(targetfile, "w") as outfile: 
+            json.dump(output, outfile)
+        print("Written output to " + targetfile)
     elif benchmark == "PubMedQA":
         output = []
         for i in range(len(responses)):

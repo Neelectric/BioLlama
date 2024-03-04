@@ -17,7 +17,7 @@ model =  "BioLlama-7B" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune",
 torch_dtype = None
 if model[:8] == "BioLlama":
     torch_dtype = torch.float32
-benchmark = "MedQA-4" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
+benchmark = "MedQA-5" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"
 retrieval_text_mode = None # eg. "full", "input_segmentation
@@ -31,6 +31,7 @@ b_end = b_start + num_questions
 max_new_tokens = 30
 if benchmark[:6] == "bioASQ":
     max_new_tokens = 45  
+    b_start = 0
 
 if benchmark == "PubMedQA":
     max_new_tokens = 15

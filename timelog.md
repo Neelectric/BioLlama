@@ -521,7 +521,7 @@
 * *13.5 hours* Close to finished with introduction and background
 * *0.5 hours* Some minor benchmarking of Llama-2 on bioASQ
 
-## Week 24 - hours
+## Week 24 - 53 hours
 ### Monday - 26 Feb 2023
 * *8.5 hours* Further work on background, some inference tests
 * *2 hours* First benchmarks of BioLlama-7B/13B/70B on PubMedQA
@@ -561,3 +561,5 @@
 * *0.5 hours* Finishing forgotten meeting minutes for three meetings
 * *1 hour* New inference results on MedQA-4 and 5
 * *3 hours* Adding support for PubMedQA finetuning
+* *3.5 hours* Adding support for BioASQ finetuning, further inference results
+* *2 hours* Fixing error in BioASQ finetuning 

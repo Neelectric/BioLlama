@@ -55,7 +55,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     #promptifying questions
     chunk_index = 0
     num_questions = b_start + b_end
-    for question in benchmark_questions[b_start:min(b_end, num_questions)]:
+    for question in benchmark_questions[b_start:min(b_end, len(benchmark_questions))]:
         prompts.append(promptify(benchmark=benchmark, question=question, retrieval_mode=retrieval_model, retrieved_chunks=retrieved_chunks[chunk_index], model=model)) #promptify questions
         chunk_index += 1
     
@@ -70,7 +70,6 @@ def inference(model="Llama-2-70B-chat-GPTQ",
         model_directory = 'meta-llama/Llama-2-13b-chat-hf'
     elif model == "BioLlama-70B":
         model_directory = 'meta-llama/Llama-2-70b-chat-hf'
-
 
     print(f"--------------Start of inference of {model} on {benchmark} questions {b_start} to {b_start + num_questions}------------------")
     #helper function for batch inference
@@ -94,12 +93,13 @@ def inference(model="Llama-2-70B-chat-GPTQ",
                 json.dump(raw_responses, outfile)
             # after we are done with the model object, we remove it from the GPUs
             #model_object.cache.key_states()
-            if "meta-llama" not in model_directory or "/home/service/BioLlama/utilities/finetuning/biollama_training_output/" not in model_directory:
-                if benchmark[:6] == "bioASQ":
-                    model_object.cache.zero()
-                    model_object.model.free_unmanaged()
-                    model_object = None
-                    torch.cuda.empty_cache()
+            if "meta-llama" not in model_directory:
+                if "/home/service/BioLlama/utilities/finetuning/" not in model_directory:
+                    if benchmark[:6] == "bioASQ":
+                        model_object.cache.zero()
+                        model_object.model.free_unmanaged()
+                        model_object = None
+                        torch.cuda.empty_cache()
 
         else:
             raw_responses += batch_llm_inference(prompts, max_new_tokens)
