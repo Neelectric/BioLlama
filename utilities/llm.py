@@ -118,13 +118,23 @@ def finetuned_llama2(model_directory, prompts, max_new_tokens, model_object = No
     return generations, new_model
 
 def finetuned_biollama(model_directory, prompts, max_new_tokens, model_object = None, torch_dtype = None):
-    # override_directory = "/home/service/BioLlama/utilities/finetuning/biollama_training_output/"
+    finetune_directory = "/home/service/BioLlama/utilities/finetuning/biollama_training_output/"
     # print(f"overriding model_id with {override_directory}, using torch_dtype {torch_dtype}")
+    RETRO_layer_ids = [15]
+    if finetune_directory in model_directory:
+        slashes = model_directory.split("/")
+        size = slashes[-2]
+        if size == "7":
+            RETRO_layer_ids = [15]
+        elif size == "13":
+            RETRO_layer_ids = [19]
+        elif size == "70":
+            RETRO_layer_ids = [39]
     if model_object is None:
         chunk_length = 32
         new_model = BioLlama(model_id=model_directory, 
                              chunk_length=chunk_length, 
-                             RETRO_layer_ids = [15], 
+                             RETRO_layer_ids = RETRO_layer_ids, 
                              training=False, 
                              torch_dtype=torch_dtype)
     else:
