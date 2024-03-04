@@ -273,7 +273,7 @@ class BioLlama:
     def __init__(self, model_id, chunk_length, RETRO_layer_ids=[15], training=False, torch_dtype=torch.float32):
         # If quantization is lower than float32 (ie int8 or int4), we need a BitsAndBytesConfig
         if (torch_dtype == "int4"):
-            if training: raise Exception("Cannot train with quantization, train unquantized and quantize after training")
+            # if training: raise Exception("Cannot train with quantization, train unquantized and quantize after training")
             bnb_config = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype="float16", bnb_4bit_use_double_quant=False)
             torch_dtype=torch.bfloat16
         elif (torch_dtype == torch.int8):

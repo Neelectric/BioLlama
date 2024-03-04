@@ -12,11 +12,11 @@ from utilities.judging import llm_as_judge
 from utilities.utilities import write_to_readme
 import torch
 
-model =  "BioLlama-13B-finetune" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune", "BioLlama-7B", "BioLlama-7B-finetune"
-
+model =  "BioLlama-70B" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune", "BioLlama-7B", "BioLlama-7B-finetune"
+two_epochs = False
 torch_dtype = None
 if model[:8] == "BioLlama":
-    torch_dtype = torch.bfloat16
+    torch_dtype = "int4"
 benchmark = "bioASQ_with_snippet" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"
@@ -40,18 +40,18 @@ if benchmark == "PubMedQA":
 if benchmark == "MedQA-4" or benchmark == "MedQA-5":
     max_new_tokens = 20
 
-# inference(model=model,
-#         benchmark=benchmark,
-#         b_start=b_start,
-#         b_end=b_end,
-#         max_new_tokens=max_new_tokens,
-#         inference_mode="std",
-#         retrieval_model=retrieval_model,
-#         retrieval_text_mode=retrieval_text_mode,
-#         chunk_length=chunk_length,
-#         top_k=top_k,
-#         db_name=db_name,
-#         torch_dtype=torch_dtype)
+inference(model=model,
+        benchmark=benchmark,
+        b_start=b_start,
+        b_end=b_end,
+        max_new_tokens=max_new_tokens,
+        inference_mode="std",
+        retrieval_model=retrieval_model,
+        retrieval_text_mode=retrieval_text_mode,
+        chunk_length=chunk_length,
+        top_k=top_k,
+        db_name=db_name,
+        torch_dtype=torch_dtype)
 
 if torch_dtype is not None:
     print(f"Used dtype {torch_dtype}")
@@ -68,5 +68,7 @@ elif retrieval_model == "medcpt":
     model = "MedCPT"
 elif retrieval_model == "retro":
     model = "BioLlama"
+if two_epochs:
+    model = model + "-2"
 if num_questions > 100:
     write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode, top_k=top_k, num_questions=num_questions)
