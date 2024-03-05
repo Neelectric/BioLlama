@@ -12,19 +12,19 @@ from utilities.judging import llm_as_judge
 from utilities.utilities import write_to_readme
 import torch
 
-model =  "BioLlama-70B" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune", "BioLlama-7B", "BioLlama-7B-finetune"
+model =  "BioLlama-13B-finetune" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune", "BioLlama-7B", "BioLlama-7B-finetune"
 two_epochs = False
 torch_dtype = None
 if model[:8] == "BioLlama":
-    torch_dtype = "int4"
-benchmark = "bioASQ_with_snippet" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
+    torch_dtype = torch.bfloat16 # eg. torch.float32, torch.bfloat16 or "int4"
+benchmark = "MedMCQA" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"
 retrieval_text_mode = None # eg. "full", "input_segmentation
 chunk_length = None
 top_k = 1
 b_start = 10
-num_questions = 486
+num_questions = 1000
 b_end = b_start + num_questions
 
 #if benchmark name starts with "bioASQ" set max_new_tokens to 40

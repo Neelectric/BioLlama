@@ -298,8 +298,12 @@ class BioLlama:
         for i, layer in enumerate(self.model.model.layers): # switch pre-specified decoder layers to be a RETRO layer
             if i in RETRO_layer_ids:
                 RETROfit_layer(layer, i, self, training, torch_dtype)   
+            # if RETRO_layer_ids == [39]: # this is a special case for the 70B model, hacky solve
+            #     if i in [36, 37, 38, 39, 40, 41]:
+            #         layer.to(torch.device("cuda:0"))
+        # torch.cuda.empty_cache()
         if not training and model_id.startswith("/home/service/"):
-            if (torch_dtype == torch.float16):
+            if (torch_dtype == torch.float16 or torch_dtype == torch.bfloat16):
                 if "7" in model_id:
                     print(f"LOADING THE 7B BIOLLAMA WEIGHTS FOR CCA IN FLOAT16")
                     CCA_state_dict = load_state_dict(model_id + 'model-00002-of-00003.safetensors')

@@ -4,17 +4,11 @@ Public repository to accompany the Level 4 Research Project "Retrieval enhanceme
 The aim of this project is to enhance models of varying sizes from the Llama2 family through retrieval. Using few-shot prompting techniques, an initial baseline is created to see how much performance can be "tickled" out of vanilla Llama2 in its 7B, 13B and 70B variants. Performance is measured using standard Biomedical QA and OpenQA benchmarks such as BioASQ, MedQA, PubMedQA and MedMCQA. After setting this baseline, a RETRO-fitted version of Llama 2, dubbed "BioLLama" as inspired by the recent "BioReader" paper, is benchmarked. BioLlama uses MedCPT as a retriever to extract 32 token long snippets from RCT200k or PubMedAbstracts, augmenting Llama-2 on designated RETRO layers.
 
 ## Results
-The table below shows preliminary results, as reported by other papers or recorded by me. Note that in many cases these are out of date, a more accu
+The table below shows preliminary results. Note that currently, this table is a work in progress and so many scores are inaccurate or changing frequently as I refine BioLlama
 
  <!-- table -->
 | Model                  | Size   | BioASQ5b (snippets)   | PubMedQA   | MedQA-4   | MedQA-5   | MedMCQA   |
 |:-----------------------|:-------|:----------------------|:-----------|:----------|:----------|:----------|
-| **As reported**        |        |                       |            |           |           |           |
-| M42                    | 70B    | -                     | -          | 61.5      | -         | 60.9      |
-| Med-PaLM               | 540B   | -                     | 79.0       | 67.6      | -         | 57.6      |
-| Med-PaLM 2             | 540B   | -                     | 81.8       | 86.5      | -         | 72.3      |
-| BIOREADER              | 229.5M | 81.88                 | -          | 42.96     | -         | -         |
-| **Produced By Me**     |        |                       |            |           |           |           |
 | Llama-2-7B-chat-GPTQ   | 7B     | 91.91                 | 59.49      | 30.9      | 25.6      | 32.1      |
 | Llama-2-13B-chat-GPTQ  | 13B    | 91.70                 | 73.74      | 36.9      | 31.3      | 37.8      |
 | Llama-2-70B-chat-GPTQ  | 70B    | 93.4                  | 75.35      | 44.3      | 36.4      | 46.6      |
@@ -22,10 +16,19 @@ The table below shows preliminary results, as reported by other papers or record
 | BioLlama-13B           | 13B    | 87.02                 | 67.5       | 38.5      | 34.0      | 36.1      |
 | BioLlama-70B           | 70B    | 87.45                 | 70.4       | 40.4      | 40.0      | 37.6      |
 | BioLlama-7B-finetune   | 7B     | 86.46                 | 64.2       | 28.0      | 25.8      | 34.4      |
-| BioLlama-13B-finetune  | 13B    | 89.79                 | 76.5       |           |           |           |
+| BioLlama-13B-finetune  | 13B    | 89.79                 | 76.5       |           |           | 0.0       |
 | BioLlama-70B-finetune  | 70B    |                       |            |           |           |           |
 | BioLlama-7B-finetune-2 | 7B     | 87.29                 |            |           |           |           |
 <!-- table -->
+
+For comparison, this table shows the performance reported by open-source or proprietary models.
+| Model                  | Size   | BioASQ5b (snippets)   | PubMedQA   | MedQA-4   | MedQA-5   | MedMCQA   |
+|:-----------------------|:-------|:----------------------|:-----------|:----------|:----------|:----------|
+| BIOREADER              | 229.5M | 81.88                 | -          | 43.0      | -         | -         |
+| Med-PaLM               | 540B   | -                     | 79.0       | 67.6      | -         | 57.6      |
+| Med-PaLM 2             | 540B   | -                     | 81.8       | 86.5      | -         | 72.3      |
+| GPT-4                  | ?      | -                     | 74.4       | 81.4      | 78.6      | 72.4      |
+| GPT-4 (MedPrompt)      | ?      | -                     | 82.0       | 90.2      | -         | 79.1      |
 
 ## 🔎 Dissertation
 The dissertation is on the following overleaf project: https://www.overleaf.com/read/pvgmnfpxtvby
@@ -35,6 +38,8 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 15:36:59, 05.03.2024 | BioLlama-13B-finetune | MedMCQA |  --> 0.0, 1000 questions
+
  * 23:33:09, 04.03.2024 | BioLlama-7B-finetune-2 | BioASQ5b (snippets) |  --> 87.29, 486 questions
 
  * 22:17:26, 04.03.2024 | BioLlama-13B-finetune | PubMedQA |  --> 76.5, 1000 questions
@@ -180,6 +185,7 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
 
 
 

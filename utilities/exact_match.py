@@ -66,6 +66,8 @@ def mark_MedMCQA(model, benchmark, input):
     for i in range(len(input)):
         marking_scheme = input[i][1]
         student_response = input[i][2].strip()
+        if student_response[0] == "(":
+            student_response = student_response[1]
         num_total += 1
         if marking_scheme == student_response[0:1]:
             num_correct += 1
