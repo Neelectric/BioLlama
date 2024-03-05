@@ -17,7 +17,7 @@ two_epochs = False
 torch_dtype = None
 if model[:8] == "BioLlama":
     torch_dtype = torch.bfloat16 # eg. torch.float32, torch.bfloat16 or "int4"
-benchmark = "MedMCQA" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
+benchmark = "MedQA-4" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"
 retrieval_text_mode = None # eg. "full", "input_segmentation

@@ -16,7 +16,7 @@ The table below shows preliminary results. Note that currently, this table is a 
 | BioLlama-13B           | 13B    | 87.02                 | 67.5       | 38.5      | 34.0      | 36.1      |
 | BioLlama-70B           | 70B    | 87.45                 | 70.4       | 40.4      | 40.0      | 37.6      |
 | BioLlama-7B-finetune   | 7B     | 86.46                 | 64.2       | 28.0      | 25.8      | 34.4      |
-| BioLlama-13B-finetune  | 13B    | 89.79                 | 76.5       |           |           | 0.0       |
+| BioLlama-13B-finetune  | 13B    | 89.79                 | 76.5       | 40.8      |           | 42.3      |
 | BioLlama-70B-finetune  | 70B    |                       |            |           |           |           |
 | BioLlama-7B-finetune-2 | 7B     | 87.29                 |            |           |           |           |
 <!-- table -->
@@ -38,6 +38,10 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 20:07:33, 05.03.2024 | BioLlama-13B-finetune | MedQA-4 |  --> 40.8, 1000 questions
+
+ * 17:15:24, 05.03.2024 | BioLlama-13B-finetune | MedMCQA | 0.0 --> 42.3, 1000 questions
+
  * 15:36:59, 05.03.2024 | BioLlama-13B-finetune | MedMCQA |  --> 0.0, 1000 questions
 
  * 23:33:09, 04.03.2024 | BioLlama-7B-finetune-2 | BioASQ5b (snippets) |  --> 87.29, 486 questions
@@ -185,6 +189,8 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
+
 
 
 
