@@ -16,9 +16,9 @@ The table below shows preliminary results. Note that currently, this table is a 
 | BioLlama-13B           | 13B    | 87.02                 | 67.5       | 38.5      | 34.0      | 36.1      |
 | BioLlama-70B           | 70B    | 87.45                 | 70.4       | 40.4      | 40.0      | 37.6      |
 | BioLlama-7B-finetune   | 7B     | 86.46                 | 64.2       | 28.0      | 25.8      | 34.4      |
-| BioLlama-13B-finetune  | 13B    | 89.79                 | 76.5       | 40.8      |           | 42.3      |
+| BioLlama-13B-finetune  | 13B    | 89.79                 | 76.5       | 40.8      | 32.9      | 42.3      |
 | BioLlama-70B-finetune  | 70B    |                       |            |           |           |           |
-| BioLlama-7B-finetune-2 | 7B     | 87.29                 |            |           |           |           |
+| BioLlama-7B-finetune-2 | 7B     | 87.29                 | 68.2       |           |           |           |
 <!-- table -->
 
 For comparison, this table shows the performance reported by open-source or proprietary models.
@@ -38,6 +38,10 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 00:56:24, 06.03.2024 | BioLlama-13B-finetune | MedQA-5 |  --> 32.9, 1000 questions
+
+ * 21:52:19, 05.03.2024 | BioLlama-7B-finetune-2 | PubMedQA |  --> 68.2, 1000 questions
+
  * 20:07:33, 05.03.2024 | BioLlama-13B-finetune | MedQA-4 |  --> 40.8, 1000 questions
 
  * 17:15:24, 05.03.2024 | BioLlama-13B-finetune | MedMCQA | 0.0 --> 42.3, 1000 questions
@@ -189,6 +193,8 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
+
 
 
 
