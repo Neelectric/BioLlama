@@ -34,11 +34,14 @@ def inference(model="Llama-2-70B-chat-GPTQ",
               chunk_length = 16,
               top_k = 1,
               db_name = "RCT20ktrain",
-              torch_dtype = None):
+              torch_dtype = None,
+              zero_shot = None):
     
     #preparatory steps
     start_time = time.time() # time before batch inference
     targetfile = "output/" + model + "-" + benchmark + ".json" #file to write output to
+    if zero_shot:
+        targetfile = "output/" + model + "-" + benchmark + "-0.json" #file to write output to
     model_directory =  "../models/" + model + "/" #directory containing model, tokenizer, generator
     benchmark_questions, benchmark_answers = parse_benchmark(benchmark) #load benchmark
     prompts = []
@@ -56,7 +59,7 @@ def inference(model="Llama-2-70B-chat-GPTQ",
     chunk_index = 0
     num_questions = b_end - b_start
     for question in benchmark_questions[b_start:min(b_end, len(benchmark_questions))]:
-        prompts.append(promptify(benchmark=benchmark, question=question, retrieval_mode=retrieval_model, retrieved_chunks=retrieved_chunks[chunk_index], model=model)) #promptify questions
+        prompts.append(promptify(benchmark=benchmark, question=question, retrieval_mode=retrieval_model, retrieved_chunks=retrieved_chunks[chunk_index], model=model, zero_shot=zero_shot)) #promptify questions
         chunk_index += 1
     
     #change model directory if dealing with a finetuned model
@@ -130,7 +133,8 @@ def inference(model="Llama-2-70B-chat-GPTQ",
                           benchmark_answers,
                           b_start,
                           raw_responses,
-                          targetfile)
+                          targetfile,
+                          zero_shot)
     print("Time for batch inference: " + str(time.time() - start_time))
 
 if __name__ == "__main__":

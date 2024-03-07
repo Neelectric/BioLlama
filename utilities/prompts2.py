@@ -11,6 +11,10 @@ def retrieval_augmentation(chunks):
         output += "\"" + chunk + "\",\n"
     return output
 
+def zero_shotify():
+    format_string = "You start all of your responses with <ANSWER> and end them with </ANSWER>. Respond only with the correct answer enclosed in brackets followed by its answer text, as stated in the question."
+    return format_string + "\n" + "<QUESTION>"
+
 def few_shot(benchmark):
     format_string = "You start all of your responses with <ANSWER> and end them with </ANSWER>, as shown in the following example: "
     if benchmark == "bioASQ_no_snippet" or benchmark == "bioASQ_with_snippet":
@@ -37,15 +41,17 @@ def add_snippets(question):
     output += "</SNIPPETS>\n"
     return output, factoid_question
 
-def promptify(benchmark, question, retrieval_mode = None, retrieved_chunks = None, model = None):
+def promptify(benchmark, question, retrieval_mode = None, retrieved_chunks = None, model = None, zero_shot = False):
     promptified = system_prompt()
     if retrieval_mode != None:
         promptified += retrieval_augmentation(retrieved_chunks)
     if benchmark == "bioASQ_with_snippet" or benchmark == "PubMedQA":
         snippet_addition, question = add_snippets(question)
         promptified += snippet_addition
-    
-    promptified += few_shot(benchmark)
+    if zero_shot:
+        promptified += zero_shotify()
+    else:
+        promptified += few_shot(benchmark)
     promptified += question
     promptified += "</QUESTION>\n<ANSWER>"
     # print(promptified)

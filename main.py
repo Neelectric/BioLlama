@@ -12,9 +12,10 @@ from utilities.judging import llm_as_judge
 from utilities.utilities import write_to_readme
 import torch
 
-model =  "BioLlama-13B-finetune" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune", "BioLlama-7B", "BioLlama-7B-finetune"
-two_epochs = False
+model =  "Llama-2-7B-chat-GPTQ" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune", "BioLlama-7B", "BioLlama-7B-finetune"
+two_epochs = None
 torch_dtype = None
+zero_shot = True
 if model[:11] == "BioLlama-7B": torch_dtype = torch.float32 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-13B": torch_dtype = torch.bfloat16 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-70B": torch_dtype = "int4" # eg. torch.float32, torch.bfloat16 or "int4"
@@ -52,13 +53,14 @@ inference(model=model,
         chunk_length=chunk_length,
         top_k=top_k,
         db_name=db_name,
-        torch_dtype=torch_dtype)
+        torch_dtype=torch_dtype,
+        zero_shot=zero_shot,)
 
 if torch_dtype is not None:
     print(f"Used dtype {torch_dtype}")
 
 if benchmark == "MedQA-4" or benchmark == "MedQA-5" or benchmark == "PubMedQA" or benchmark == "MedMCQA":
-    accuracy = 100*exact_match(model=model, benchmark=benchmark)
+    accuracy = 100*exact_match(model=model, benchmark=benchmark, zero_shot=zero_shot)
 
 elif benchmark == "bioASQ_no_snippet" or benchmark == "bioASQ_with_snippet":
     accuracy = 100*llm_as_judge(model_to_mark=model, benchmark_to_mark=benchmark)
@@ -71,5 +73,7 @@ elif retrieval_model == "retro":
     model = "BioLlama"
 if two_epochs:
     model = model + "-2"
+if zero_shot:
+    model = model + "-0"
 if num_questions > 100:
     write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode, top_k=top_k, num_questions=num_questions)

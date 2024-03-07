@@ -572,3 +572,8 @@
 ### Tuesday - 05 March 2023
 * *3.5 hours* Re-visiting 13b finetuning, new results on 2 epoch training
 * *2.5 hours* Further 2 epoch training, visualising BioLlama13b finetune improvements
+
+### Wednesday - 06 March 2023
+* *2.5 hours* New 2 epoch training and inference results
+* *0.5 hours* Twentieth meeting with supervisor
+* *2 hours* Fixing old zero-shot results

@@ -5,10 +5,10 @@ def parse_output_GPTQ(benchmark,
                       benchmark_answers,
                       b_start,
                       raw_responses,
-                      targetfile):
+                      targetfile,
+                      zero_shot=False):
     #detect answers to benchmark questions in response from the LLM
     pattern = r'<ANSWER>(.*?)</[aA][nN][sS][wW][eE][rR]>'
-    # pattern_emergency = r'<ANSWER>(.*?)'
     responses = []
     weird_counter = 0
     for raw_response in raw_responses:

@@ -27,7 +27,11 @@ def mark_MedQA(model, benchmark, input):
     else:
         for i in range(len(input)):
             num_total += 1
-            if input[i][1] == input[i][2]:
+            marking_scheme = input[i][1]
+            student_response = input[i][2]
+            if marking_scheme == student_response:
+                num_correct += 1
+            elif marking_scheme[1:2] == student_response:
                 num_correct += 1
     accuracy = num_correct/num_total
     print(f"Marking model {model} performance on benchmark {benchmark}")
@@ -79,8 +83,10 @@ def mark_MedMCQA(model, benchmark, input):
     print(f"Out of {num_total}, accuracy is {num_correct/num_total} with a total of {num_correct} correct and {num_incorrect} incorrect responses.")
     return accuracy
 
-def exact_match(model, benchmark):
+def exact_match(model, benchmark, zero_shot):
     output_file = "output/" + model + "-" + benchmark + ".json"
+    if zero_shot:
+        output_file = "output/" + model + "-" + benchmark + "-0.json"
     with open(output_file, 'rb') as json_file:
         json_data = json_file.read().decode('utf-8')
     data = json.loads(json_data)
