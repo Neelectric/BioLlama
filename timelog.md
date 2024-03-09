@@ -577,3 +577,13 @@
 * *2.5 hours* New 2 epoch training and inference results
 * *0.5 hours* Twentieth meeting with supervisor
 * *2 hours* Fixing old zero-shot results
+
+### Thursday - 07 March 2023
+* *1.5 hours* Fixing introuction, re-adding support for zero-shot benchmarking
+* *1 hour* New zero-shot results
+
+### Friday - 08 March 2023
+* *3 hours* Further work fixing background section
+
+### Saturday - 09 March 2023
+* *10 hours* Fixing Intro and Background, new MedMCQA and zs results
