@@ -9,9 +9,9 @@ The table below shows preliminary results. Note that currently, this table is a 
  <!-- table -->
 | Model                   | Size   | BioASQ5b (snippets)   | PubMedQA   | MedQA-4   | MedQA-5   | MedMCQA   |
 |:------------------------|:-------|:----------------------|:-----------|:----------|:----------|:----------|
-| Llama-2-7B-chat-GPTQ-0  | 7B     |                       |            | 14.7      |           |           |
-| Llama-2-13B-chat-GPTQ-0 | 13B    |                       |            |           |           |           |
-| Llama-2-70B-chat-GPTQ-0 | 70B    |                       |            |           |           |           |
+| Llama-2-7B-chat-GPTQ-0  | 7B     |                       | 68.6       | 14.7      | 11.5      | 21.8      |
+| Llama-2-13B-chat-GPTQ-0 | 13B    |                       | 74.2       | 34.4      | 26.4      | 37.6      |
+| Llama-2-70B-chat-GPTQ-0 | 70B    |                       | 52.1       | 33.3      | 32.7      | 40.6      |
 | Llama-2-7B-chat-GPTQ    | 7B     | 91.91                 | 59.49      | 30.9      | 25.6      | 32.1      |
 | Llama-2-13B-chat-GPTQ   | 13B    | 91.70                 | 73.74      | 36.9      | 31.3      | 37.8      |
 | Llama-2-70B-chat-GPTQ   | 70B    | 93.4                  | 75.35      | 44.3      | 36.4      | 46.6      |
@@ -41,6 +41,28 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 18:32:19, 09.03.2024 | Llama-2-7B-chat-GPTQ-0 | MedMCQA |  --> 21.8, 1000 questions
+
+ * 18:09:31, 09.03.2024 | Llama-2-13B-chat-GPTQ-0 | MedMCQA |  --> 37.6, 1000 questions
+
+ * 18:04:47, 09.03.2024 | Llama-2-13B-chat-GPTQ-0 | MedQA-4 |  --> 34.4, 1000 questions
+
+ * 17:54:13, 09.03.2024 | Llama-2-7B-chat-GPTQ-0 | PubMedQA |  --> 68.6, 1000 questions
+
+ * 17:44:54, 09.03.2024 | Llama-2-13B-chat-GPTQ-0 | PubMedQA |  --> 74.2, 1000 questions
+
+ * 17:11:29, 09.03.2024 | Llama-2-70B-chat-GPTQ-0 | PubMedQA |  --> 52.1, 1000 questions
+
+ * 16:35:23, 09.03.2024 | Llama-2-70B-chat-GPTQ-0 | MedMCQA |  --> 40.6, 1000 questions
+
+ * 16:12:16, 09.03.2024 | Llama-2-70B-chat-GPTQ-0 | MedQA-4 |  --> 33.3, 1000 questions
+
+ * 15:32:31, 09.03.2024 | Llama-2-70B-chat-GPTQ-0 | MedQA-5 |  --> 32.7, 1000 questions
+
+ * 15:00:16, 09.03.2024 | Llama-2-13B-chat-GPTQ-0 | MedQA-5 |  --> 26.4, 1000 questions
+
+ * 14:28:16, 09.03.2024 | Llama-2-7B-chat-GPTQ-0 | MedQA-5 |  --> 11.5, 1000 questions
+
  * 23:26:44, 06.03.2024 | Llama-2-7B-chat-GPTQ-0 | MedQA-4 |  --> 14.7, 1000 questions
 
  * 15:29:14, 06.03.2024 | BioLlama-7B-finetune-2 | MedQA-4 |  --> 26.2, 1000 questions
@@ -202,6 +224,17 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
+
+
+
+
+
+
+
+
+
+
 
 
 

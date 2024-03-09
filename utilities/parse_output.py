@@ -15,7 +15,7 @@ def parse_output_GPTQ(benchmark,
         # print("Raw response: " + raw_response  + "\n")
         response = re.findall(pattern, raw_response, re.DOTALL)
         # print("Response: " + str(response) + "\n")
-        if len(response) > 2 and benchmark == "MedQA-4" or benchmark == "MedQA-5":
+        if len(response) > 2 and (benchmark == "MedQA-4" or benchmark == "MedQA-5"):
             responses.append(response[2][1:])
         elif len(response) > 2 and benchmark=="PubMedQA":
             responses.append(response[2])

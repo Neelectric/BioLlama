@@ -29,6 +29,8 @@ def mark_MedQA(model, benchmark, input):
             num_total += 1
             marking_scheme = input[i][1]
             student_response = input[i][2]
+            #strip any preceding whitespace from student response
+            student_response = student_response.strip()
             if marking_scheme == student_response:
                 num_correct += 1
             elif marking_scheme[1:2] == student_response:
