@@ -9,9 +9,9 @@ The table below shows preliminary results. Note that currently, this table is a 
  <!-- table -->
 | Model                   | Size   | BioASQ5b (snippets)   | PubMedQA   | MedQA-4   | MedQA-5   | MedMCQA   |
 |:------------------------|:-------|:----------------------|:-----------|:----------|:----------|:----------|
-| Llama-2-7B-chat-GPTQ-0  | 7B     |                       | 68.6       | 14.7      | 11.5      | 21.8      |
-| Llama-2-13B-chat-GPTQ-0 | 13B    |                       | 74.2       | 34.4      | 26.4      | 37.6      |
-| Llama-2-70B-chat-GPTQ-0 | 70B    |                       | 52.1       | 33.3      | 32.7      | 40.6      |
+| Llama-2-7B-chat-GPTQ-0  | 7B     | 92.13                 | 68.6       | 14.7      | 11.5      | 21.8      |
+| Llama-2-13B-chat-GPTQ-0 | 13B    | 91.7                  | 74.2       | 34.4      | 26.4      | 37.6      |
+| Llama-2-70B-chat-GPTQ-0 | 70B    | 93.4                  | 52.1       | 33.3      | 32.7      | 40.6      |
 | Llama-2-7B-chat-GPTQ    | 7B     | 91.91                 | 59.49      | 30.9      | 25.6      | 32.1      |
 | Llama-2-13B-chat-GPTQ   | 13B    | 91.70                 | 73.74      | 36.9      | 31.3      | 37.8      |
 | Llama-2-70B-chat-GPTQ   | 70B    | 93.4                  | 75.35      | 44.3      | 36.4      | 46.6      |
@@ -41,6 +41,12 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 19:45:48, 09.03.2024 | Llama-2-70B-chat-GPTQ-0 | BioASQ5b (snippets) |  --> 93.4, 1000 questions
+
+ * 18:50:08, 09.03.2024 | Llama-2-13B-chat-GPTQ-0 | BioASQ5b (snippets) |  --> 91.7, 1000 questions
+
+ * 18:40:17, 09.03.2024 | Llama-2-7B-chat-GPTQ-0 | BioASQ5b (snippets) |  --> 92.13, 1000 questions
+
  * 18:32:19, 09.03.2024 | Llama-2-7B-chat-GPTQ-0 | MedMCQA |  --> 21.8, 1000 questions
 
  * 18:09:31, 09.03.2024 | Llama-2-13B-chat-GPTQ-0 | MedMCQA |  --> 37.6, 1000 questions
@@ -224,6 +230,9 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
+
+
 
 
 
