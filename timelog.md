@@ -587,3 +587,6 @@
 
 ### Saturday - 09 March 2023
 * *10 hours* Fixing Intro and Background, new MedMCQA and zs results
+
+### Sunday - 10 March 2023
+* *3 hours* Further work on Background, graphs
