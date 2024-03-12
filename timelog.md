@@ -593,4 +593,7 @@
 
 ## Week 26 - hours
 ### Monday - 11 March 2023
-* *13 hours* Starting methods section
+* *13 hours* Starting methods section, how to prompt, mark and benchmark pipeline
+
+### Tusday - 12 March 2023
+* *9 hours* Further work on methods section, fleshing out BioLlama design and training

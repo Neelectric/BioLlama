@@ -65,7 +65,9 @@ if benchmark == "MedQA-4" or benchmark == "MedQA-5" or benchmark == "PubMedQA" o
     accuracy = 100*exact_match(model=model, benchmark=benchmark, zero_shot=zero_shot)
 
 elif benchmark == "bioASQ_no_snippet" or benchmark == "bioASQ_with_snippet":
-    accuracy = 100*llm_as_judge(model_to_mark=model, benchmark_to_mark=benchmark)
+    # note that this runs out of memory for anything larger than 7B models (I think)
+    # it should be easy to remedy, but I don't have the time to do it
+    accuracy = 100*llm_as_judge(model_to_mark=model, benchmark_to_mark=benchmark) 
     
 if retrieval_model == "gte-large":
     model = "GTE"

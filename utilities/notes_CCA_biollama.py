@@ -47,19 +47,19 @@ def ca(self, hidden_state, neighbour): # Cross-Attention
 def cca(self, hidden_states): # Chunked Cross-Attention
     neighbours = self.retrieval(hidden_states) # retrieve neighbours
     ee_neighbours = self.encode_and_embed(neighbours) # encode and embed neighbours
-    spliced_neighbours = self.splice_neighbours(ee_neighbours) # splice neighbours
-    first_hidden_state = hidden_states[0:32] # prepare first hidden state
-    spliced_hidden_states = self.splice_hidden_states(hidden_states) # splice hidden states
-    for hidden_state, neighbour in zip(spliced_hidden_states, spliced_neighbours):
+    first_hs = hidden_states[0:32] # first hidden state remains untouched
+    sliced_hs = self.slice_hidden_states(hidden_states) # slice hidden states
+    for hidden_state, neighbour in zip(sliced_hs, ee_neighbours):
         cross_attention = self.ca(hidden_state, neighbour) # apply cross attention
-        first_hidden_state = torch.cat((first_hidden_state, cross_attention), 0) # concatenate hidden states
-    output = self.add_last_chunk(first_hidden_state, hidden_states) # add last chunk (if any)
+        first_hs = torch.cat((first_hs, cross_attention), 0) # concatenate hidden states
+    output = self.add_last_chunk(first_hs, hidden_states) # add last chunk (if any)
     return output
 
 def RETRO_layer_forward(self, *args, **kwargs): # .forward of RETRO layers
     # Standard RMS normalization, self-attention, and residual connections
     ...
     residual = hidden_states # prepare residual connection
+    hiddden_states = self.pre_cca_layernorm(hidden_states) # normalize
     hidden_states = self.cca(hidden_states) # apply chunked cross-attention
     hidden_states = residual + hidden_states # add residual connection
     # Standard RMS normalization, feed-forward, and residual connections
@@ -68,11 +68,12 @@ def RETRO_layer_forward(self, *args, **kwargs): # .forward of RETRO layers
 
 class BioLlama: # BioLlama model
     def __init__(self, model_id, chunk_length, RETRO_layer_ids=15, training=False):
-        setup_biollama(self, training) # setup the model, tokenizer, and device
-        # this replaces the .forward() method of specified layers with the custom implementation above, and adds LlamaRMSNorm and LlamaSdpaAttention modules to them. their weights are randomly initialized
+        setup_biollama(self, model_id, training) # setup the model and tokenizer
+        # adds RMSNorm and SdpaAttention modules & customizes .forward()
         RETROfit_layers(self.model.layers, RETRO_layer_ids)
-        if not training: load_RETRO_weights(self.model, RETRO_layer_ids) # load RETRO weights if already trained
-        self.model.forward = generate_new_forward(self) # replace model .forward() method
+        # if benchmarking a trained model, load RETRO weights
+        if not training: load_RETRO_weights(self.model, RETRO_layer_ids) 
+        self.model.forward = generate_new_forward(self) # replace model .forward() 
         prepare_medCPT_and_db(self, chunk_length) # attach medCPT and db to model
 
     def generate(self, prompt, max_new_tokens=100):
