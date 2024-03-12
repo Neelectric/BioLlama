@@ -21,7 +21,8 @@ The table below shows preliminary results. Note that currently, this table is a 
 | BioLlama-7B-finetune    | 7B     | 86.46                 | 64.2       | 28.0      | 25.8      | 34.4      |
 | BioLlama-13B-finetune   | 13B    | 89.79                 | 76.5       | 40.8      | 32.9      | 42.3      |
 | BioLlama-70B-finetune   | 70B    | ??                    | ??         | ??        | ??        | ??        |
-| BioLlama-7B-finetune-2  | 7B     | 87.29                 | 68.2       | 26.2      | 24.2      |           |
+| BioLlama-7B-finetune-2  | 7B     | 87.29                 | 68.2       | 26.2      | 24.2      | 37.2      |
+| BioLlama-13B-finetune-2 | 13B    |                       |            |           |           |           |
 <!-- table -->
 
 For comparison, this table shows the performance reported by open-source or proprietary models.
@@ -41,6 +42,8 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 13:02:47, 12.03.2024 | BioLlama-7B-finetune-2 | MedMCQA |  --> 37.2, 1000 questions
+
  * 19:45:48, 09.03.2024 | Llama-2-70B-chat-GPTQ-0 | BioASQ5b (snippets) |  --> 93.4, 1000 questions
 
  * 18:50:08, 09.03.2024 | Llama-2-13B-chat-GPTQ-0 | BioASQ5b (snippets) |  --> 91.7, 1000 questions
@@ -230,6 +233,7 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
 
 
 

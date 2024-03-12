@@ -69,9 +69,10 @@ def RETRO_layer_forward(self, *args, **kwargs): # .forward of RETRO layers
 class BioLlama: # BioLlama model
     def __init__(self, model_id, chunk_length, RETRO_layer_ids=15, training=False):
         setup_biollama(self, training) # setup the model, tokenizer, and device
-        RETROfit_layer(self.model.layers[RETRO_layer_ids]) # RETROfit specified layers
-        if not training: load_RETRO_weights(self.model, RETRO_layer_ids) # load RETRO weights
-        self.model.forward = generate_new_forward(self) # replace forward method
+        # this replaces the .forward() method of specified layers with the custom implementation above, and adds LlamaRMSNorm and LlamaSdpaAttention modules to them. their weights are randomly initialized
+        RETROfit_layers(self.model.layers, RETRO_layer_ids)
+        if not training: load_RETRO_weights(self.model, RETRO_layer_ids) # load RETRO weights if already trained
+        self.model.forward = generate_new_forward(self) # replace model .forward() method
         prepare_medCPT_and_db(self, chunk_length) # attach medCPT and db to model
 
     def generate(self, prompt, max_new_tokens=100):
