@@ -590,3 +590,7 @@
 
 ### Sunday - 10 March 2023
 * *3 hours* Further work on Background, graphs
+
+## Week 26 - hours
+### Monday - 11 March 2023
+* *13 hours* Starting methods section
