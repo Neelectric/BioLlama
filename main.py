@@ -18,7 +18,7 @@ zero_shot = False
 if model[:11] == "BioLlama-7B": torch_dtype = torch.float32 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-13B": torch_dtype = torch.bfloat16 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-70B": torch_dtype = "int4" # eg. torch.float32, torch.bfloat16 or "int4"
-benchmark = "bioASQ_with_snippet" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
+benchmark = "PubMedQA" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"
 retrieval_text_mode = None # eg. "full", "input_segmentation
@@ -44,19 +44,19 @@ if benchmark == "MedQA-4" or benchmark == "MedQA-5":
 if zero_shot:
     max_new_tokens = 35
 
-# inference(model=model,
-#         benchmark=benchmark,
-#         b_start=b_start,
-#         b_end=b_end,
-#         max_new_tokens=max_new_tokens,
-#         inference_mode="std",
-#         retrieval_model=retrieval_model,
-#         retrieval_text_mode=retrieval_text_mode,
-#         chunk_length=chunk_length,
-#         top_k=top_k,
-#         db_name=db_name,
-#         torch_dtype=torch_dtype,
-#         zero_shot=zero_shot,)
+inference(model=model,
+        benchmark=benchmark,
+        b_start=b_start,
+        b_end=b_end,
+        max_new_tokens=max_new_tokens,
+        inference_mode="std",
+        retrieval_model=retrieval_model,
+        retrieval_text_mode=retrieval_text_mode,
+        chunk_length=chunk_length,
+        top_k=top_k,
+        db_name=db_name,
+        torch_dtype=torch_dtype,
+        zero_shot=zero_shot,)
 
 if torch_dtype is not None:
     print(f"Used dtype {torch_dtype}")
