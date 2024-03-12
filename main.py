@@ -11,10 +11,10 @@ from utilities.judging import llm_as_judge
 from utilities.utilities import write_to_readme
 import torch
 
-model =  "Llama-2-7B-chat-GPTQ" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune", "BioLlama-7B", "BioLlama-7B-finetune"
-two_epochs = None
+model =  "BioLlama-7B-finetune" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune", "BioLlama-7B", "BioLlama-7B-finetune"
+two_epochs = True
 torch_dtype = None
-zero_shot = True
+zero_shot = False
 if model[:11] == "BioLlama-7B": torch_dtype = torch.float32 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-13B": torch_dtype = torch.bfloat16 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-70B": torch_dtype = "int4" # eg. torch.float32, torch.bfloat16 or "int4"
