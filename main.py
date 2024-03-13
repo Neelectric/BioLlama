@@ -18,7 +18,7 @@ zero_shot = False
 if model[:11] == "BioLlama-7B": torch_dtype = torch.float32 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-13B": torch_dtype = torch.bfloat16 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-70B": torch_dtype = "int4" # eg. torch.float32, torch.bfloat16 or "int4"
-benchmark = "MedQA-4" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
+benchmark = "MedQA-5" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"
 retrieval_text_mode = None # eg. "full", "input_segmentation

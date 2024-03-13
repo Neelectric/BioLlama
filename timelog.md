@@ -597,3 +597,4 @@
 
 ### Tusday - 12 March 2023
 * *9 hours* Further work on methods section, fleshing out BioLlama design and training
+* *2 hours* Further 13B 2 epoch finetuning attempts

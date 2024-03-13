@@ -47,7 +47,7 @@ def ca(self, hidden_state, neighbour): # Cross-Attention
 def cca(self, hidden_states): # Chunked Cross-Attention
     neighbours = self.retrieval(hidden_states) # retrieve neighbours
     ee_neighbours = self.encode_and_embed(neighbours) # encode and embed neighbours
-    first_hs = hidden_states[0:32] # first hidden state remains untouched
+    first_hs = hidden_states[0:31] # first hidden state remains untouched
     sliced_hs = self.slice_hidden_states(hidden_states) # slice hidden states
     for hidden_state, neighbour in zip(sliced_hs, ee_neighbours):
         cross_attention = self.ca(hidden_state, neighbour) # apply cross attention
