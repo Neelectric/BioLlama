@@ -18,14 +18,14 @@ zero_shot = False
 if model[:11] == "BioLlama-7B": torch_dtype = torch.float32 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-13B": torch_dtype = torch.bfloat16 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-70B": torch_dtype = "int4" # eg. torch.float32, torch.bfloat16 or "int4"
-benchmark = "MedMCQA" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
+benchmark = "PubMedQA" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
 db_name = "RCT200ktrain"
 retrieval_model = None # eg. "gte-large", "medcpt"
 retrieval_text_mode = None # eg. "full", "input_segmentation
 chunk_length = None
 top_k = 1
 b_start = 10
-num_questions = 486
+num_questions = 1000
 b_end = b_start + num_questions
 
 #if benchmark name starts with "bioASQ" set max_new_tokens to 40

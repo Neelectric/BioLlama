@@ -22,7 +22,7 @@ The table below shows preliminary results. Note that currently, this table is a 
 | BioLlama-13B-finetune   | 13B    | 89.79                 | 76.5       | 40.8      | 32.9      | 42.3      |
 | BioLlama-70B-finetune   | 70B    | ??                    | ??         | ??        | ??        | ??        |
 | BioLlama-7B-finetune-2  | 7B     | 87.29                 | 68.2       | 26.2      | 24.2      | 37.2      |
-| BioLlama-13B-finetune-2 | 13B    | 89.38                 | 74.58      | 40.0      | 33.54     |           |
+| BioLlama-13B-finetune-2 | 13B    | 89.38                 | 76.7       |           |           | 42.7      |
 <!-- table -->
 
 For comparison, this table shows the performance reported by open-source or proprietary models.
@@ -33,6 +33,7 @@ For comparison, this table shows the performance reported by open-source or prop
 | Med-PaLM 2             | 540B   | -                     | 81.8       | 86.5      | -         | 72.3      |
 | GPT-4                  | ?      | -                     | 74.4       | 81.4      | 78.6      | 72.4      |
 | GPT-4 (MedPrompt)      | ?      | -                     | 82.0       | 90.2      | -         | 79.1      |
+| BioLlama-13B-finetune  | 13B    | 89.79                 | 76.5       | 40.8      | 32.9      | 42.3      |
 
 ## 🔎 Dissertation
 The dissertation is on the following overleaf project: https://www.overleaf.com/read/pvgmnfpxtvby
@@ -42,6 +43,12 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
 
 ## Changelog
 <!-- changelog -->
+ * 17:18:43, 16.03.2024 | BioLlama-13B-finetune-2 | PubMedQA |  --> 76.7, 1000 questions
+
+ * 14:26:37, 16.03.2024 | BioLlama-13B-finetune-2 | MedMCQA | 41.88 --> 42.7, 1000 questions
+
+ * 13:58:37, 16.03.2024 | BioLlama-13B-finetune-2 | MedMCQA |  --> 41.88, 486 questions
+
  * 23:13:10, 12.03.2024 | BioLlama-13B-finetune-2 | MedQA-5 |  --> 33.54, 486 questions
 
  * 19:29:01, 12.03.2024 | BioLlama-13B-finetune-2 | MedQA-4 |  --> 40.0, 486 questions
@@ -241,6 +248,9 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
+
+
+
 
 
 
