@@ -80,5 +80,4 @@ if two_epochs:
 if zero_shot:
     model = model + "-0"
 if num_questions > 100:
-    # write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode, top_k=top_k, num_questions=num_questions)
-    pass
+    write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode, top_k=top_k, num_questions=num_questions)
