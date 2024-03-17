@@ -564,7 +564,7 @@
 * *3.5 hours* Adding support for BioASQ finetuning, further inference results
 * *2 hours* Fixing error in BioASQ finetuning 
 
-## Week 25 - hours
+## Week 25 - 22.5 hours
 ### Monday - 04 March 2023
 * *0.5 hours* New inference results
 * *2.5 hours* Adding support for BioLlama-13B finetuning in bfloat16, starting first finetune and inference tests
@@ -598,3 +598,6 @@
 ### Tusday - 12 March 2023
 * *9 hours* Further work on methods section, fleshing out BioLlama design and training
 * *2 hours* Further 13B 2 epoch finetuning attempts
+
+### Wednesday - 13 March 2023 
+* *0.5 hours* Twenty-first meeting with supervisor

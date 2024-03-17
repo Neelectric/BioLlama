@@ -14,7 +14,7 @@ import torch
 model =  "BioLlama-13B-finetune" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune", "BioLlama-7B", "BioLlama-7B-finetune"
 two_epochs = True
 torch_dtype = None
-zero_shot = False
+zero_shot = True
 if model[:11] == "BioLlama-7B": torch_dtype = torch.float32 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-13B": torch_dtype = torch.bfloat16 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-70B": torch_dtype = "int4" # eg. torch.float32, torch.bfloat16 or "int4"
@@ -80,4 +80,5 @@ if two_epochs:
 if zero_shot:
     model = model + "-0"
 if num_questions > 100:
-    write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode, top_k=top_k, num_questions=num_questions)
+    # write_to_readme(model, benchmark, result=accuracy, db_name=db_name, retrieval_text_mode=retrieval_text_mode, top_k=top_k, num_questions=num_questions)
+    pass
