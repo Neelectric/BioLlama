@@ -1,0 +1,260 @@
+{
+  "PubmedBookArticle": [],
+  "PubmedArticle": [
+    {
+      "MedlineCitation": {
+        "OtherID": [],
+        "InvestigatorList": [],
+        "CitationSubset": [
+          "IM"
+        ],
+        "KeywordList": [
+          [
+            "FUNCTION",
+            "KNEE OSTEOARTHRITIS",
+            "LOW-DOSE CORTICOSTEROIDS",
+            "PAIN"
+          ]
+        ],
+        "OtherAbstract": [],
+        "GeneralNote": [],
+        "SpaceFlightMission": [],
+        "PMID": "24293578",
+        "DateCompleted": {
+          "Year": "2014",
+          "Month": "09",
+          "Day": "22"
+        },
+        "DateRevised": {
+          "Year": "2016",
+          "Month": "06",
+          "Day": "30"
+        },
+        "Article": {
+          "ArticleDate": [
+            {
+              "Year": "2013",
+              "Month": "12",
+              "Day": "01"
+            }
+          ],
+          "ELocationID": [
+            "10.3899/jrheum.130199"
+          ],
+          "Language": [
+            "eng"
+          ],
+          "Journal": {
+            "ISSN": "1499-2752",
+            "JournalIssue": {
+              "Volume": "41",
+              "Issue": "1",
+              "PubDate": {
+                "Year": "2014",
+                "Month": "Jan"
+              }
+            },
+            "Title": "The Journal of rheumatology",
+            "ISOAbbreviation": "J Rheumatol"
+          },
+          "ArticleTitle": "Effect of low-dose oral prednisolone on symptoms and systemic inflammation in older adults with moderate to severe knee osteoarthritis: a randomized placebo-controlled trial.",
+          "Pagination": {
+            "StartPage": "53",
+            "EndPage": "59",
+            "MedlinePgn": "53-9"
+          },
+          "Abstract": {
+            "AbstractText": [
+              "To investigate the efficacy of 6 weeks of daily low-dose oral prednisolone in improving pain, mobility, and systemic low-grade inflammation in the short term and whether the effect would be sustained at 12 weeks in older adults with moderate to severe knee osteoarthritis (OA).",
+              "A total of 125 patients with primary knee OA were randomized 1:1; 63 received 7.5 mg/day of prednisolone and 62 received placebo for 6 weeks. Outcome measures included pain reduction and improvement in function scores and systemic inflammation markers. Pain was assessed using the visual analog pain scale (0-100 mm). Secondary outcome measures included the Western Ontario and McMaster Universities Osteoarthritis Index scores, patient global assessment (PGA) of the severity of knee OA, and 6-min walk distance (6MWD). Serum levels of interleukin 1 (IL-1), IL-6, tumor necrosis factor (TNF)-\u03b1, and high-sensitivity C-reactive protein (hsCRP) were measured.",
+              "There was a clinically relevant reduction in the intervention group compared to the placebo group for knee pain, physical function, PGA, and 6MWD at 6 weeks. The mean difference between treatment arms (95% CI) was 10.9 (4.8-18.0), p < 0.001; 9.5 (3.7-15.4), p < 0.05; 15.7 (5.3-26.1), p < 0.001; and 86.9 (29.8-144.1), p < 0.05, respectively. Further, there was a clinically relevant reduction in the serum levels of IL-1, IL-6, TNF-\u03b1, and hsCRP at 6 weeks in the intervention group when compared to the placebo group. These differences remained significant at 12 weeks. The Outcome Measures in Rheumatology Clinical Trials-Osteoarthritis Research Society International responder rate was 65% in the intervention group and 34% in the placebo group (p < 0.05).",
+              "Low-dose oral prednisolone had both a short-term and a longer sustained effect resulting in less knee pain, better physical function, and attenuation of systemic inflammation in older patients with knee OA (ClinicalTrials.gov identifier NCT01619163)."
+            ]
+          },
+          "AuthorList": [
+            {
+              "AffiliationInfo": [
+                {
+                  "Identifier": [],
+                  "Affiliation": "From the Rheumatology Unit and the Geriatric Unit, Internal Medicine Department, and the Orthopaedics Department, University of Alexandria; the Biochemistry Department, Medical Research Institute; the Alexandria Centre for Women's Health, Alexandria, Egypt."
+                }
+              ],
+              "Identifier": [],
+              "LastName": "Abou-Raya",
+              "ForeName": "Anna",
+              "Initials": "A"
+            },
+            {
+              "AffiliationInfo": [],
+              "Identifier": [],
+              "LastName": "Abou-Raya",
+              "ForeName": "Suzan",
+              "Initials": "S"
+            },
+            {
+              "AffiliationInfo": [],
+              "Identifier": [],
+              "LastName": "Khadrawi",
+              "ForeName": "Tarek",
+              "Initials": "T"
+            },
+            {
+              "AffiliationInfo": [],
+              "Identifier": [],
+              "LastName": "Helmii",
+              "ForeName": "Madihah",
+              "Initials": "M"
+            }
+          ],
+          "DataBankList": [
+            {
+              "DataBankName": "ClinicalTrials.gov",
+              "AccessionNumberList": [
+                "NCT01619163"
+              ]
+            }
+          ],
+          "PublicationTypeList": [
+            "Journal Article",
+            "Randomized Controlled Trial",
+            "Retracted Publication"
+          ]
+        },
+        "MedlineJournalInfo": {
+          "Country": "Canada",
+          "MedlineTA": "J Rheumatol",
+          "NlmUniqueID": "7501984",
+          "ISSNLinking": "0315-162X"
+        },
+        "ChemicalList": [
+          {
+            "RegistryNumber": "0",
+            "NameOfSubstance": "Anti-Inflammatory Agents"
+          },
+          {
+            "RegistryNumber": "9PHQ9Y1OLM",
+            "NameOfSubstance": "Prednisolone"
+          }
+        ],
+        "CommentsCorrectionsList": [
+          {
+            "RefSource": "Praxis (Bern 1994). 2014 Jun 4;103(12):721-2",
+            "PMID": "24894617"
+          },
+          {
+            "RefSource": "J Rheumatol. 2018 Dec;45(12):1713",
+            "PMID": "30504483"
+          }
+        ],
+        "MeshHeadingList": [
+          {
+            "QualifierName": [],
+            "DescriptorName": "Administration, Oral"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Aged"
+          },
+          {
+            "QualifierName": [
+              "administration & dosage",
+              "therapeutic use"
+            ],
+            "DescriptorName": "Anti-Inflammatory Agents"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Double-Blind Method"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Female"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Humans"
+          },
+          {
+            "QualifierName": [
+              "drug therapy",
+              "physiopathology"
+            ],
+            "DescriptorName": "Inflammation"
+          },
+          {
+            "QualifierName": [
+              "physiopathology"
+            ],
+            "DescriptorName": "Knee Joint"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Male"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Middle Aged"
+          },
+          {
+            "QualifierName": [
+              "drug therapy",
+              "physiopathology"
+            ],
+            "DescriptorName": "Osteoarthritis, Knee"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Pain Measurement"
+          },
+          {
+            "QualifierName": [
+              "administration & dosage",
+              "therapeutic use"
+            ],
+            "DescriptorName": "Prednisolone"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Severity of Illness Index"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Treatment Outcome"
+          }
+        ]
+      },
+      "PubmedData": {
+        "ReferenceList": [],
+        "History": [
+          {
+            "Year": "2013",
+            "Month": "12",
+            "Day": "3",
+            "Hour": "6",
+            "Minute": "0"
+          },
+          {
+            "Year": "2013",
+            "Month": "12",
+            "Day": "3",
+            "Hour": "6",
+            "Minute": "0"
+          },
+          {
+            "Year": "2014",
+            "Month": "9",
+            "Day": "23",
+            "Hour": "6",
+            "Minute": "0"
+          }
+        ],
+        "PublicationStatus": "ppublish",
+        "ArticleIdList": [
+          "24293578",
+          "10.3899/jrheum.130199",
+          "jrheum.130199"
+        ]
+      }
+    }
+  ]
+}

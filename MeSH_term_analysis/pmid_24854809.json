@@ -1,0 +1,282 @@
+{
+  "PubmedBookArticle": [],
+  "PubmedArticle": [
+    {
+      "MedlineCitation": {
+        "OtherID": [],
+        "InvestigatorList": [],
+        "CitationSubset": [
+          "IM"
+        ],
+        "KeywordList": [
+          [
+            "Attention bias",
+            "Emotional eating",
+            "Eye tracking",
+            "Food intake",
+            "Mood induction"
+          ]
+        ],
+        "OtherAbstract": [],
+        "GeneralNote": [],
+        "SpaceFlightMission": [],
+        "PMID": "24854809",
+        "DateCompleted": {
+          "Year": "2014",
+          "Month": "08",
+          "Day": "22"
+        },
+        "DateRevised": {
+          "Year": "2018",
+          "Month": "12",
+          "Day": "02"
+        },
+        "Article": {
+          "ArticleDate": [
+            {
+              "Year": "2014",
+              "Month": "02",
+              "Day": "14"
+            }
+          ],
+          "ELocationID": [
+            "10.1016/j.eatbeh.2014.02.001",
+            "S1471-0153(14)00025-7"
+          ],
+          "Language": [
+            "eng"
+          ],
+          "Journal": {
+            "ISSN": "1873-7358",
+            "JournalIssue": {
+              "Volume": "15",
+              "Issue": "2",
+              "PubDate": {
+                "Year": "2014",
+                "Month": "Apr"
+              }
+            },
+            "Title": "Eating behaviors",
+            "ISOAbbreviation": "Eat Behav"
+          },
+          "ArticleTitle": "Looking at food in sad mood: do attention biases lead emotional eaters into overeating after a negative mood induction?",
+          "Pagination": {
+            "StartPage": "230",
+            "EndPage": "236",
+            "MedlinePgn": "230-6"
+          },
+          "Abstract": {
+            "AbstractText": [
+              "Emotional eating is associated with overeating and the development of obesity. Yet, empirical evidence for individual (trait) differences in emotional eating and cognitive mechanisms that contribute to eating during sad mood remain equivocal.",
+              "The aim of this study was to test if attention bias for food moderates the effect of self-reported emotional eating during sad mood (vs neutral mood) on actual food intake. It was expected that emotional eating is predictive of elevated attention for food and higher food intake after an experimentally induced sad mood and that attentional maintenance on food predicts food intake during a sad versus a neutral mood.",
+              "Participants (N = 85) were randomly assigned to one of the two experimental mood induction conditions (sad/neutral). Attentional biases for high caloric foods were measured by eye tracking during a visual probe task with pictorial food and neutral stimuli. Self-reported emotional eating was assessed with the Dutch Eating Behavior Questionnaire (DEBQ) and ad libitum food intake was tested by a disguised food offer.",
+              "Hierarchical multivariate regression modeling showed that self-reported emotional eating did not account for changes in attention allocation for food or food intake in either condition. Yet, attention maintenance on food cues was significantly related to increased intake specifically in the neutral condition, but not in the sad mood condition.",
+              "The current findings show that self-reported emotional eating (based on the DEBQ) might not validly predict who overeats when sad, at least not in a laboratory setting with healthy women. Results further suggest that attention maintenance on food relates to eating motivation when in a neutral affective state, and might therefore be a cognitive mechanism contributing to increased food intake in general, but maybe not during sad mood."
+            ],
+            "CopyrightInformation": "Copyright \u00a9 2014 Elsevier Ltd. All rights reserved."
+          },
+          "AuthorList": [
+            {
+              "AffiliationInfo": [
+                {
+                  "Identifier": [],
+                  "Affiliation": "Maastricht University, The Netherlands. Electronic address: Jessica.Werthmann@maastrichtuniversity.nl."
+                }
+              ],
+              "Identifier": [],
+              "LastName": "Werthmann",
+              "ForeName": "Jessica",
+              "Initials": "J"
+            },
+            {
+              "AffiliationInfo": [
+                {
+                  "Identifier": [],
+                  "Affiliation": "Maastricht University, The Netherlands."
+                }
+              ],
+              "Identifier": [],
+              "LastName": "Renner",
+              "ForeName": "Fritz",
+              "Initials": "F"
+            },
+            {
+              "AffiliationInfo": [
+                {
+                  "Identifier": [],
+                  "Affiliation": "Maastricht University, The Netherlands."
+                }
+              ],
+              "Identifier": [],
+              "LastName": "Roefs",
+              "ForeName": "Anne",
+              "Initials": "A"
+            },
+            {
+              "AffiliationInfo": [
+                {
+                  "Identifier": [],
+                  "Affiliation": "VU University Amsterdam, The Netherlands."
+                }
+              ],
+              "Identifier": [],
+              "LastName": "Huibers",
+              "ForeName": "Marcus J H",
+              "Initials": "MJ"
+            },
+            {
+              "AffiliationInfo": [
+                {
+                  "Identifier": [],
+                  "Affiliation": "Maastricht University, The Netherlands."
+                }
+              ],
+              "Identifier": [],
+              "LastName": "Plumanns",
+              "ForeName": "Lana",
+              "Initials": "L"
+            },
+            {
+              "AffiliationInfo": [
+                {
+                  "Identifier": [],
+                  "Affiliation": "Maastricht University, The Netherlands."
+                }
+              ],
+              "Identifier": [],
+              "LastName": "Krott",
+              "ForeName": "Nora",
+              "Initials": "N"
+            },
+            {
+              "AffiliationInfo": [
+                {
+                  "Identifier": [],
+                  "Affiliation": "Maastricht University, The Netherlands."
+                }
+              ],
+              "Identifier": [],
+              "LastName": "Jansen",
+              "ForeName": "Anita",
+              "Initials": "A"
+            }
+          ],
+          "PublicationTypeList": [
+            "Journal Article",
+            "Randomized Controlled Trial",
+            "Research Support, Non-U.S. Gov't"
+          ]
+        },
+        "MedlineJournalInfo": {
+          "Country": "United States",
+          "MedlineTA": "Eat Behav",
+          "NlmUniqueID": "101090048",
+          "ISSNLinking": "1471-0153"
+        },
+        "MeshHeadingList": [
+          {
+            "QualifierName": [],
+            "DescriptorName": "Affect"
+          },
+          {
+            "QualifierName": [
+              "physiology"
+            ],
+            "DescriptorName": "Attention"
+          },
+          {
+            "QualifierName": [
+              "psychology"
+            ],
+            "DescriptorName": "Eating"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Eye Movements"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Female"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Food"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Humans"
+          },
+          {
+            "QualifierName": [
+              "psychology"
+            ],
+            "DescriptorName": "Hyperphagia"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Multivariate Analysis"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Regression Analysis"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Self Report"
+          },
+          {
+            "QualifierName": [],
+            "DescriptorName": "Young Adult"
+          }
+        ]
+      },
+      "PubmedData": {
+        "ReferenceList": [],
+        "History": [
+          {
+            "Year": "2013",
+            "Month": "7",
+            "Day": "17"
+          },
+          {
+            "Year": "2014",
+            "Month": "1",
+            "Day": "21"
+          },
+          {
+            "Year": "2014",
+            "Month": "2",
+            "Day": "3"
+          },
+          {
+            "Year": "2014",
+            "Month": "5",
+            "Day": "24",
+            "Hour": "6",
+            "Minute": "0"
+          },
+          {
+            "Year": "2014",
+            "Month": "5",
+            "Day": "24",
+            "Hour": "6",
+            "Minute": "0"
+          },
+          {
+            "Year": "2014",
+            "Month": "8",
+            "Day": "26",
+            "Hour": "6",
+            "Minute": "0"
+          }
+        ],
+        "PublicationStatus": "ppublish",
+        "ArticleIdList": [
+          "24854809",
+          "10.1016/j.eatbeh.2014.02.001",
+          "S1471-0153(14)00025-7"
+        ]
+      }
+    }
+  ]
+}
