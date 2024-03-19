@@ -57,7 +57,7 @@ def promptify(benchmark, question, retrieval_mode = None, retrieved_chunks = Non
         promptified += few_shot(benchmark)
     promptified += question
     promptified += "</QUESTION>\n<ANSWER>"
-    # print(promptified)
+    print(promptified)
     return promptified
 
 def promptify_for_judging(question, true_answer, model_response):

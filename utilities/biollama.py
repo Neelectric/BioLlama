@@ -142,7 +142,7 @@ def cca_forward_true(self, input_ids, hidden_states):
         self.biollama.retrieved_chunk_storage = E_no_continuations
     else: # otherwise, we do not need retrieval (as it would just retrieve the same as we already have stored)
         E_no_continuations = self.biollama.retrieved_chunk_storage
-
+    # print(E_no_continuations)
     ca_list = None
     for i in range(len(Hplus_list)): # for these spliced chunks in Hplus_list, calculate cross attentions with neighbours
         Hplus_ca = ca(self, Hplus_list[i], E_no_continuations[i])
@@ -279,7 +279,7 @@ class BioLlama:
         elif (torch_dtype == torch.int8):
             if training: raise Exception("Cannot train with quantization, train unquantized and quantize after training")
             bnb_config = BitsAndBytesConfig(load_in_8bit=True)
-            torch_dtype=torch.ffloat16
+            torch_dtype=torch.bfloat16
         else:
             bnb_config = None
 
@@ -350,4 +350,5 @@ class BioLlama:
         self.model.prompt_biollama = prompt
         generate_ids = self.model.generate(inputs.input_ids.to(self.device), max_new_tokens=max_new_tokens, use_cache=False)
         num_tokens = len(generate_ids[0]) - len(inputs.input_ids[0])
+        print(self.retrieved_chunk_storage)
         return (num_tokens, self.tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False,)[0],)
