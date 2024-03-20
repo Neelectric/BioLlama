@@ -601,3 +601,20 @@
 
 ### Wednesday - 13 March 2023 
 * *0.5 hours* Twenty-first meeting with supervisor
+
+### Saturday - 16 March 2023
+* *2.5 hours* Starting Results / Evaluation, re-wording research questions, starting graphs
+
+### Sunday - 17 March 2023
+* *6 hours* Writing up the first three research questions
+
+### Monday - 18 March 2023
+* *12.5 hours* Writing up the last three research questions
+
+### Tuesday - 19 March 2023
+* *2.5 hours* Going over feedback, restructuring, editing Results / Evaluation
+* *7 hours* Writing up Discussion / Limitations and Conclusion
+
+### Wednesday - 20 March
+* *2 hours* General editing
+* *0.5 hours* Twenty-second meeting with supervisor

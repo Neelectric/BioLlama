@@ -31,36 +31,33 @@ mesh_term_counts = {}
 time_before = time()
 pmid_counter = 0
 for pmid in tqdm(pmid_list):
-    handle = Entrez.efetch(db="pubmed", id=pmid, retmode="xml")
-    record = Entrez.read(handle)
-    handle.close()
-
-    # Extract MeSH terms
-    mesh_terms = []
     try:
-        article = record["PubmedArticle"][0]
-        medline_citation = article["MedlineCitation"]
-        mesh_heading_list = medline_citation["MeshHeadingList"]
-        # print(mesh_heading_list)
-        # for mesh_heading in mesh_heading_list:
-        #     descriptor_name_list = mesh_heading["DescriptorName"].split(", ")
-        #     mesh_terms.extend(descriptor_name_list)
-    except KeyError:
-        print(f"No MeSH terms found for PMID: {pmid}")
-
-    for mesh_heading in mesh_heading_list:
-        qualifier_name_list = mesh_heading.get("QualifierName", [])
-        mesh_terms.extend(qualifier_name_list)
-    for term in mesh_terms:
-        if term in mesh_term_counts:
-            mesh_term_counts[term] += 1
-        else:
-            mesh_term_counts[term] = 1
-    pmid_counter += 1
-    if pmid_counter % 10000:
-        # dump the dictionary to a file MeSH_term_analysis/MeSH_term_counts.json
-        with open("MeSH_term_analysis/MeSH_term_counts.json", "w") as file:
-            json.dump(mesh_term_counts, file)
+        handle = Entrez.efetch(db="pubmed", id=pmid, retmode="xml")
+        record = Entrez.read(handle, validate=False)
+        handle.close()
+        mesh_terms = []
+        try:
+            article = record["PubmedArticle"][0]
+            medline_citation = article["MedlineCitation"]
+            mesh_heading_list = medline_citation["MeshHeadingList"]
+        except KeyError:
+            print(f"No MeSH terms found for PMID: {pmid}")
+        for mesh_heading in mesh_heading_list:
+            qualifier_name_list = mesh_heading.get("QualifierName", [])
+            mesh_terms.extend(qualifier_name_list)
+        for term in mesh_terms:
+            if term in mesh_term_counts:
+                mesh_term_counts[term] += 1
+            else:
+                mesh_term_counts[term] = 1
+        pmid_counter += 1
+        if (pmid_counter % 10000 == 0):
+            with open("MeSH_term_analysis/MeSH_term_counts_2.json", "w") as file:
+                json.dump(mesh_term_counts, file)
+    except Exception as e:
+        print(f"Error occurred for PMID: {pmid}")
+        print(e)
+        continue
 
 time_after = time()
 # Print the mesh_term_counts dictionary

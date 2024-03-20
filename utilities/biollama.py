@@ -350,5 +350,5 @@ class BioLlama:
         self.model.prompt_biollama = prompt
         generate_ids = self.model.generate(inputs.input_ids.to(self.device), max_new_tokens=max_new_tokens, use_cache=False)
         num_tokens = len(generate_ids[0]) - len(inputs.input_ids[0])
-        print(self.retrieved_chunk_storage)
+        # print(self.retrieved_chunk_storage)
         return (num_tokens, self.tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False,)[0],)
