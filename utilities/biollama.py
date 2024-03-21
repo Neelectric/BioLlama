@@ -85,6 +85,8 @@ def cca_forward_true(self, input_ids, hidden_states):
     n = len(input_ids)
     m = self.biollama.chunk_length
     l = math.ceil(n/m)
+    top_k = 1
+    k = 1
     H_list = [] # For splitting the input into l chunks of size m (the last one will probably be shorter)
     H_list_decoded = [] # Keeping a decoded version for retrieval lookup
     for i in range(l): 
@@ -117,8 +119,8 @@ def cca_forward_true(self, input_ids, hidden_states):
             query_model=self.biollama.query_model, # passed as a pre-loaded object to save time
             rerank_tokenizer=self.biollama.rerank_tokenizer, # passed as a pre-loaded object to save time
             rerank_model=self.biollama.rerank_model, # passed as a pre-loaded object to save time
-            top_k=1, # normally retrieve top 2, following RETRO
-            k=1,
+            top_k=top_k, # normally retrieve top 2, following RETRO
+            k=k,
             db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
             db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
         )    
@@ -134,8 +136,8 @@ def cca_forward_true(self, input_ids, hidden_states):
             query_model=self.biollama.query_model, # passed as a pre-loaded object to save time
             rerank_tokenizer=self.biollama.rerank_tokenizer, # passed as a pre-loaded object to save time
             rerank_model=self.biollama.rerank_model, # passed as a pre-loaded object to save time
-            top_k=1, # retrieve top 2, following RETRO
-            k=1,
+            top_k=top_k, # retrieve top 2, following RETRO
+            k=k,
             db_faiss=self.biollama.db_faiss, # passed as a pre-loaded object to save time
             db_json=self.biollama.db_json, # passed as a pre-loaded object to save time
         )    
@@ -351,4 +353,9 @@ class BioLlama:
         generate_ids = self.model.generate(inputs.input_ids.to(self.device), max_new_tokens=max_new_tokens, use_cache=False)
         num_tokens = len(generate_ids[0]) - len(inputs.input_ids[0])
         # print(self.retrieved_chunk_storage)
+        # print("MedCPT retrieved the following chunks:")
+        # chunk_counter = 1
+        # for chunk in self.retrieved_chunk_storage:
+        #     print(f"  {chunk_counter} - {chunk}")
+        #     chunk_counter += 1
         return (num_tokens, self.tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False,)[0],)

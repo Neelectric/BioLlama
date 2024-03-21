@@ -48,10 +48,10 @@ questions = [prompt, prompt2, prompt3, prompt_ultra_long, prompt_medmcqa_2]
 db_name = "RCT200ktrain"
 retrieval_text_mode = "input_segmentation"
 
-prompt = questions[4]
+prompt = questions[1]
 # model_id = 'meta-llama/Llama-2-7b-chat-hf'
 # model_id = "/home/service/BioLlama/utilities/finetuning/biollama_training_output/7/"
-model_directory = "/home/service/BioLlama/utilities/finetuning/biollama_training_output/MedQA-4/13/"
+model_directory = "/home/service/BioLlama/utilities/finetuning/biollama_training_output/MedQA-5/13/"
 chunk_length = 32
 
 time_before_setup = time.time()
@@ -62,7 +62,7 @@ BioLlama = BioLlama(model_id=model_directory,
                     torch_dtype=torch.bfloat16)
 
 time_before_generation = time.time()
-num_tokens, text = BioLlama.generate(prompt=prompt, max_new_tokens=10)
+num_tokens, text = BioLlama.generate(prompt=prompt, max_new_tokens=26)
 
 time_after = time.time()
 
