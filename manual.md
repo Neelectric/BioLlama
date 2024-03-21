@@ -1,5 +1,7 @@
 # User manual 
 
+NOTE: This repository is entirely experimental and unlikely to run on another machine without many hours of laborious setup and debugging of my confusing code. Proceed at your own risk!
+
 This directory contains the files of a complex and wide-reaching project. To replicate my approach and results, a workstation with 48Gb GPU VRAM is probably necessary, in addition to sufficient free storage space (~300Gb) and installation of the relevant CUDA/pytorch/transformers versions. requirements.txt was automatically produced by the wandb library and hopefully includes all necessary dependencies. Experiments were run with 
 * nvidia-smi version 525.147.05
 * driver version 525.147.05
@@ -23,5 +25,6 @@ top_k = 1 # how many chunks to retrieve, this variable was relevant for retrieva
 b_start = 10 # from which point in the benchmark shall we start sampling questions, 10 recommended as questions 0-10 is where few-shot examples are from
 num_questions = 1000 # how many questions to sample, 1000 is standard
 
-These variables dictate how an experiment is run. a call to inference.py is then made, which takes care of running a benchmark as specified.
+These variables dictate how an experiment is run. A call to inference.py is then made, which takes care of running a benchmark as specified. There are essentially two model types: Llama-2, and BioLlama. Both have different backends. inference.py makes a call to llm.py, where the correct backend is identified and handled. If the model type is Llama-2, the exllama library with its optimized CUDA kernels handles the creation of a model object and the model inference itself. The relevant files are in /src/. If the model type is BioLlama, my custom BioLlama class in biollama.py handles the creation of a model object and model inference in a tight interplay with HuggingFace's Transformers library. After the respective backend returns the model outputs, these are saved by inference.py to a JSON file in /output/, named after the model and benchmark config (optionally also if it was zero-shot and if it was a finetuned model). main.py then uses exact_match.py or llm-as-a-judge.py to mark these outputs, and writes to the README if it was a properly sized training run (if less than 100 questions were involved in benchmarking, this is treated as a sanity test/debugging run and not recorded).
 
+Note that this code was designed without the intention of thorough reuse by other people. If there are persistent issues, feel free to contact me at Neel.R@web.de, but I cannot make guarantees that any of this will work elsewhere/will not brick your computer.
