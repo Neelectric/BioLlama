@@ -11,24 +11,28 @@ from utilities.judging import llm_as_judge
 from utilities.utilities import write_to_readme
 import torch
 
+### SETTING EXPERIMENT PARAMETERS
+
 model =  "Llama-2-13B-chat-GPTQ" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune", "BioLlama-7B", "BioLlama-7B-finetune"
-two_epochs = False
-torch_dtype = None
-zero_shot = True
+two_epochs = False # eg. True, False
+torch_dtype = None # should be false but could theoretically be eg. torch.float32, torch.bfloat16 or "int4"
+zero_shot = True # eg. True, False
+benchmark = "MedQA-5" # eg. "MedQA-4", "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
+db_name = "RCT200ktrain" # eg. "RCT200ktrain", in addition "RCT20ktrain" could work but support would need to be added manually
+retrieval_model = None # eg. "gte-large", "medcpt", this variable was relevant for retrieval testing, should be None 
+retrieval_text_mode = None # eg. "full", "input_segmentation",this variable was relevant for retrieval testing, should be None
+chunk_length = None # this variable was relevant for retrieval testing, should be None
+top_k = 1 # how many chunks to retrieve, this variable was relevant for retrieval testing, should be 1
+b_start = 10 # from which point in the benchmark shall we start sampling questions, 10 recommended as questions 0-10 is where few-shot examples are from
+num_questions = 1000 # how many questions to sample, 1000 is standard
+b_end = b_start + num_questions
+
+### FURTHER PARAMETER SETTING HAPPENS AUTOMATICALLY
+
 if model[:11] == "BioLlama-7B": torch_dtype = torch.float32 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-13B": torch_dtype = torch.bfloat16 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-70B": torch_dtype = "int4" # eg. torch.float32, torch.bfloat16 or "int4"
-benchmark = "MedQA-5" # eg. "MedQA-5", "PubMedQA", "MedMCQA", "bioASQ_no_snippet", "bioASQ_with_snippet"
-db_name = "RCT200ktrain"
-retrieval_model = None # eg. "gte-large", "medcpt"
-retrieval_text_mode = None # eg. "full", "input_segmentation
-chunk_length = None
-top_k = 1
-b_start = 10
-num_questions = 20
-b_end = b_start + num_questions
 
-#if benchmark name starts with "bioASQ" set max_new_tokens to 40
 max_new_tokens = 30
 if benchmark[:6] == "bioASQ":
     max_new_tokens = 45  
@@ -44,6 +48,8 @@ if benchmark == "MedQA-4" or benchmark == "MedQA-5":
 if zero_shot:
     max_new_tokens = 35
 
+### RUNNING THE EXPERIMENT
+
 inference(model=model,
         benchmark=benchmark,
         b_start=b_start,
@@ -57,6 +63,8 @@ inference(model=model,
         db_name=db_name,
         torch_dtype=torch_dtype,
         zero_shot=zero_shot,)
+
+### MARKING MODEL OUTPUTS AND WRITING TO README
 
 if torch_dtype is not None:
     print(f"Used dtype {torch_dtype}")
