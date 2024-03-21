@@ -11,10 +11,10 @@ from utilities.judging import llm_as_judge
 from utilities.utilities import write_to_readme
 import torch
 
-model =  "BioLlama-13B-finetune" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune", "BioLlama-7B", "BioLlama-7B-finetune"
-two_epochs = True
+model =  "Llama-2-13B-chat-GPTQ" # eg. "Llama-2-7B-chat-GPTQ", "Llama-2-7B-chat-finetune", "BioLlama-7B", "BioLlama-7B-finetune"
+two_epochs = False
 torch_dtype = None
-zero_shot = False
+zero_shot = True
 if model[:11] == "BioLlama-7B": torch_dtype = torch.float32 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-13B": torch_dtype = torch.bfloat16 # eg. torch.float32, torch.bfloat16 or "int4"
 elif model[:12] == "BioLlama-70B": torch_dtype = "int4" # eg. torch.float32, torch.bfloat16 or "int4"
@@ -25,7 +25,7 @@ retrieval_text_mode = None # eg. "full", "input_segmentation
 chunk_length = None
 top_k = 1
 b_start = 10
-num_questions = 1000
+num_questions = 20
 b_end = b_start + num_questions
 
 #if benchmark name starts with "bioASQ" set max_new_tokens to 40
@@ -39,7 +39,7 @@ if benchmark == "PubMedQA":
     b_start = 0
     b_end = b_start + num_questions
 if benchmark == "MedQA-4" or benchmark == "MedQA-5":
-    max_new_tokens = 20
+    max_new_tokens = 30
 
 if zero_shot:
     max_new_tokens = 35
