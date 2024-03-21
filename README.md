@@ -33,7 +33,7 @@ For comparison, this table shows the performance reported by open-source or prop
 | Med-PaLM 2             | 540B   | -                     | 81.8       | 86.5      | -         | 72.3      |
 | GPT-4                  | ?      | -                     | 74.4       | 81.4      | 78.6      | 72.4      |
 | GPT-4 (MedPrompt)      | ?      | -                     | 82.0       | 90.2      | -         | 79.1      |
-| BioLlama-13B-finetune  | 13B    | 89.79                 | 76.5       | 40.8      | 32.9      | 42.3      |
+| BioLlama-13B-finetune/2| 13B    | 89.79                 | 76.5       | 40.8      | 33.4      | 42.7      |
 
 ## 🔎 Dissertation
 The dissertation is on the following overleaf project: https://www.overleaf.com/read/pvgmnfpxtvby
