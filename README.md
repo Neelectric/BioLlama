@@ -10,6 +10,14 @@ The method is described in much greater detail in the dissertation under the lin
 This diagram shows a default Llama-2 decoder layer
 ![Accuracy Plot](plots/Llama2_layer.png)
 
+### RETRO layer
+This diagram shows a RETRO layer, which uses the encoder to encode retrieved neighbours.
+![Accuracy Plot](plots/RETRO_layer.png)
+
+### BioLlama layer
+Finally, this diagram combines both of the above examples to create BioLlama
+![Accuracy Plot](plots/BioLlama_layer.png)
+
 
 ## Results
 The table below shows preliminary results. Note that currently, this table is a work in progress and so many scores are inaccurate or changing frequently as I refine BioLlama
