@@ -8,14 +8,20 @@ The method is described in much greater detail in the dissertation under the lin
 
 ### Llama-2 layer
 This diagram shows a default Llama-2 decoder layer
+
+
 <img src="plots/Llama2_layer.png" width="200" height="250">
 
 ### RETRO layer
 This diagram shows a RETRO layer, which uses the encoder to encode retrieved neighbours.
+
+
 <img src="plots/RETRO_layer.png" width="200" height="250">
 
 ### BioLlama layer
 Finally, this diagram combines both of the above examples to create BioLlama
+
+
 <img src="plots/BioLlama_layer.png" width="200" height="250">
 
 
