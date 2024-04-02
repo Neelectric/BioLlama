@@ -1,10 +1,10 @@
 # BioLlama
 Public repository to accompany the Level 4 Research Project "BioLlama: Improving Language Models for Biomedicine by Retrieving from Millions of Tokens".
 
-The aim of this project is to enhance models of varying sizes from the Llama2 family through retrieval. Using few-shot prompting techniques, an initial baseline is created to see how much performance can be "tickled" out of vanilla Llama2 in its 7B, 13B and 70B variants. Performance is measured using standard Biomedical QA and OpenQA benchmarks such as BioASQ, MedQA, PubMedQA and MedMCQA. After setting this baseline, a RETRO-fitted version of Llama 2, dubbed "BioLLama" as inspired by the recent "BioReader" paper, is benchmarked. BioLlama uses MedCPT as a retriever to extract 32 token long snippets from RCT200k or PubMedAbstracts, augmenting Llama-2 on designated RETRO layers.
+This project aims to enhance models of varying sizes from the Llama2 family through retrieval. Using few-shot prompting techniques, an initial baseline is created to see how much performance can be "tickled" out of vanilla Llama2 in its 7B, 13B and 70B variants. Performance is measured using standard Biomedical QA and OpenQA benchmarks such as BioASQ, MedQA, PubMedQA and MedMCQA. After setting this baseline, a RETRO-fitted version of Llama 2, dubbed "BioLLama" as inspired by the recent "BioReader" paper, is benchmarked. BioLlama uses MedCPT as a retriever to extract 32 token-long snippets from RCT200k, augmenting Llama-2 on designated RETRO layers.
 
 ## Explainer video
-A video that explains my approach is (hopefully) available at https://gla-my.sharepoint.com/:v:/g/personal/2514211r_student_gla_ac_uk/EY30ouuvqedKpyuCDvnzz4MBaxG-HXA4LjuObIJZhAWWLg?e=yirz18&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D
+A video that explains my approach is (hopefully) available at [https://gla-my.sharepoint.com/:v:/g/personal/2514211r_student_gla_ac_uk/EY30ouuvqedKpyuCDvnzz4MBaxG-HXA4LjuObIJZhAWWLg?e=yirz18&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D](https://gla-my.sharepoint.com/:v:/g/personal/2514211r_student_gla_ac_uk/EY30ouuvqedKpyuCDvnzz4MB2iyKTy177ZSQdT0bmot_XQ?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=NWpsUe)
 
 ## Method 
 The method is described in much greater detail in the dissertation under the link below, but essentially, Llama-2 is RETRO-fitted as shown in the contrast between the following three diagrams.
@@ -29,7 +29,7 @@ Finally, this diagram combines both of the above examples to create BioLlama
 
 
 ## Results
-The table below shows preliminary results. Note that currently, this table is a work in progress and so many scores are inaccurate or changing frequently as I refine BioLlama
+The table below shows preliminary results. Note that this table is a work in progress and so many scores are inaccurate or changing frequently as I refine BioLlama
 
  <!-- table -->
 | Model                   | Size   | BioASQ5b (snippets)   | PubMedQA   | MedQA-4   | MedQA-5   | MedMCQA   |
