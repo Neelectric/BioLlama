@@ -1,4 +1,8 @@
 # BioLlama
+## Update
+To prepare my work for publication, I have started to reimplement BioLlama in a new, cleaner repository to address several shortcomings present in this one: [https://github.com/Neelectric/BioLlamaV2]BioLlamaV2
+
+## Intro
 Public repository to accompany the Level 4 Research Project "BioLlama: Improving Language Models for Biomedicine by Retrieving from Millions of Tokens". The dissertation on this project is accessible on the overleaf link below, or through the PDF in this repository, entitled "2514211r.pdf".
 
 This project aims to enhance models of varying sizes from the Llama2 family through retrieval. Using few-shot prompting techniques, an initial baseline is created to see how much performance can be "tickled" out of vanilla Llama2 in its 7B, 13B and 70B variants. Performance is measured using standard Biomedical QA and OpenQA benchmarks such as BioASQ, MedQA, PubMedQA and MedMCQA. After setting this baseline, a RETRO-fitted version of Llama 2, dubbed "BioLLama" as inspired by the recent "BioReader" paper, is benchmarked. BioLlama uses MedCPT as a retriever to extract 32 token-long snippets from RCT200k, augmenting Llama-2 on designated RETRO layers.
