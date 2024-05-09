@@ -1,6 +1,6 @@
 # BioLlama
 ## Update
-To prepare my work for publication, I have started to reimplement BioLlama in a new, cleaner repository to address several shortcomings present in this one: [https://github.com/Neelectric/BioLlamaV2] BioLlamaV2
+To prepare my work for publication, I have started to reimplement BioLlama in a new, cleaner repository to address several shortcomings present in this one: https://github.com/Neelectric/BioLlamaV2
 
 ## Intro
 Public repository to accompany the Level 4 Research Project "BioLlama: Improving Language Models for Biomedicine by Retrieving from Millions of Tokens". The dissertation on this project is accessible on the overleaf link below, or through the PDF in this repository, entitled "2514211r.pdf".
