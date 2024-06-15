@@ -1,17 +1,9 @@
 # BioLlama
-## Update
-To prepare my work for publication, I have started to reimplement BioLlama in a new, cleaner repository to address several shortcomings present in this one: https://github.com/Neelectric/BioLlamaV2
 
 ## Intro
-Public repository to accompany the Level 4 Research Project "BioLlama: Improving Language Models for Biomedicine by Retrieving from Millions of Tokens". The dissertation on this project is accessible on the overleaf link below, or through the PDF in this repository, entitled "2514211r.pdf".
+Public repository to accompany the Research Project "BioLlama: Improving Language Models for Biomedicine by Retrieving from Millions of Tokens". 
 
 This project aims to enhance models of varying sizes from the Llama2 family through retrieval. Using few-shot prompting techniques, an initial baseline is created to see how much performance can be "tickled" out of vanilla Llama2 in its 7B, 13B and 70B variants. Performance is measured using standard Biomedical QA and OpenQA benchmarks such as BioASQ, MedQA, PubMedQA and MedMCQA. After setting this baseline, a RETRO-fitted version of Llama 2, dubbed "BioLLama" as inspired by the recent "BioReader" paper, is benchmarked. BioLlama uses MedCPT as a retriever to extract 32 token-long snippets from RCT200k, augmenting Llama-2 on designated RETRO layers.
-
-## Explainer video
-A video that explains my approach is (hopefully) available under the following link. Note that this video follows specific requirements for submission, and I talk quickly towards the end to fall within my time limit.  [https://gla-my.sharepoint.com/:v:/g/personal/2514211r_student_gla_ac_uk/EY30ouuvqedKpyuCDvnzz4MBaxG-HXA4LjuObIJZhAWWLg?e=yirz18&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D](https://gla-my.sharepoint.com/:v:/g/personal/2514211r_student_gla_ac_uk/EY30ouuvqedKpyuCDvnzz4MB2iyKTy177ZSQdT0bmot_XQ?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=NWpsUe)
-
-## Method 
-The method is described in much greater detail in the dissertation under the link below, but essentially, Llama-2 is RETRO-fitted as shown in the contrast between the following three diagrams.
 
 ### Llama-2 layer
 This diagram shows a default Llama-2 decoder layer
@@ -33,7 +25,7 @@ Finally, this diagram combines both of the above examples to create BioLlama
 
 
 ## Results
-The table below shows preliminary results. Note that this table is a work in progress and so many scores are inaccurate or changing frequently as I refine BioLlama
+The table below shows preliminary results. Note that this table is a work in progress and so many scores are inaccurate or changing frequently. For reliable details, please refer to the paper when it gets published.
 
  <!-- table -->
 | Model                   | Size   | BioASQ5b (snippets)   | PubMedQA   | MedQA-4   | MedQA-5   | MedMCQA   |
@@ -63,12 +55,6 @@ For comparison, this table shows the performance reported by open-source or prop
 | GPT-4                  | ?      | -                     | 74.4       | 81.4      | 78.6      | 72.4      |
 | GPT-4 (MedPrompt)      | ?      | -                     | 82.0       | 90.2      | -         | 79.1      |
 | BioLlama-13B-finetune/2| 13B    | 89.79                 | 76.5       | 40.8      | 33.4      | 42.7      |
-
-## 🔎 Dissertation
-The dissertation is on the following overleaf project: https://www.overleaf.com/read/pvgmnfpxtvby
-
-## ✉ Contacts
-* Neel Rajani, Neel.R@web.de
 
 ## Changelog
 <!-- changelog -->
@@ -281,99 +267,6 @@ The dissertation is on the following overleaf project: https://www.overleaf.com/
  * 2023-12-19 01:49:29 | RAGLlama | MedMCQA | 46.1
 
  * 2023-12-18 22:37:20 | BioLlama | PubMedQA | 00.00
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
